@@ -26,10 +26,13 @@ export default function Home() {
             alert('Please select .csv file');
         } else {
             try {
-                const response = await axios.get('http://localhost:5000/healthcheck');
+                const formData = new FormData();
+                formData.append('csvFile', file);
+
+                const response = await axios.post('http://localhost:4000/load-csv', formData);
                 console.log(response.data);
 
-                setResponse(prompt + " running... backend status: " + response.data.status);
+                setResponse("File uploaded successfully. Upload status: " + response.data.status);
             } catch (error) {
                 console.error('Error sending prompt:', error);
             }

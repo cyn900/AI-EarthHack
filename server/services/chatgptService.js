@@ -2,9 +2,9 @@
 const { response } = require("express");
 const OpenAI = require("openai");
 
-// const openai = new OpenAI();
+const openai = new OpenAI();
 // if API key is not set up in the project
-const openai = new OpenAI("YOUR_API_KEY");
+// const openai = new OpenAI("YOUR_API_KEY");
 
 const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
 const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
@@ -86,7 +86,7 @@ async function problemUrgentEval(prompt) {
 }
 
 // problem expense evaluation
-async function problemExpenseEval(prompt) { 
+async function problemExpenseEval(prompt) {
     rolePlay = background + 'You only care about the money. You only like a problem that will grow with the time and more people will have the problem). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination.' + replyFormat
     const problemMactch = prompt.match(problemRegex);
     const problemDescription = problemMactch ? problemMactch[1].trim() : null;
@@ -110,7 +110,7 @@ async function problemExpenseEval(prompt) {
 }
 
 // problem frequent evaluation
-async function problemFrequentEval(prompt) { 
+async function problemFrequentEval(prompt) {
     rolePlay = background + 'You only about how frequesnt the problem happen, ex is it a daily issue. You only like a problem that is not a one-time problem, people come across the problem frequently. A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is frequently happen in the explaination.' + replyFormat
     const problemMactch = prompt.match(problemRegex);
     const problemDescription = problemMactch ? problemMactch[1].trim() : null;
@@ -135,7 +135,7 @@ async function problemFrequentEval(prompt) {
 
 // problem customize evaluation
 // customizeInput is a metric that the user what to use for evaluation
-async function problemCustomEval(prompt, customizeInput) { 
+async function problemCustomEval(prompt, customizeInput) {
     rolePlay = background + 'You only care about ' + customizeInput +'Talk about'+ customizeInput + 'in your explaination' + replyFormat;
     const problemMactch = prompt.match(problemRegex);
     const problemDescription = problemMactch ? problemMactch[1].trim() : null;
@@ -203,6 +203,7 @@ async function solutionCompletenessEval(prompt) {
 p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick building. Solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
 // problemPopularEval(p)
 // problemGrowingEval(p)
+// problemUrgentEval(p)
 // problemUrgentEval(p)
 // problemExpenseEval(p)
 // problemFrequentEval(p)
