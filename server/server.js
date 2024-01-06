@@ -1,9 +1,11 @@
 const express = require("express");
+const cors = require("cors");
 const { generateResponse } = require('./services/chatgptService');
 
 const app = express();
 const port = process.env.PORT || 2000;
 
+app.use(cors());
 app.use(express.json());
 
 app.get('/healthcheck', (req, res) => {
