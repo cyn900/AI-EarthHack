@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const csv = require("csv-parser");
-const { problemPopularEval, problemGrowingEval, problemUrgentEval } = require('./services/chatgptService');
+const { problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval } = require('./services/chatgptService');
 
 const app = express();
 const port = process.env.PORT || 4000;
