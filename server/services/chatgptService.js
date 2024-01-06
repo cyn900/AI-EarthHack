@@ -2,9 +2,9 @@
 const { response } = require("express");
 const OpenAI = require("openai");
 
-// const openai = new OpenAI();
+const openai = new OpenAI();
 // if API key is not set up in the project
-const openai = new OpenAI("YOUR_API_KEY");
+// const openai = new OpenAI("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");
 
 const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
 const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
@@ -88,7 +88,7 @@ async function problemUrgentEval(prompt) {
 p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick building. Solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
 // problemPopularEval(p)
 // problemGrowingEval(p)
-problemUrgentEval(p)
+// problemUrgentEval(p)
 
 module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval};
 
