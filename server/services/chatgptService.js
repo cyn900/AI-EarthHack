@@ -2,9 +2,9 @@
 const { response } = require("express");
 const OpenAI = require("openai");
 
-const openai = new OpenAI();
+// const openai = new OpenAI();
 // if API key is not set up in the project
-// const openai = new OpenAI("YOUR_API_KEY");
+const openai = new OpenAI("YOUR_API_KEY");
 
 const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
 const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
