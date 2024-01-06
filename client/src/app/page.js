@@ -12,11 +12,14 @@ export default function Home() {
     setPrompt(e.target.value);
   };
 
-  const handleSendPrompt = () => {
+  const handleSendPrompt = async(e) => {
+      e.preventDefault();
+
       try {
-          // const response = await axios.post('/api/chatgpt', { prompt });
-          const response = prompt + " running";
-          setResponse(response);
+          const response = await axios.get('http://localhost:5000/healthcheck');
+          console.log(response.data);
+
+          setResponse(prompt + " running... backend status: " + response.data.status);
       } catch (error) {
           console.error('Error sending prompt:', error);
       }
