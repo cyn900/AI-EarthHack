@@ -7,6 +7,7 @@ const { problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpens
 const app = express();
 const port = process.env.PORT || 4000;
 
+let storedRows = null; // Global variable to store the rows data
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
 
@@ -51,10 +52,14 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 
-    console.log(rows);
-    res.status(200).json({ status: 'OK' });
+    storedRows = rows;
+    res.json({ csvData: rows });
+    // res.status(200).json({ status: 'OK' });
 });
 
+app.get('/get-stored-rows', (req, res) => {
+    res.json({ storedRows });
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
