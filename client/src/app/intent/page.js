@@ -46,7 +46,7 @@ export default function Page() {
                     <p className="py-6">*Each project gets a score out of 100 points, adjust success indicators based on your standards</p>
                     <div className="max-w-screen-2xl flex w-full">
                         {categories.map((category, index) => (
-                            <div key={index} className="flex flex-col">
+                            <div key={index} className="flex flex-col text-right mx-8">
                                 <h1 className="text-2xl font-bold">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
                                 <div className="mx-4 mt-4">
                                     {category.sliders.map((slider, sliderIndex) => (
