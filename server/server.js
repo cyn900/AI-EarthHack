@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { generateResponse } = require('./services/chatgptService');
+const { noveltyPoint } = require('./services/chatgptService');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -16,7 +16,7 @@ app.post('/chatgpt', async (req, res) => {
     const { prompt } = req.body;
 
     try {
-        const response = await generateResponse(prompt);
+        const response = await noveltyPoint(prompt);
         res.json({ response });
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });

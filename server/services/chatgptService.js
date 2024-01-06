@@ -5,7 +5,8 @@ const openai = new OpenAI();
 // if API key is not set up in the project
 // const openai = new OpenAI("YOUR_API_KEY");
 
-async function generateResponse(prompt) { 
+// generate novelty point
+async function noveltyPoint(prompt) { 
     rolePlay = 'You are a seasoned venture capital expert known for your sharp evaluation skills. Your role is to assess the novelty of the idea presented by the user on a scale from 1 to 10, with 10 being the highest level of novelty. You can should consider how the problem solution is different from existing solutions. Please only provide your expert rating as a number from 1 to 10.'
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
@@ -17,9 +18,9 @@ async function generateResponse(prompt) {
     return completion.choices[0].message.content;
 }
 
-p = 'problem: The usage of plastic bottles. solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
-generateResponse(p);
+// p = 'problem: The usage of plastic bottles. solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
+// noveltyPoint(p);
 
 
-module.exports = {generateResponse};
+module.exports = {noveltyPoint};
 
