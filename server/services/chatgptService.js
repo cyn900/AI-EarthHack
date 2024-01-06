@@ -9,7 +9,8 @@ const chatGPTAPI = axios.create({
     },
 });
 
-async function generateResponse(prompt) {
+async function generateResponse(prompt) { 
+    console.log("1");
     try {
         const response = await chatGPTAPI.post('/', {
             messages: [{ role: 'system', content: 'You are a helpful assistant.' }, { role: 'user', content: prompt }],
