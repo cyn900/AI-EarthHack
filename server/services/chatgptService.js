@@ -133,31 +133,6 @@ async function problemFrequentEval(prompt) {
     // return completion.choices[0].message.content;
 }
 
-// problem customize evaluation
-// customizeInput is a metric that the user what to use for evaluation
-async function problemCustomEval(prompt, customizeInput) {
-    rolePlay = background + 'You only care about ' + customizeInput +'Talk about'+ customizeInput + 'in your explaination' + replyFormat;
-    const problemMactch = prompt.match(problemRegex);
-    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log(problemDescription);
-    console.log([score, explanation]);
-    return [score, explanation]
-    // return completion.choices[0].message.content;
-}
-
 //solution completeness evaluation
 async function solutionCompletenessEval(prompt) { 
     rolePlay = background + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? Note that problem is after Problem: and before Solution: and solution is everything after Solution:' + replyFormat;
@@ -279,46 +254,24 @@ async function solutionImplementabilityEval(prompt) {
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    console.log("score: " + [score, explanation][0]);
     console.log([score, explanation]);
     return [score, explanation]
     // return completion.choices[0].message.content;
 }
 
-//solution customize evaluation
-async function solutionCusotomizeEval(prompt, customizeInput) { 
-    rolePlay = background + inputFormat + 'You care about' + customizeInput + replyFormat;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
-    return [score, explanation]
-    // return completion.choices[0].message.content;
-}
 
 p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick building. Solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
 // problemPopularEval(p)
 // problemGrowingEval(p)
 // problemUrgentEval(p)
-// problemUrgentEval(p)
 // problemExpenseEval(p)
 // problemFrequentEval(p)
-problemCustomEval(p, 'creativity')
-solutionCompletenessEval(p)
-solutionTargetEval(p)
-solutionNoveltyEval(p)
-solutionFinImpactEval(p)
+// solutionCompletenessEval(p)
+// solutionTargetEval(p)
+// solutionNoveltyEval(p)
+// solutionFinImpactEval(p)
 solutionImplementabilityEval(p)
-solutionCusotomizeEval(p, 'creativity')
 
-module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, problemCustomEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, solutionCusotomizeEval};
+module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval};
 
