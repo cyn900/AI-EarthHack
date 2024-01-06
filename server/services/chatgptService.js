@@ -17,7 +17,7 @@ async function noveltyPt(prompt) {
     return completion.choices[0].message.content;
 }
 
-// p = 'prblem: The usage of plastic bottles. solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
+// p = 'problem: The usage of plastic bottles. solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
 // noveltyPt(p);
 
 
