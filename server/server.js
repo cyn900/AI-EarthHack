@@ -6,6 +6,10 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
+app.get('/healthcheck', (req, res) => {
+    res.status(200).json({ status: 'OK' });
+});
+
 app.post('/chatgpt', async (req, res) => {
     const { prompt } = req.body;
 
