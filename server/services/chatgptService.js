@@ -260,6 +260,26 @@ async function solutionImplementabilityEval(prompt) {
     // return completion.choices[0].message.content;
 }
 
+// creative name
+async function generateName(prompt) { 
+    rolePlay = "You are a creative thinker! Make up a name with only 2 to 4 words for the given info. Just give me the name, nothing else!";
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 10,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){1,3})/;
+    const aiResponse = completion.choices[0].message.content;
+    const nameMatch = aiResponse.match(nameRegex);
+    const name = nameMatch ? nameMatch[1].trim() : null;
+    
+    console.log(name);
+    return name
+    // return completion.choices[0].message.content;
+}
+
 
 p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick building. Solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
 // problemPopularEval(p)
@@ -271,7 +291,8 @@ p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick buildin
 // solutionTargetEval(p)
 // solutionNoveltyEval(p)
 // solutionFinImpactEval(p)
-solutionImplementabilityEval(p)
+// solutionImplementabilityEval(p)
+// generateName(p)
 
-module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval};
+module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName};
 

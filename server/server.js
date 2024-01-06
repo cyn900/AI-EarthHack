@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const csv = require("csv-parser");
-const { problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval } = require('./services/chatgptService');
+const { problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName } = require('./services/chatgptService');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -54,6 +54,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     const solutionNoveltyReply = solutionNoveltyEval(prompt);
                     const solutionFinImpactReply = solutionFinImpactEval(prompt);
                     const solutionImplementabilityReply = solutionImplementabilityEval(prompt);
+                    const generateNameReply = generateName(promt);
 
                     rowData['problemPopularityScore'] = problemPopularityReply[0];
                     rowData['problemPopularityExplaination'] = problemPopularityReply[1];
@@ -87,6 +88,8 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
 
                     rowData['solutionImplementabilityScore'] = solutionImplementabilityReply[0];
                     rowData['solutionImplementabilityExplaination'] = solutionImplementabilityReply[1];
+
+                    rowData['name'] = generateNameReply;
 
                     rows.push(rowData);
                 }
