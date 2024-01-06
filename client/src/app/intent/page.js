@@ -1,15 +1,41 @@
 "use client";
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function Page() {
-    const categories = ['Category 1', 'Category 2', 'Category 3', 'Category 4', 'Category 5', 'Category 6', 'Category 7', 'Category 8', 'Category 9', 'Category 10']
-    const [categoryScores, setCategoryScores] = useState(categories.reduce((acc, category) => ({ ...acc, [category]: 3 }), {}));
+    const categories = [
+        { name: 'Problem Significance', sliders: ['Popularity', 'Growing', 'Urgent', 'Expensive', 'Frequent', 'Others'] },
+        { name: 'Solution Significance', sliders: ['Popularity', 'Growing', 'Urgent', 'Expensive', 'Frequent', 'Others'] },
+    ];
 
-    const handleScoreChange = (category, score) => {
-        setCategoryScores((prevScores) => ({ ...prevScores, [category]: score }));
+    const [categoryScores, setCategoryScores] = useState(
+        categories.reduce((acc, category) => {
+            const sliders = category.sliders;
+            acc[category.name] = sliders.reduce((sliderAcc, slider, index) => {
+                sliderAcc[slider] = index === sliders.length - 1 ? 0 : 30;
+                return sliderAcc;
+            }, {});
+            return acc;
+        }, {})
+    );
+
+    const handleScoreChange = (category, slider, score) => {
+        setCategoryScores((prevScores) => ({
+            ...prevScores,
+            [category]: { ...prevScores[category], [slider]: score },
+        }));
     };
 
+    const [categoryTotals, setCategoryTotals] = useState({});
+
+    useEffect(() => {
+        // Calculate category totals when categoryScores changes
+        const totals = {};
+        categories.forEach((category) => {
+            totals[category.name] = Object.values(categoryScores[category.name]).reduce((sum, score) => sum + score, 0);
+        });
+        setCategoryTotals(totals);
+    }, [categoryScores]);
 
 
     return (
@@ -18,30 +44,38 @@ export default function Page() {
                 <div className="max-w-screen-2xl">
                     <h1 className="text-5xl font-bold"> Evaluation Personalization </h1>
                     <p className="py-6">*Each project gets a score out of 100 points, adjust success indicators based on your standards</p>
-
-                    <div className="max-w-screen-2xl grid grid-cols-2 gap-4">
+                    <div className="max-w-screen-2xl flex w-full">
                         {categories.map((category, index) => (
-                            <div key={index} className="flex flex-row mb-4">
-                                <h1 className="text-right">{category}</h1>
-                                <div className="mx-4">
-                                    <input type="range"
-                                           min={0}
-                                           max="5"
-                                           step="1"
-                                           className="range range-primary"
-                                           value={categoryScores[category]}
-                                           onChange={(e) => handleScoreChange(category, parseInt(e.target.value, 10))}
-                                    />
-                                    <div className="w-full flex justify-between text-xs px-2">
-                                        <span>0</span>
-                                        <span>1</span>
-                                        <span>2</span>
-                                        <span>3</span>
-                                        <span>4</span>
-                                        <span>5</span>
-                                    </div>
+                            <div key={index} className="flex flex-col">
+                                <h1 className="text-2xl font-bold">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
+                                <div className="mx-4 mt-4">
+                                    {category.sliders.map((slider, sliderIndex) => (
+                                        <div key={sliderIndex} className="grid grid-cols-6">
+                                            <label className="col-span-1">{slider}</label>
+                                            <div className="col-span-4 mx-4">
+                                                <input
+                                                    type="range"
+                                                    min={0}
+                                                    max={50}
+                                                    step={10}
+                                                    className="range range-primary"
+                                                    value={categoryScores[category.name][slider]}
+                                                    onChange={(e) => handleScoreChange(category.name, slider, parseInt(e.target.value, 10))}
+                                                />
+                                                <div className="w-full flex justify-between text-xs px-2">
+                                                    <span>0</span>
+                                                    <span>10</span>
+                                                    <span>20</span>
+                                                    <span>30</span>
+                                                    <span>40</span>
+                                                    <span>50</span>
+                                                </div>
+                                            </div>
+
+                                            <p className="col-span-1">{categoryScores[category.name][slider]} / 50 </p>
+                                        </div>
+                                    ))}
                                 </div>
-                                <p> {categoryScores[category]} / 5 </p>
                             </div>
                         ))}
                     </div>

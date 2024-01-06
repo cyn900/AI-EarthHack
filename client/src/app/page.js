@@ -68,18 +68,5 @@ export default function Home() {
                 </div>
             </div>
         </div>
-
-        // <div>
-        //   <h1>ChatGPT App</h1>
-        //   <div>
-        //     <label>Enter your prompt:</label>
-        //     <input type="text" value={prompt} onChange={handlePromptChange} />
-        //     <button onClick={handleSendPrompt}>Send Prompt</button>
-        //   </div>
-        //   <div>
-        //     <p>Response:</p>
-        //     <p>{response}</p>
-        //   </div>
-        // </div>
     );
 }
