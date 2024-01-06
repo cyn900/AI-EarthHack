@@ -60,9 +60,9 @@ async function problemGrowingEval(prompt) {
     // return completion.choices[0].message.content;
 }
 
-// problem gent evaluation
+// problem urgent evaluation
 async function problemUrgentEval(prompt) { 
-    rolePlay = background + 'You only care about the urgency (it is a really big issue that we must pay attention right now). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain popularity of the problem. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is/will be growing in the explaination.' + replyFormat
+    rolePlay = background + 'You only care about the urgency (it is a really big issue that we must pay attention right now). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is urgent. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination.' + replyFormat
     const problemMactch = prompt.match(problemRegex);
     const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     const completion = await openai.chat.completions.create({
@@ -84,11 +84,86 @@ async function problemUrgentEval(prompt) {
     // return completion.choices[0].message.content;
 }
 
+// problem expense evaluation
+async function problemExpenseEval(prompt) { 
+    rolePlay = background + 'You only care about the money. You only like a problem that will grow with the time and more people will have the problem). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination.' + replyFormat
+    const problemMactch = prompt.match(problemRegex);
+    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 60,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    const scoreMatch = aiResponse.match(scoreRegex);
+    const explanationMatch = aiResponse.match(explanationRegex);
+
+    const score = scoreMatch ? scoreMatch[1] : null;
+    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    console.log(problemDescription);
+    console.log([score, explanation]);
+    return [score, explanation]
+    // return completion.choices[0].message.content;
+}
+
+// problem frequent evaluation
+async function problemFrequentEval(prompt) { 
+    rolePlay = background + 'You only about how frequesnt the problem happen, ex is it a daily issue. You only like a problem that is not a one-time problem, people come across the problem frequently. A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is frequently happen in the explaination.' + replyFormat
+    const problemMactch = prompt.match(problemRegex);
+    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 60,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    const scoreMatch = aiResponse.match(scoreRegex);
+    const explanationMatch = aiResponse.match(explanationRegex);
+
+    const score = scoreMatch ? scoreMatch[1] : null;
+    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    console.log(problemDescription);
+    console.log([score, explanation]);
+    return [score, explanation]
+    // return completion.choices[0].message.content;
+}
+
+// problem customize evaluation
+// customizeInput is a metric that the user what to use for evaluation
+async function problemCustomEval(prompt, customizeInput) { 
+    rolePlay = background + 'You only care about ' + customizeInput +'Talk about'+ customizeInput + 'in your explaination' + replyFormat;
+    const problemMactch = prompt.match(problemRegex);
+    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 60,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    const scoreMatch = aiResponse.match(scoreRegex);
+    const explanationMatch = aiResponse.match(explanationRegex);
+
+    const score = scoreMatch ? scoreMatch[1] : null;
+    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    console.log(problemDescription);
+    console.log([score, explanation]);
+    return [score, explanation]
+    // return completion.choices[0].message.content;
+}
 
 p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick building. Solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
 // problemPopularEval(p)
 // problemGrowingEval(p)
-problemUrgentEval(p)
+// problemUrgentEval(p)
+// problemExpenseEval(p)
+// problemFrequentEval(p)
+// problemCustomEval(p, 'creativity')
 
-module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval};
+module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval};
 
