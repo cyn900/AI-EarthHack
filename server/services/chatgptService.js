@@ -13,8 +13,8 @@ async function generateResponse(prompt) {
         max_tokens: 1,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
-    return console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
+    return completion.choices[0].message.content;
 }
 // p = 'Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
 // generateResponse(p);
