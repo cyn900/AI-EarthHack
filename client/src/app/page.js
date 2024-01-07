@@ -44,7 +44,6 @@ export default function Home() {
                         'Content-Type': 'multipart/form-data'
                     },
                 });
-                console.log(response.data);
 
                 setResponse("File uploaded successfully. Upload status: " + response.data.status);
                 window.location.href = "/intent";

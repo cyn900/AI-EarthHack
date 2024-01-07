@@ -7,9 +7,8 @@ const { spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, p
 const app = express();
 const port = process.env.PORT || 4000;
 
-
-
-let storedRows = null; // Global variable to store the rows data
+let storedRows = null;
+let userRatings = null;
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
 
@@ -163,8 +162,128 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
     // res.status(200).json({ status: 'OK' });
 });
 
-app.get('/get-stored-rows', (req, res) => {
-    res.json({ storedRows });
+app.post('/load-user-rating', (req, res) => {
+    if (!storedRows) {
+        return res.status(400).json({ error: 'No CSV file loaded' });
+    }
+
+    if (!req.body.rating) {
+        return res.status(400).json({ error: 'No problem provided' });
+    }
+    userRatings = req.body.rating;
+
+    // generate scores for each row
+    storedRows.forEach((row) => {
+        if (row.relevance === 'valid') {
+
+            const problemScore =
+                row.problemPopularityScore * userRatings['Popularity'] +
+                row.problemGrowingScore * userRatings['Growing'] +
+                row.problemUrgentScore * userRatings['Urgent'] +
+                row.problemExpenseScore * userRatings['Expense'] +
+                row.problemFrequentScore * userRatings['Frequent'];
+
+            const solutionScore =
+                row.solutionCompletenessScore * userRatings['Completeness'] +
+                row.solutionTargetScore * userRatings['Target'] +
+                row.solutionNoveltyScore * userRatings['Novelty'] +
+                row.solutionFinImpactScore * userRatings['Financial Impact'] +
+                row.solutionImplementabilityScore * userRatings['Implementability'];
+
+            row.score = problemScore + solutionScore;
+        } else {
+            row.score = 0;
+        }
+    });
+
+    res.status(200).json({ status: 'OK' });
+});
+
+app.get('/get-relevant-number', (req, res) => {
+    if (!storedRows) {
+        return res.status(400).json({ error: 'No CSV file loaded' });
+    }
+
+    const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+    res.json({ relevantNumber: relevantRows.length });
+});
+
+app.get('/get-max-freq-problem', (req, res) => {
+    if (!storedRows) {
+        return res.status(400).json({ error: 'No CSV file loaded' });
+    }
+
+    const problemFreq = {};
+    storedRows.forEach((row) => {
+        if (row.relevance === 'valid') {
+            const problem = row.problem;
+            if (!problemFreq[problem]) {
+                problemFreq[problem] = 0;
+            }
+            problemFreq[problem] += 1;
+        }
+    });
+
+    let maxFreq = 0;
+    let maxFreqProblem = null;
+    Object.keys(problemFreq).forEach((problem) => {
+        if (problemFreq[problem] > maxFreq) {
+            maxFreq = problemFreq[problem];
+            maxFreqProblem = problem;
+        }
+    });
+
+    res.json({ maxFreqProblem: maxFreqProblem });
+});
+
+// app.get('/get-top-5-ideas', (req, res) => {
+//     if (!storedRows) {
+//         return res.status(400).json({ error: 'No CSV file loaded' });
+//     }
+//
+//     const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+//     relevantRows.sort((a, b) => b.score - a.score);
+//
+//     const top5Rows = relevantRows.slice(0, 5);
+//     res.json({ top5Rows: top5Rows });
+// });
+
+app.get('/get-top-5-ideas-by-category', (req, res) => {
+    if (!storedRows) {
+        return res.status(400).json({ error: 'No CSV file loaded' });
+    }
+
+    let relevantRows = null;
+    if (req.query.category === 'All') {
+        relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+    } else {
+        relevantRows = storedRows.filter((row) => row.relevance === 'valid' && req.query.category in row.tags);
+    }
+    relevantRows.sort((a, b) => b.score - a.score);
+
+    const top5Rows = relevantRows.slice(0, 5);
+    res.json({ top5Rows: top5Rows });
+});
+
+app.get('/get-tag-frequency', (req, res) => {
+    if (!storedRows) {
+        return res.status(400).json({ error: 'No CSV file loaded' });
+    }
+
+    const tagFreq = {};
+    storedRows.forEach((row) => {
+        if (row.relevance === 'valid') {
+            const tags = row.tags;
+            tags.forEach((tag) => {
+                if (!tagFreq[tag]) {
+                    tagFreq[tag] = 0;
+                }
+                tagFreq[tag] += 1;
+            });
+        }
+    });
+
+    res.json({ tagFreq: tagFreq });
 });
 
 app.listen(port, () => {

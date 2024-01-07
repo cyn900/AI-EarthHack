@@ -1,6 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
+import axios from "axios";
 
 export default function Page() {
     const categories = [
@@ -55,6 +56,32 @@ export default function Page() {
         setCategoryTotals(totals);
     }, [categoryScores]);
 
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        try {
+            const transformedCategoryScores = Object.keys(categoryScores).reduce((acc, categoryName) => {
+                const sliderScores = categoryScores[categoryName];
+
+                Object.keys(sliderScores).forEach((slider) => {
+                    const sliderName = slider.split(',')[0].trim(); // Extract only the slider name
+
+                    if (!acc[sliderName]) {
+                        acc[sliderName] = sliderScores[slider];
+                    }
+                });
+
+                return acc;
+            }, {});
+
+            const response = await axios.post('http://localhost:4000/load-user-rating', { rating: transformedCategoryScores });
+            const json = response.data;
+            console.log(json);
+            window.location.href = "/result";
+        } catch (error) {
+            console.error('Error sending form:', error);
+            alert('Error sending form');
+        }
+    }
 
     return (
         <div className="hero min-h-screen bg-base-200">
@@ -103,7 +130,7 @@ export default function Page() {
                         ))}
                     </div>
 
-                    <button className="btn btn-primary"> Submit </button>
+                    <button className="btn btn-primary" onClick={handleSubmit}> Submit </button>
                 </div>
             </div>
         </div>
