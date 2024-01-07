@@ -60,8 +60,9 @@ export default function Home() {
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row">
                 <div className="text-center lg:text-left">
-                    <h1 className="text-5xl font-bold"> How "NAME" Works </h1>
-                    <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                    <h1 className="text-5xl font-bold" style={{ color: 'black' }}> How Arbor Works </h1>
+                    <p className="py-6 font-bold" style={{ color: 'black' }}> 1. 📂 File Upload & Metric Prioritization: </p>
+                    <p className="py-6" style={{ color: 'black' }}> Upload your ideas and prioritize evaluation criteria to fit your needs and standards. </p>
                 </div>
                 <div className="card self-center bg-gray-300 shadow-xl">
 
