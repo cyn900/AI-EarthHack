@@ -56,7 +56,7 @@ async function problemPopularEval(prompt) {
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
-    console.log([score,explanation]);
+    // console.log([score,explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -316,7 +316,7 @@ async function generateName(prompt) {
             max_tokens: 10,
             temperature: 0.0,
         });
-        console.log(completion.choices[0].message.content);
+        // console.log(completion.choices[0].message.content);
         const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){0,3})/;
         const aiResponse = completion.choices[0].message.content;
         const nameMatch = aiResponse.match(nameRegex);
@@ -326,7 +326,7 @@ async function generateName(prompt) {
         if (n === null || n === 'undefined') {
             n = "Default Name"; // Fallback name if none is generated
         }
-    console.log('name' + n);
+    // console.log('name' + n);
     return n;
     // return completion.choices[0].message.content;
 }

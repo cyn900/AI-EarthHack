@@ -10,36 +10,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 let evaluationGoal = "Evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'.";
-let storedRows = [
-    {
-        "problem": "Urban areas are suffering from high air pollution levels",
-        "solution": "Implementing green public transportation systems powered by renewable energy sources.",
-        "relevance": "Valid",
-        "problemPopularityScore": 8.5,
-        "problemPopularityExplaination": "The user provided a clear and specific problem statement about high air pollution levels in urban areas, which affects a large number of individuals and communities.",
-        "problemGrowingScore": 8.5,
-        "problemGrowingExplaination": "The user provided a clear problem description about high air pollution levels in urban areas.",
-        "problemUrgentScore": 8.5,
-        "problemUrgentExplaination": "The user provided a clear and urgent problem description regarding high air pollution levels in urban areas.",
-        "problemExpenseScore": 8.5,
-        "problemExpenseExplaination": "The problem of high air pollution levels in urban areas is urgent as it poses a significant threat to public health and the environment.",
-        "problemFrequentScore": 8.5,
-        "problemFrequentExplaination": "The user provided a clear and common problem of high air pollution levels in urban areas.",
-        "solutionCompletenessScore": 8.5,
-        "solutionCompletenessExplaination": "The solution proposed is a good step towards reducing air pollution in urban areas by implementing green public transportation systems powered by renewable energy sources.",
-        "solutionTargetScore": 9.0,
-        "solutionTargetExplaination": "The solution proposed addresses the problem of high air pollution levels in urban areas by suggesting the implementation of green public transportation systems powered by renewable energy sources.",
-        "solutionNoveltyScore": 8.5,
-        "solutionNoveltyExplaination": "The user did a good job in identifying the problem of high air pollution levels in urban areas and proposing a solution of implementing green public transportation systems powered by renewable energy sources.",
-        "solutionFinImpactScore": 9.0,
-        "solutionFinImpactExplaination": "The user did a great job identifying the problem of high air pollution levels in urban areas and proposing a solution of implementing green public transportation systems powered by renewable energy sources.",
-        "solutionImplementabilityScore": 8.5,
-        "solutionImplementabilityExplaination": "The user did well in identifying the problem of high air pollution levels in urban areas and proposing a solution of implementing green public transportation systems powered by renewable energy sources.",
-        "newName": undefined,
-        "tags": "Energy",
-        "summary": "The solution to high air pollution in urban areas is to introduce green public transportation systems that run on renewable energy sources."
-    }
-];
+let storedRows = null;
 let userRatings = null;
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
@@ -49,29 +20,23 @@ const generateScore = () => {
         return;
     }
 
-    console.log("generate score")
-
     storedRows.forEach((row) => {
         if (row.relevance === 'Valid') {
-
-
             const problemScore =
                 parseFloat(row.problemPopularityScore) * userRatings['Popularity'] +
                 parseFloat(row.problemGrowingScore) * userRatings['Growing'] +
                 parseFloat(row.problemUrgentScore) * userRatings['Urgent'] +
-                parseFloat(row.problemExpenseScore) * userRatings['Expense'] +
+                parseFloat(row.problemExpenseScore) * userRatings['Expensive'] +
                 parseFloat(row.problemFrequentScore) * userRatings['Frequent'];
 
             const solutionScore =
                 parseFloat(row.solutionCompletenessScore) * userRatings['Completeness'] +
-                parseFloat(row.solutionTargetScore) * userRatings['Target'] +
+                parseFloat(row.solutionTargetScore) * userRatings['Targeted'] +
                 parseFloat(row.solutionNoveltyScore) * userRatings['Novelty'] +
                 parseFloat(row.solutionFinImpactScore) * userRatings['Financial Impact'] +
                 parseFloat(row.solutionImplementabilityScore) * userRatings['Implementability'];
 
             row.score = problemScore + solutionScore;
-
-            console.log("row score", row.score)
         } else {
             row.score = 0;
         }
@@ -146,7 +111,6 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     const problemDescription = problemMactch ? problemMactch[1].trim() : null;
                     //console.log(problemDescription);
                     num += 1;
-                    console.log("num"+num);
                     //console.log(prompt);
                     const spamFilterReply = await spamFilter(prompt);
                     //console.log("reply" + spamFilterReply);
@@ -216,7 +180,6 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
     }
     storedRows = rows;
     res.json({ csvData: rows });
-    console.log(storedRows);
     // res.status(200).json({ status: 'OK' });
 });
 
@@ -259,8 +222,6 @@ app.post('/read-csv', (req, res) => {
             // Now `data` is available here
             storedRows = data;
             res.json(data);
-
-            console.log(data[0]);
         } catch (error) {
             console.error('Error parsing CSV:', error);
         }
@@ -294,9 +255,8 @@ app.get('/get-average-idea-score', (req, res) => {
 
     const relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
     const sum = relevantRows.reduce((acc, row) => acc + row.score, 0);
-    console.log("get average", sum, relevantRows.length)
     const average = sum / relevantRows.length;
-    res.json({ averageIdeaScore: average });
+    res.json({ averageIdeaScore: average.toFixed(2) });
 });
 
 // app.get('/get-top-5-ideas', (req, res) => {
@@ -320,9 +280,11 @@ app.get('/get-top-5-ideas-by-category', (req, res) => {
     if (req.query.category === 'All') {
         relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
     } else {
-        relevantRows = storedRows.filter((row) => row.relevance === 'Valid' && req.query.category in row.tags);
+        relevantRows = storedRows.filter((row) => row.relevance === 'Valid' && req.query.category === row.tags);
     }
     relevantRows.sort((a, b) => b.score - a.score);
+
+    console.log(relevantRows);
 
     const top5Rows = relevantRows.slice(0, 5);
     res.json({ top5Rows: top5Rows });
@@ -334,17 +296,15 @@ app.get('/get-tag-frequency', (req, res) => {
     }
 
     const tagFreq = {};
-    storedRows.forEach((row) => {
+    for (const row of storedRows) {
         if (row.relevance === 'Valid') {
-            const tags = row.tags;
-            tags.forEach((tag) => {
-                if (!tagFreq[tag]) {
-                    tagFreq[tag] = 0;
-                }
-                tagFreq[tag] += 1;
-            });
+            if (row.tags in tagFreq) {
+                tagFreq[row.tags] += 1;
+            } else {
+                tagFreq[row.tags] = 1;
+            }
         }
-    });
+    }
 
     res.json({ tagFreq: tagFreq });
 });

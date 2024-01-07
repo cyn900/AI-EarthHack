@@ -55,19 +55,18 @@ export default function Page() {
 
     const pillarColor = {
         "Water": "#DAE06D",
-        "Material": "#88C4A6",
+        "Materials": "#88C4A6",
         "Value": "#98C26C",
-        "Society & Culture": "#728F4F",
+        "Society and Culture": "#728F4F",
         "Energy": "#3D6E5B",
         "Biodiversity": "#CCE1B6",
-        "Health & Wellbeing": "#B9C7A7"
+        "Health and Wellbeing": "#B9C7A7"
     };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:4000/get-evaluation-goal');
-                console.log(response);
                 setEvaluationGoal(response.data.evaluationGoal);
             } catch (error) {
                 console.error('Error fetching evaluation goal:', error);
@@ -95,7 +94,7 @@ export default function Page() {
        const fetchData = async () => {
            try {
                 const response = await axios.get('http://localhost:4000/get-average-idea-score');
-                console.log("average idea score: " + JSON.stringify(response));
+                // console.log("average idea score: " + JSON.stringify(response));
                 setAverageIdeaScore(response.data.averageIdeaScore);
            } catch (error) {
                console.error('Error fetching average idea score:', error);
@@ -109,8 +108,25 @@ export default function Page() {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:4000/get-tag-frequency');
-                console.log("pillars: " + response);
-                setPillars(response.data.tagFreq);
+
+                const _pillars = [];
+                for (const [key, value] of Object.entries(response.data.tagFreq)) {
+                    if (key in pillarColor) {
+                        _pillars.push({
+                            name: key,
+                            color: pillarColor[key],
+                            share: value
+                        });
+                    } else {
+                        _pillars.push({
+                            name: key,
+                            color: "#00FF00",
+                            share: value
+                        });
+                    }
+                }
+
+                setPillars(_pillars);
             } catch (error) {
                 console.error('Error fetching pillars:', error);
             }
@@ -127,7 +143,7 @@ export default function Page() {
                         category: "All"
                     }
                 });
-                console.log("top ideas: " + response);
+                // console.log("top ideas: " + JSON.stringify(response.data.top5Rows));
                 setTopIdeas(response.data.top5Rows);
             } catch (error) {
                 console.error('Error fetching top ideas:', error);
@@ -145,12 +161,14 @@ export default function Page() {
                         category: selectedValue
                     }
                 });
-                console.log("top ideas by pillar: " + response);
+                console.log("top ideas by pillar: " + JSON.stringify(response));
                 setTopIdeasByPillar(response.data.top5Rows);
             } catch (error) {
                 console.error('Error fetching top ideas:', error);
             }
         };
+
+        fetchData();
     }, [selectedValue]);
 
     return (
@@ -199,7 +217,7 @@ export default function Page() {
                         <div className="card-body">
                             <h2 className="card-title text-xs"> Popularity of Each Pillars of Circular Economy </h2>
                             <div>
-                                {/*<PieChart chartData={pillars} />*/}
+                                <PieChart chartData={pillars} />
                             </div>
                         </div>
                     </div>
@@ -215,7 +233,7 @@ export default function Page() {
                                     <h1 className="text-3xl font-bold mx-4"> Top Ideas Comparisons </h1>
 
                                     <div className="relative z-10">
-                                        <button onClick={handleToggleDropdown} className="btn w-48 flex justify-between">
+                                        <button onClick={handleToggleDropdown} className="btn w-56 flex justify-between">
                                             <span>{selectedValue}</span>
                                             <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"  viewBox="0 0 24 24" className="w-4 h-4">
                                                 <path d="M19 9l-7 7-7-7"></path>
@@ -223,13 +241,12 @@ export default function Page() {
                                         </button>
 
                                         {open && (
-                                            <div className="absolute mt-= w-48 bg-white rounded-md overflow-hidden shadow-md z-10">
+                                            <div className="absolute mt-4 w-56 bg-white rounded-md overflow-hidden shadow-md z-10">
                                                 {Object.entries(pillarColor).map(([key, value], index) => (
                                                     <button
                                                         key={index}
                                                         onClick={() => handleOptionClick(key)}
                                                         className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 w-full"
-                                                        style={{ backgroundColor: value }}
                                                     >
                                                         {key}
                                                     </button>
@@ -238,8 +255,8 @@ export default function Page() {
                                         )}
                                     </div>
                                 </div>
-                                <div className="mt-8">
-                                    {/*<RadarChart chartData={pillars} />*/}
+                                <div className="mt-8 h-full">
+                                    { topIdeasByPillar.length > 0 ? <RadarChart chartData={topIdeasByPillar} /> : <p> No Relevant Idea </p> }
                                 </div>
                             </div>
                         </div>
@@ -250,14 +267,14 @@ export default function Page() {
                             <h1 className="text-3xl font-bold"> Idea Leaderboard </h1>
                             <button className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4"> All Entries </button>
                         </div>
-                        {ideas.map((idea, index) => (
+                        {topIdeas.map((idea, index) => (
                             <div className="card m-4 bg-base-100 shadow-xl" key={index}>
                                 <div className="card-body p-2 flex flex-row justify-between items-center">
                                     <div className="flex flex-row items-center">
                                         <h2 className="mr-6 text-xl font-bold"> {index + 1} </h2>
                                         <div>
-                                            <h2 className="card-title"> {idea.problem} </h2>
-                                            <p> {idea.solution} </p>
+                                            <h2 className="card-title"> {idea.newName} </h2>
+                                            <p>{idea.summary.length > 50 ? idea.summary.slice(0, 50) + '...' : idea.summary}</p>
                                         </div>
                                     </div>
                                     <h2 className="text-2xl font-bold text-green-800">{idea.score}pt</h2>
