@@ -14,7 +14,10 @@ export default function Page() {
     const [pillars, setPillars] = useState([]);
     const [topIdeas, setTopIdeas] = useState([]);
     const [selectedValue, setSelectedValue] = useState('Water');
-    const [topIdeasByPillar, setTopIdeasByPillar] = useState([]);
+
+    const [genRadarChart, setGenRadarChart] = useState(false);
+    const [topIdeasByPillarProblem, setTopIdeasByPillarProblem] = useState([]);
+    const [topIdeasByPillarSolution, setTopIdeasByPillarSolution] = useState([]);
 
     const handleToggleDropdown = () => {
         setOpen(!open);
@@ -24,34 +27,6 @@ export default function Page() {
         setSelectedValue(option);
         setOpen(false);
     };
-
-    const [ideas, setIdeas] = useState([
-        {
-            problem: "Problem 1",
-            solution: "Solution 1",
-            score: 95
-        },
-        {
-            problem: "Problem 2",
-            solution: "Solution 2",
-            score: 90
-        },
-        {
-            problem: "Problem 3",
-            solution: "Solution 3",
-            score: 85
-        },
-        {
-            problem: "Problem 4",
-            solution: "Solution 4",
-            score: 80
-        },
-        {
-            problem: "Problem 5",
-            solution: "Solution 5",
-            score: 75
-        },
-    ]);
 
     const pillarColor = {
         "Water": "#DAE06D",
@@ -161,8 +136,51 @@ export default function Page() {
                         category: selectedValue
                     }
                 });
-                console.log("top ideas by pillar: " + JSON.stringify(response));
-                setTopIdeasByPillar(response.data.top5Rows);
+
+                if (response.data.top5Rows.length === 0) {
+                    setGenRadarChart(false);
+                    return;
+                } else {
+                    setGenRadarChart(true);
+                }
+
+                const _ideas_by_pillar_problem = {
+                    pillarName: selectedValue + " Problem",
+                    series: [],
+                    categories: ["Popularity", "Growth", "Urgency", "Expensive", "Frequency"],
+                };
+
+                const _ideas_by_pillar_solution = {
+                    pillarName: selectedValue + " Solution",
+                    series: [],
+                    categories: ["Completeness", "Targeted", "Novelty", "Financial Impact", "Implementability"],
+                };
+
+                for (const idea of response.data.top5Rows) {
+                    _ideas_by_pillar_problem.series.push({
+                        name: idea.newName,
+                        data: [
+                            idea.problemPopularityScore,
+                            idea.problemGrowingScore,
+                            idea.problemUrgentScore,
+                            idea.problemExpenseScore,
+                            idea.problemFrequentScore
+                        ]
+                    });
+                    _ideas_by_pillar_solution.series.push({
+                        name: idea.newName,
+                        data: [
+                            idea.solutionCompletenessScore,
+                            idea.solutionTargetScore,
+                            idea.solutionNoveltyScore,
+                            idea.solutionFinImpactScore,
+                            idea.solutionImplementabilityScore
+                        ]
+                    });
+                }
+                setTopIdeasByPillarProblem(_ideas_by_pillar_problem);
+                setTopIdeasByPillarSolution(_ideas_by_pillar_solution);
+
             } catch (error) {
                 console.error('Error fetching top ideas:', error);
             }
@@ -174,14 +192,37 @@ export default function Page() {
     return (
         <div className="flex flex-col justify-center items-center min-h-screen mt-16">
             <div className="max-w-screen-2xl">
-                <div className="flex flex-row">
+                <div className="flex flex-row justify-between">
                     <h1 className="font-bold text-2xl w-80"> Evaluation Results </h1>
-                    <label className="flex flex-row justify-around w-full p-2 h-fit bg-green-100 rounded-xl">
-                        <p className="text-gray-600"> Criteria </p>
-                        <p> <strong>Problem</strong>: Popularity, Growth, Urgency, Cost-saving, Frequency </p>
-                        <p> <strong>Solution</strong>: Completeness, Targeted, Novelty, Financial Impact, Implementability </p>
-                    </label>
-                </div>
+                    {/* You can open the modal using document.getElementById('ID').showModal() method */}
+                    <button className="btn" onClick={()=>document.getElementById('my_modal_3').showModal()}> New Evaluation </button>
+                    <dialog id="my_modal_3" className="modal">
+                        <div className="modal-box text-center">
+                            <form method="dialog">
+                                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                            </form>
+                            <h3 className="font-bold text-lg"> This Action Cannot be Undone!! </h3>
+                            <p className="py-4"> <strong>You won’t be able to access the current evaluation when you start a new evaluation.</strong> If you want to re-evaluate current ideas with new priorities, click “Modify Metrics”. If you have new ideas to evaluate, click “Start New Evaluation” to clear current files and start fresh! </p>
+                            <button
+                                className="btn btn-primary w-4/5 m-4 text-lg bg-light_forest hover:bg-dark_forest border-light_forest"
+                                onClick={() => window.location.href = '/intent'}
+                            > Modify Metrics </button>
+                            <button
+                                className="btn btn-primary w-4/5 m-4 text-lg bg-white text-dark_forest hover:bg-light_forest border-light_forest"
+                                onClick={() => window.location.href = '/'}
+                            > Start New Evaluation </button>
+                        </div>
+                        <form method="dialog" className="modal-backdrop">
+                            <button>close</button>
+                        </form>
+                    </dialog>                </div>
+
+                <label className="flex flex-row justify-around w-full p-2 h-fit bg-green-100 rounded-xl mt-4">
+                    <p className="text-gray-600"> Criteria </p>
+                    <p> <strong>Problem</strong>: Popularity, Growth, Urgency, Cost-saving, Frequency </p>
+                    <p> <strong>Solution</strong>: Completeness, Targeted, Novelty, Financial Impact, Implementability </p>
+                </label>
+
 
                 <div className="grid grid-cols-3 gap-4">
                     <div className="card w-full m-4 bg-base-100 shadow-xl">
@@ -223,7 +264,7 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-6 mt-4">
                     <div className="mt-6">
                         <h1 className="text-3xl font-bold"> Idea Comparisons </h1>
 
@@ -255,8 +296,25 @@ export default function Page() {
                                         )}
                                     </div>
                                 </div>
-                                <div className="mt-8 h-full">
-                                    { topIdeasByPillar.length > 0 ? <RadarChart chartData={topIdeasByPillar} /> : <p> No Relevant Idea </p> }
+                                <div className="mt-8">
+                                    { genRadarChart
+                                        ?
+                                        <div className="carousel w-full">
+                                            <div id="slide1" className="carousel-item relative w-full justify-center">
+                                                <RadarChart chartData={topIdeasByPillarProblem} />
+                                                <div className="absolute flex flex-row-reverse justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                                                    <a href="#slide2" className="btn btn-circle">❯</a>
+                                                </div>
+                                            </div>
+                                            <div id="slide2" className="carousel-item relative w-full justify-center">
+                                                <RadarChart chartData={topIdeasByPillarSolution} />
+                                                <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                                                    <a href="#slide1" className="btn btn-circle">❮</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        :
+                                        <p> No Relevant Idea </p> }
                                 </div>
                             </div>
                         </div>

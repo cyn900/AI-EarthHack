@@ -285,8 +285,6 @@ app.get('/get-top-5-ideas-by-category', (req, res) => {
     }
     relevantRows.sort((a, b) => b.score - a.score);
 
-    console.log(relevantRows);
-
     const top5Rows = relevantRows.slice(0, 5);
     res.json({ top5Rows: top5Rows });
 });

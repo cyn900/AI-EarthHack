@@ -17,7 +17,7 @@ const PieChart = ({ chartData }) => {
         },
     };
 
-    const seriesData = chartData.map(item => item.share * 100);
+    const seriesData = chartData.map(item => item.share);
 
     return (
         <div>
