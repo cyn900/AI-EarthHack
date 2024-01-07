@@ -4,7 +4,6 @@ import {useEffect, useState} from "react";
 import PieChart from "@/components/PieChart";
 import RadarChart from "@/components/RadarChart";
 import axios from "axios";
-import './globals.css';
 
 
 export default function Page() {
