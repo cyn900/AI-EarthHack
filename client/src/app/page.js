@@ -1,91 +1,18 @@
-'use client'
-
-// ./src/app/page.js
-import { useState } from 'react';
-import axios from 'axios';
-import Image from 'next/image'
-import Link from "next/link";
-
-export default function Home() {
-    const [file, setFile] = useState(null);
-    const [evaluationGoal, setEvaluationGoal] = useState('');
-    const [loading, setLoading] = useState(false); // Track the loading state
-    const [response, setResponse] = useState('');
-    const handleChangeForm = (e) => {
-        e.preventDefault()
-        if (e.target.name === 'csv-form') {
-            const selectedFile = e.target.files?.[0];
-            setFile(selectedFile || null);
-        }
-    };
-
-    const handleChangeTextArea = (e) => {
-        e.preventDefault()
-        if (e.target.name === 'evaluation-goal') {
-            setEvaluationGoal(e.target.value);
-        }
-    }
-
-    const handleSubmitForm = async(e) => {
-        e.preventDefault();
-        if (!file) {
-            alert('Please select a file');
-        } else if (!file.name.endsWith('.csv')) {
-            alert('Please select .csv file');
-        } else {
-            setLoading(true);
-            try {
-                const formData = new FormData();
-                formData.append('csvFile', file);
-                formData.append('evaluationGoal', evaluationGoal);
-
-                const response = await axios.post('http://localhost:4000/load-csv', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                });
-
-                setResponse("File uploaded successfully. Upload status: " + response.data.status);
-                window.location.href = "/intent";
-            } catch (error) {
-                console.error('Error sending form:', error);
-                alert('Error sending form');
-            } finally {
-                setLoading(false);
-            }
-        }
-    };
-
-    return (
-        <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content flex-col lg:flex-row">
-                <div className="text-center lg:text-left">
-                    <h1 className="text-5xl font-bold"> How "NAME" Works </h1>
-                    <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                </div>
-                <div className="card self-center bg-gray-300 shadow-xl">
-
-                    <div className="card-body">
-                        <h2 className="card-title"> Evaluation Goal </h2>
-                        <textarea
-                            className="textarea textarea-primary min-h-36"
-                            placeholder="E.g. evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'."
-                            onChange={handleChangeTextArea}
-                            name="evaluation-goal"
-                        ></textarea>
-
-                        <h2 className="card-title mt-8"> Idea Database </h2>
-                        <p> Insert a csv file with a separate columns for problem and solution by clicking on the area below. <Link href="https://drive.google.com/file/d/1cgeZPGsntnJckH7_ROSQm1JG5pFuE0u6/view" className="link"  > See example data file. </Link>  </p>
-                        <form onSubmit={handleSubmitForm} encType="multipart/form-data" className="card-actions justify-end">
-                            <input id='file-input' type="file" onChange={handleChangeForm} name="csv-form" className="file-input file-input-bordered file-input-primary w-full bg-gray-100" />
-                            {
-                                loading ? <span className="btn loading loading-spinner text-primary"></span> :
-                                    <button className='btn btn-primary' type='submit'> Upload </button>
-                            }
-                        </form>
-                    </div>
-                </div>
-            </div>
+"use client";
+<div style={{width: '100%', height: '100%', position: 'relative', background: 'white'}}>
+    <div style={{width: 1512, height: 982, left: 0, top: 0, position: 'absolute'}}>
+        <div style={{width: 1512, height: 982, left: 0, top: 0, position: 'absolute', background: '#88C4A6'}} />
+        <div style={{width: 555, height: 555, left: -114, top: 35, position: 'absolute', borderRadius: 9999}} />
+        <div style={{left: 570, top: 333, position: 'absolute', color: 'white', fontSize: 40, fontFamily: 'Lexend Deca', fontWeight: '700', lineHeight: 60, wordWrap: 'break-word'}}>Welcome to Arbor!</div>
+        <div style={{width: 618, left: 447, top: 504, position: 'absolute'}}><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">💪 </span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '700', lineHeight: 27, wordWrap: 'break-word'">Make</span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'"> </span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '700', lineHeight: 27, wordWrap: 'break-word'">informed choices</span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">, </span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '700', lineHeight: 27, wordWrap: 'break-word'">fast</span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">! </span><span style="color: '#EFEFEF', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">We harness the power of AI to create data-backed analysis, unearth trends, and spot opportunities<br/></span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">🎯 </span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '700', lineHeight: 27, wordWrap: 'break-word'">Tailor-made</span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'"> </span><span style="color: '#EFEFEF', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">evaluation is our jam. You're the director! Pick the metrics that matter to your vision – because your idea, your rules.<br/></span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">🌈 </span><span style="color: '#EFEFEF', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">Say goodbye to dull spreadsheets! We leverage</span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'"> </span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '700', lineHeight: 27, wordWrap: 'break-word'">data visualization</span><span style="color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'"> </span><span style="color: '#EFEFEF', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '400', lineHeight: 27, wordWrap: 'break-word'">to highlight your idea's potential and weak points<br/></span></div>
+        <div style={{width: 124, height: 124, left: 694, top: 175, position: 'absolute'}}>
+            <div style={{width: 124, height: 124, left: 0, top: 0, position: 'absolute', background: '#D9D9D9', borderRadius: 9999}} />
+            <img style={{width: 126.73, height: 132.18, left: -0, top: -3.41, position: 'absolute'}} src="https://via.placeholder.com/127x132" />
         </div>
-    );
-}
+        <div style={{width: 698, left: 407, top: 408, position: 'absolute', textAlign: 'center', color: 'white', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '700', lineHeight: 27, wordWrap: 'break-word'}}>Ever wished for an AI genie to make your evaluation process more streamlined, efficient and unbiased? Say hello to Arbor – your co-pilot on the journey to identify the next big idea.</div>
+    </div>
+    <div style={{width: 218, height: 60, left: 647, top: 734, position: 'absolute'}}>
+        <div style={{width: 218, height: 60, left: 0, top: 0, position: 'absolute', background: 'white', borderRadius: 10, border: '1.50px #98C26C solid'}} />
+        <div style={{left: 29, top: 16, position: 'absolute', textAlign: 'center', color: '#728F4F', fontSize: 18, fontFamily: 'Lexend Deca', fontWeight: '700', lineHeight: 27, wordWrap: 'break-word'}}>Try out the magic</div>
+    </div>
+</div>

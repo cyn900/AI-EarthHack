@@ -2,11 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const csv = require("csv-parser");
+const fs = require('fs');
+const path = require('path');
 const { spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary } = require('./services/chatgptService');
 
 const app = express();
 const port = process.env.PORT || 4000;
 
+let evaluationGoal = "Evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'.";
 let storedRows = null;
 let userRatings = null;
 const storage = multer.memoryStorage(); // Store the file in memory
@@ -23,6 +26,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
     const rows = [];
     let headers = null;
     let num = 0;
+
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
@@ -30,20 +34,19 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         if (!req.body.evaluationGoal) {
             return res.status(400).json({ error: 'No evaluation goal provided' });
         }
-        const evaluationGoal = req.body.evaluationGoal;  // do something with evaluation goal
+
+        evaluationGoal = req.body.evaluationGoal;  // do something with evaluation goal
         const fileBuffer = req.file.buffer;
         const fileContent = fileBuffer.toString('utf-8');
-        const fs = require('fs');
-        const path = require('path');
-        
-         const outputCsvPath = path.join(__dirname, 'output.csv');
-         const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
+
+        const outputCsvPath = path.join(__dirname, 'output.csv');
+        const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
 
          const newHeader = 'problem;solution;relevance;problemPopularityScore;problemPopularityExplaination;problemGrowingScore;problemGrowingExplaination;problemUrgentScore;problemUrgentExplaination;problemExpenseScore;problemExpenseExplaination;problemFrequentScore;problemFrequentExplaination;solutionCompletenessScore;solutionCompletenessExplaination;solutionCompletenessScore;solutionCompletenessExplaination;solutionTargetScore;solutionTargetExplaination;solutionNoveltyScore;solutionNoveltyExplaination;solutionFinImpactScore;solutionFinImpactExplaination;solutionImplementabilityScore;solutionImplementabilityExplaination;newName;tags;summary\n';
          writableStream.write(newHeader);
 
          // Example function to write a row
-    
+
         function writeRow(rowData) {
             const rowString = `${rowData.problem};${rowData.solution};${rowData.relevance};${rowData.problemPopularityScore};${rowData.problemPopularityExplaination};${rowData.problemGrowingScore};${rowData.problemGrowingExplaination};${rowData.problemUrgentScore};${rowData.problemUrgentExplaination};${rowData.problemExpenseScore};${rowData.problemExpenseExplaination};${rowData.problemFrequentScore};${rowData.problemFrequentExplaination};${rowData.solutionCompletenessScore};${rowData.solutionCompletenessExplaination};${rowData.solutionTargetScore};${rowData.solutionTargetExplaination};${rowData.solutionNoveltyScore};${rowData.solutionNoveltyExplaination};${rowData.solutionFinImpactScore};${rowData.solutionFinImpactExplaination};${rowData.solutionImplementabilityScore},${rowData.solutionImplementabilityExplaination};${rowData.newName};${rowData.tags};${rowData.summary}\n`;
             writableStream.write(rowString);
@@ -144,7 +147,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                 }
             })
             .write(fileContent);
-        
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -192,41 +195,54 @@ app.post('/load-user-rating', (req, res) => {
     res.status(200).json({ status: 'OK' });
 });
 
-app.get('/get-relevant-number', (req, res) => {
+app.post('/read-csv', (req, res) => {
+    const data = [];
+
+    const csvFilePath = path.join(__dirname, 'output.csv');
+
+    fs.createReadStream(csvFilePath, 'utf8')
+        .pipe(csv({ delimiter: ';' })) // Adjust the delimiter based on your CSV
+        .on('data', (row) => {
+            data.push(row);
+        })
+        .on('end', () => {
+            res.json(data);
+        })
+        .on('error', (error) => {
+            res.status(500).json({ error: 'Error parsing CSV' });
+        });
+
+    storedRows = data;
+    console.log(storedRows);
+});
+
+
+app.get('/get-evaluation-goal', (req, res) => {
+    if (!evaluationGoal) {
+        return res.status(400).json({ error: 'No evaluation goal provided' });
+    }
+
+    res.json({ evaluationGoal: evaluationGoal });
+});
+
+app.get('/get-relevant-ideas-number', (req, res) => {
     if (!storedRows) {
         return res.status(400).json({ error: 'No CSV file loaded' });
     }
 
     const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
-    res.json({ relevantNumber: relevantRows.length });
+    res.json({ relevantIdeasNumber: relevantRows.length });
 });
 
-app.get('/get-max-freq-problem', (req, res) => {
+app.get('/get-average-idea-score', (req, res) => {
     if (!storedRows) {
         return res.status(400).json({ error: 'No CSV file loaded' });
     }
 
-    const problemFreq = {};
-    storedRows.forEach((row) => {
-        if (row.relevance === 'valid') {
-            const problem = row.problem;
-            if (!problemFreq[problem]) {
-                problemFreq[problem] = 0;
-            }
-            problemFreq[problem] += 1;
-        }
-    });
-
-    let maxFreq = 0;
-    let maxFreqProblem = null;
-    Object.keys(problemFreq).forEach((problem) => {
-        if (problemFreq[problem] > maxFreq) {
-            maxFreq = problemFreq[problem];
-            maxFreqProblem = problem;
-        }
-    });
-
-    res.json({ maxFreqProblem: maxFreqProblem });
+    const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+    const sum = relevantRows.reduce((acc, row) => acc + row.score, 0);
+    const average = sum / relevantRows.length;
+    res.json({ averageIdeaScore: average });
 });
 
 // app.get('/get-top-5-ideas', (req, res) => {
