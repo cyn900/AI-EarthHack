@@ -282,8 +282,7 @@ async function generateName(prompt) {
 
 // generate tags
 async function generateTags(prompt) { 
-    rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy. If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Design for Longevity and Durability; 2. Maintain and Extend Product Life; 3. Reuse and Re-purpose; 4. Recycle and Recover; 5. Reduce Waste and Minimise Resource Use; 6. Shift to Sustainable Materials; 7. Embrace Digitalisation and Sharing."
-    
+    rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy. If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
@@ -295,20 +294,21 @@ async function generateTags(prompt) {
     tags = categorize(aiResponse)
     
     // console.log(categorize('Design for Longevity and Durability, Recycle and Recover'));
-    // console.log(categorize(aiResponse));
+    console.log(aiResponse);
+    console.log(categorize(aiResponse));
     return categorize(aiResponse);
     // return completion.choices[0].message.content;
 }
 
 function categorize(input) {
     const categories = [
-        { name: "Design for Longevity and Durability", regex: /longevity|durability/i },
-        { name: "Maintain and Extend Product Life", regex: /maintain|extend|product life/i },
-        { name: "Reuse and Re-purpose", regex: /reuse|re-purpose/i },
-        { name: "Recycle and Recover", regex: /recycle|recover/i },
-        { name: "Reduce Waste and Minimise Resource Use", regex: /reduce waste|minimise resource/i },
-        { name: "Shift to Sustainable Materials", regex: /sustainable materials/i },
-        { name: "Embrace Digitalisation and Sharing", regex: /digitalisation|sharing/i }
+        { name: "Materials", regex: /Materials/i },
+        { name: "Energy", regex: /Energy/i },
+        { name: "Water", regex: /Water/i },
+        { name: "Biodiversity", regex: /Biodiversity/i },
+        { name: "Soceity & Culture", regex: /Society and Culture/i },
+        { name: "Health & Wellbeing", regex: /Health and Wellbeing/i },
+        { name: "Value", regex: /value/i }
     ];
     cate = [];
 
@@ -320,8 +320,9 @@ function categorize(input) {
     if (cate == []) {
         return ["other"];
     }
+    else{ return cate }
 
-    return  cate;
+    
 }
 
 // overall summary
@@ -355,7 +356,7 @@ p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick buildin
 // solutionFinImpactEval(p)
 // solutionImplementabilityEval(p)
 // generateName(p)
-// generateTags(p)
+generateTags(p)
 // generateSummary(p);
 
 module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
