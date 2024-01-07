@@ -21,7 +21,7 @@ async function spamFilter(prompt) {
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
         model: "gpt-3.5-turbo",
-        max_tokens: 50,
+        max_tokens: 5,
         temperature: 0.0,
     });
     
@@ -343,11 +343,11 @@ function categorize(input) {
 
 // overall summary
 async function generateSummary(prompt) { 
-    rolePlay = "You are provided with a problem and a solution. Your task is to provide a one sentence summary. ";
+    rolePlay = "You are provided with a problem and a solution. Your task is to provide a one sentence summary.";
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
-        max_tokens: 50,
+        max_tokens: 60,
         temperature: 0.0,
     });
     const firstSentenceRegex = /Summary:\s*([^\.]+\.)/;
