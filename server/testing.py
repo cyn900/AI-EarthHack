@@ -14,20 +14,31 @@ import matplotlib.pyplot as plt
 # avgSolutionImplementabilityScore = 0
 
 
-with open('server/output.csv', newline='') as csvfile:
-    reader = csv.DictReader(csvfile)
+# with open('server/output.csv', newline='') as csvfile:
+#     reader = csv.DictReader(csvfile)
     
-    for row in reader:
-        print(row['problem'], row['solution'])
+#     for row in reader:
+#         print(row['problemPopularityScore'])
 
- = 'X_Column'
-y_column = 'Y_Column'
 
-# Plotting the line graph
+# Replace with the path to your CSV file
+file_path = 'server/output.csv'
+
+# Read the CSV file using Pandas
+df = pd.read_csv(file_path, delimiter=';')
+
+# Assuming the column with numbers is named 'Numbers'
+# Replace 'Numbers' with the actual column name from your CSV
+data = df['problemPopularityScore']
+
+# Plotting the histogram
 plt.figure(figsize=(10, 6))
-plt.plot(df[x_column], df[y_column], marker='o')
-plt.title('Line Graph from CSV Data')
-plt.xlabel(x_column)
-plt.ylabel(y_column)
-plt.grid(True)
+plt.hist(data, bins=20, range=(0, 10), edgecolor='black')  # Adjust the number of bins as needed
+
+# Adding titles and labels
+plt.title('Number Distribution')
+plt.xlabel('Value')
+plt.ylabel('Frequency')
+
+# Show the plot
 plt.show()
