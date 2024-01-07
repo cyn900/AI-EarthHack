@@ -15,6 +15,45 @@ let userRatings = null;
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
 
+const generateScore = () => {
+    if (!storedRows || !userRatings) {
+        return;
+    }
+
+    console.log("generate score")
+
+    storedRows.forEach((row) => {
+        if (row.relevance === 'Valid') {
+
+
+            const problemScore =
+                parseFloat(row.problemPopularityScore) * userRatings['Popularity'] +
+                parseFloat(row.problemGrowingScore) * userRatings['Growing'] +
+                parseFloat(row.problemUrgentScore) * userRatings['Urgent'] +
+                parseFloat(row.problemExpenseScore) * userRatings['Expense'] +
+                parseFloat(row.problemFrequentScore) * userRatings['Frequent'];
+
+            const solutionScore =
+                parseFloat(row.solutionCompletenessScore) * userRatings['Completeness'] +
+                parseFloat(row.solutionTargetScore) * userRatings['Target'] +
+                parseFloat(row.solutionNoveltyScore) * userRatings['Novelty'] +
+                parseFloat(row.solutionFinImpactScore) * userRatings['Financial Impact'] +
+                parseFloat(row.solutionImplementabilityScore) * userRatings['Implementability'];
+
+            console.log("problem score", problemScore)
+            console.log("solution score", solutionScore)
+            console.log(row, userRatings);
+            return;
+
+            row.score = problemScore + solutionScore;
+
+            console.log("row score", row.score)
+        } else {
+            row.score = 0;
+        }
+    });
+}
+
 app.use(cors());
 app.use(express.json());
 
@@ -169,51 +208,42 @@ app.post('/load-user-rating', (req, res) => {
     userRatings = req.body.rating;
 
     // generate scores for each row
-    storedRows.forEach((row) => {
-        if (row.relevance === 'valid') {
-
-            const problemScore =
-                row.problemPopularityScore * userRatings['Popularity'] +
-                row.problemGrowingScore * userRatings['Growing'] +
-                row.problemUrgentScore * userRatings['Urgent'] +
-                row.problemExpenseScore * userRatings['Expense'] +
-                row.problemFrequentScore * userRatings['Frequent'];
-
-            const solutionScore =
-                row.solutionCompletenessScore * userRatings['Completeness'] +
-                row.solutionTargetScore * userRatings['Target'] +
-                row.solutionNoveltyScore * userRatings['Novelty'] +
-                row.solutionFinImpactScore * userRatings['Financial Impact'] +
-                row.solutionImplementabilityScore * userRatings['Implementability'];
-
-            row.score = problemScore + solutionScore;
-        } else {
-            row.score = 0;
-        }
-    });
-
+    generateScore();
     res.status(200).json({ status: 'OK' });
 });
 
 app.post('/read-csv', (req, res) => {
     const data = [];
-
     const csvFilePath = path.join(__dirname, 'output.csv');
 
-    fs.createReadStream(csvFilePath, 'utf-8')
-        .pipe(csv({ separator: ';' })) // Adjust the delimiter based on your CSV
-        .on('data', (row) => {
-            data.push(row);
-        })
-        .on('end', () => {
-            res.json(data);
-        })
-        .on('error', (error) => {
-            res.status(500).json({ error: 'Error parsing CSV' });
-        });
+    const processData = async () => {
+        try {
+            const data = [];
+            await new Promise((resolve, reject) => {
+                fs.createReadStream(csvFilePath, 'utf-8')
+                    .pipe(csv({ separator: ';' }))
+                    .on('data', (row) => {
+                        data.push(row);
+                    })
+                    .on('end', () => {
+                        resolve();
+                    })
+                    .on('error', (error) => {
+                        reject(error);
+                    });
+            });
 
-    storedRows = data;
-    console.log(storedRows);
+            // Now `data` is available here
+            storedRows = data;
+            res.json(data);
+
+            console.log(data[0]);
+        } catch (error) {
+            console.error('Error parsing CSV:', error);
+        }
+    };
+
+    processData();
 });
 
 
@@ -230,7 +260,7 @@ app.get('/get-relevant-ideas-number', (req, res) => {
         return res.status(400).json({ error: 'No CSV file loaded' });
     }
 
-    const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+    const relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
     res.json({ relevantIdeasNumber: relevantRows.length });
 });
 
@@ -239,8 +269,9 @@ app.get('/get-average-idea-score', (req, res) => {
         return res.status(400).json({ error: 'No CSV file loaded' });
     }
 
-    const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+    const relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
     const sum = relevantRows.reduce((acc, row) => acc + row.score, 0);
+    console.log("get average", sum, relevantRows.length)
     const average = sum / relevantRows.length;
     res.json({ averageIdeaScore: average });
 });
@@ -250,7 +281,7 @@ app.get('/get-average-idea-score', (req, res) => {
 //         return res.status(400).json({ error: 'No CSV file loaded' });
 //     }
 //
-//     const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+//     const relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
 //     relevantRows.sort((a, b) => b.score - a.score);
 //
 //     const top5Rows = relevantRows.slice(0, 5);
@@ -264,9 +295,9 @@ app.get('/get-top-5-ideas-by-category', (req, res) => {
 
     let relevantRows = null;
     if (req.query.category === 'All') {
-        relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+        relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
     } else {
-        relevantRows = storedRows.filter((row) => row.relevance === 'valid' && req.query.category in row.tags);
+        relevantRows = storedRows.filter((row) => row.relevance === 'Valid' && req.query.category in row.tags);
     }
     relevantRows.sort((a, b) => b.score - a.score);
 
@@ -281,7 +312,7 @@ app.get('/get-tag-frequency', (req, res) => {
 
     const tagFreq = {};
     storedRows.forEach((row) => {
-        if (row.relevance === 'valid') {
+        if (row.relevance === 'Valid') {
             const tags = row.tags;
             tags.forEach((tag) => {
                 if (!tagFreq[tag]) {
