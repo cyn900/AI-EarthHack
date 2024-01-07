@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Itim&family=Lexend+Deca:wght@400;600;700&family=Play&display=swap');
+
 /* /*  */
 :root {
  --button_color: #DAE06D;
@@ -28,6 +30,24 @@
    --background-end-rgb: 0, 0, 0;
  }
 }
+@font-face {
+  font-family: 'Lexend Deca';
+  src: url('../components/Lexend_Deca/static/LexendDeca-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Lexend Deca Bold';
+  src: url('../components/Lexend_Deca/static/LexendDeca-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Lexend Deca Medium';
+  src: url('../components/Lexend_Deca/static/LexendDeca-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lexend Deca SemiBold';
+  src: url('../components/Lexend_Deca/static/LexendDeca-SemiBold.ttf') format('truetype');
+}
+
 
 body {
  color: rgb(var(--foreground-rgb));
@@ -39,92 +59,92 @@ body {
    rgb(var(--background-start-rgb));
 }
 
-
-
-/*Fonts*/
-#title1{
-    font-family: Lexend Deca;
-    font-size: 40px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 150%; /* 60px */
-    letter-spacing: -0.44px;
-    text-align: center;
+.hero-content{
+  max-width: 100rem;
 }
 
-#content1_bold{
-    font-size: 40;
-    font-family: 'Lexend Deca';
-    font-weight: '700';
-    line-height: 60;
-    word-Wrap: 'break-word'
-}
-
-#content1{
-    font-family: Lexend Deca;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%; /* 27px */
-    letter-spacing: -0.198px;
-}
-
-#content2{
-    font-family: Lexend Deca;
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%; /* 19.5px */
-    letter-spacing: -0.143px;
-}
-
-#content2_bold{
-
+.button:hover{
+  background-color: var(--light_forest);
+  color:var(--white)
 }
 
 
-#button_text{
-    font-family: Lexend Deca;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 150%; /* 27px */
-    letter-spacing: -0.198px;
+
+.title1{
+  font-family: Lexend Deca Bold;
+  font-size: 40px;
+  line-height: 150%; /* 27px */
+  letter-spacing: -0.44px;
+  text-align: center;
 }
 
-#button_text2{
-    font-family: Lexend Deca;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%; /* 15px */
-    letter-spacing: -0.11px;
+.content1_bold{
+  font-size: 40;
+  font-family: 'Lexend Deca Bold';
+  letter-spacing: -0.198px;
+  
 }
 
-#subtitle1{
-    font-family: Lexend Deca;
-    font-size: 26px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%; /* 39px */
-    letter-spacing: -0.286px;
+.content1{
+  font-family: 'Lexend Deca';
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%; /* 27px */
+  letter-spacing: -0.198px;
 }
 
-#subtitle2{
-    font-family: Lexend Deca;
-    font-size: 25px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%; /* 37.5px */
-    letter-spacing: -0.275px;
+.content2{
+  font-family: 'Lexend Deca';
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 150%; /* 19.5px */
+  letter-spacing: -0.143px;
 }
 
-#link{
-    font-family: Lexend Deca;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
-    letter-spacing: -0.22px;
-    text-decoration-line: underline;
+.content2_bold{
+  font-family: 'Lexend Deca Bold';
+  font-size: 13px;
+  line-height: 150%; /* 19.5px */
+  letter-spacing: -0.143px;
+}
+
+
+.button_text{
+  font-family: 'Lexend Deca Bold';
+  font-size: 18px;
+  line-height: 150%; /* 27px */
+  letter-spacing: -0.198px;
+}
+
+.button_text2{
+  font-family: 'Lexend Deca';
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 150%; /* 15px */
+  letter-spacing: -0.11px;
+}
+
+.subtitle1{
+  font-family: 'Lexend Deca SemiBold';
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 150%; /* 39px */
+  letter-spacing: -0.286px;
+}
+
+.subtitle2{
+  font-family: 'Lexend Deca SemiBold';
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 150%; /* 37.5px */
+  letter-spacing: -0.275px;
+}
+
+.link{
+  font-family: 'Lexend Deca';
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.22px;
+  text-decoration-line: underline;
 }

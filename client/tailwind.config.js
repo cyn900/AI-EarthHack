@@ -8,13 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        button: {
-          DEFAULT: '#DAE06D',
-        },
-        card: {
-          DEFAULT: '#EFEFEF',
-          '50': '#EFEFEF 50%',
-        },
+        button_color: '#DAE06D',
+        card_color: '#EFEFEF',
+        card_color_50: '#EFEFEF 50%',
         dark_forest_50: '#728F4F 50%',
         light_forest: '#98C26C',
         dark_gray: '#6D6D6D',
@@ -27,8 +23,99 @@ module.exports = {
         middle_green: '#88C4A6',
         middle_gray: '#B4B4B4',
         white: '#FFFFFF',
+        forest_green: '#728F4F'
+
+      },
+      fontFamily: {
+        'LexendDeca': ['Lexend Deca', 'sans-serif'],
+        // Add other font families if needed
+      },
+      textStyles: {
+        'title1': {
+          fontFamily: 'LexendDeca',
+          fontSize: '40px',
+          fontStyle: 'normal',
+          fontWeight: '700',
+          lineHeight: '60',
+          letterSpacing: '-0.44px',
+          textAlign: 'center',
+        },
+        'content1_bold': {
+          fontSize: '40px',
+          fontFamily: 'LexendDeca',
+          fontWeight: '700',
+          lineHeight: '60',
+          wordWrap: 'break-word',
+        },
+        'content1': {
+          fontFamily: 'LexendDeca',
+          fontSize: '18px',
+          fontStyle: 'normal',
+          fontWeight: '400',
+          lineHeight: '27',
+          letterSpacing: '-0.198px',
+        },
+        'content2': {
+          fontFamily: 'LexendDeca',
+          fontSize: '13px',
+          fontStyle: 'normal',
+          fontWeight: '400',
+          lineHeight: '19.5',
+          letterSpacing: '-0.143px',
+        },
+        'content2_bold': {
+          fontFamily: 'LexendDeca',
+          fontSize: '13px',
+          fontStyle: 'normal',
+          fontWeight: '700',
+          lineHeight: '19.5',
+          letterSpacing: '-0.143px',
+        },
+        'button_text': {
+          fontFamily: 'LexendDeca',
+          fontSize: '18px',
+          fontStyle: 'normal',
+          fontWeight: '700',
+          lineHeight: '27',
+          letterSpacing: '-0.198px',
+        },
+        'button_text2': {
+          fontFamily: 'LexendDeca',
+          fontSize: '10px',
+          fontStyle: 'normal',
+          fontWeight: '400',
+          lineHeight: '15',
+          letterSpacing: '-0.11px',
+        },
+        'subtitle1': {
+          fontFamily: 'LexendDeca',
+          fontSize: '26px',
+          fontStyle: 'normal',
+          fontWeight: '600',
+          lineHeight: '39',
+          letterSpacing: '-0.286px',
+        },
+        'subtitle2': {
+          fontFamily: 'LexendDeca',
+          fontSize: '25px',
+          fontStyle: 'normal',
+          fontWeight: '600',
+          lineHeight: '37.5',
+          letterSpacing: '-0.275px',
+        },
+        'link': {
+          fontFamily: 'LexendDeca',
+          fontSize: '20px',
+          fontStyle: 'normal',
+          fontWeight: '500',
+          lineHeight: '20px',
+          letterSpacing: '-0.22px',
+          textDecorationLine: 'underline',
+        },
       },
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [
+  require("@tailwindcss/typography"),
+  require("daisyui"),],
 }
