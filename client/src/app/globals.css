@@ -74,6 +74,33 @@ body {
   color: var(--white);
 }
 
+.tag{
+  width: 72px;
+  height: 21px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  background-color: var(--card_color);
+  color: var(--dark_green);
+}
+
+.squared_button{
+  width: 122px;
+  height: 28px;
+  margin-top: 4.67px;
+  margin-bottom: 4.67px;
+  background-color: var(--forest_green);
+  color: var(--white);
+}
+
+.squared_button{
+  width: 217px;
+  height: 28px;
+  margin-top: 3.33px;
+  margin-bottom: 4.67px;
+  background-color: var(--forest_green);
+  color: var(--white);
+}
+
 .max-screen {
   height: 100%;
 }
