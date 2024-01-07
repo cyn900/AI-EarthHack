@@ -15,7 +15,7 @@ def calculateAvg(score):
     return num/i
 
 # print the problemUrgentScore average
-# print('average problemUrgentScore: ', calculateAvg('problemUrgentScore'))
+print('average problemUrgentScore: ', calculateAvg('problemUrgentScore'))
 
 def plot_histogram(data, column_name, bins=20, range=(0, 10)):
     """
@@ -41,8 +41,8 @@ file_path = 'server/output.csv'
 df = pd.read_csv(file_path, delimiter=';')
 
 # Plot histograms for different columns
-# plot_histogram(df, 'problemPopularityScore')
-# plot_histogram(df, 'solutionImplementabilityScore')
+plot_histogram(df, 'problemPopularityScore')
+plot_histogram(df, 'solutionImplementabilityScore')
 
 # Select the row - for example, the row with index 5
 selected_row = df.iloc[3]
@@ -64,7 +64,7 @@ def idOutlier(score):
     if selected_row[score] < lower_bound or selected_row[score] > upper_bound:
         print(f"The value in row {selected_row.newName} is an outlier in column '{score}'.")
     else:
-        print("There is no outlier.")
+        print("There is no outlier in " + score)
 
     # with open('server/output.csv', newline='') as csvfile:
     #     reader = csv.DictReader(csvfile, delimiter=';')
