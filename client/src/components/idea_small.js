@@ -1,4 +1,7 @@
 
+import './globals.css';
+
+
 <div style={{width: '100%', height: '100%', position: 'relative'}}>
     <div style={{width: 580, height: 78, left: 0, top: 0, position: 'absolute', background: 'white', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.10)', borderRadius: 6}} />
     <div style={{width: 50, height: 78, left: 0, top: 0, position: 'absolute', borderTopLeftRadius: 27, borderTopRightRadius: 27}} />
