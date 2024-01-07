@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image'
+import Link from "next/link";
 
 export default function Home() {
     const [file, setFile] = useState(null);
@@ -75,7 +76,7 @@ export default function Home() {
                         ></textarea>
 
                         <h2 className="card-title mt-8"> Idea Database </h2>
-                        <p> Insert a csv file with a separate columns for problem and solution by clicking on the area below. See example data file.  </p>
+                        <p> Insert a csv file with a separate columns for problem and solution by clicking on the area below. <Link href="https://drive.google.com/file/d/1cgeZPGsntnJckH7_ROSQm1JG5pFuE0u6/view" className="link"  > See example data file. </Link>  </p>
                         <form onSubmit={handleSubmitForm} encType="multipart/form-data" className="card-actions justify-end">
                             <input id='file-input' type="file" onChange={handleChangeForm} name="csv-form" className="file-input file-input-bordered file-input-primary w-full bg-gray-100" />
                             {
