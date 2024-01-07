@@ -135,7 +135,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     rowData.solutionImplementabilityScore = solutionImplementabilityReply[0];
                     rowData.solutionImplementabilityExplaination = solutionImplementabilityReply[1];
 
-                    rowData.name = generateNameReply;
+                    rowData.newName = generateNameReply;
                     rowData.tags = generateTagsReply; // a list of tags ex: ['Water', 'Value'] 0<len(list)<=2
                     rowData.summary = generateSummaryReply;
                     // rows.push(rowData);

@@ -306,7 +306,7 @@ async function generateName(prompt) {
     
     n = null;
     attempts = 0;
-    const maxAttempts = 5;
+    const maxAttempts = 3;
 
     while (n === null && attempts < maxAttempts) {
         const completion = await openai.chat.completions.create({
@@ -321,13 +321,12 @@ async function generateName(prompt) {
         const aiResponse = completion.choices[0].message.content;
         const nameMatch = aiResponse.match(nameRegex);
         n = nameMatch ? nameMatch[1].trim() : null;
-        console.log(n);
         attempts++;
     }
         if (n === null || n === 'undefined') {
             n = "Default Name"; // Fallback name if none is generated
         }
-    console.log(n);
+    console.log('name' + n);
     return n;
     // return completion.choices[0].message.content;
 }
