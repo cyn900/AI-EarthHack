@@ -6,7 +6,6 @@ import axios from 'axios';
 import Image from 'next/image'
 
 export default function Home() {
-
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false); // Track the loading state
     const [response, setResponse] = useState('');
@@ -25,6 +24,7 @@ export default function Home() {
         } else if (!file.name.endsWith('.csv')) {
             alert('Please select .csv file');
         } else {
+            setLoading(true);
             try {
                 const formData = new FormData();
                 formData.append('csvFile', file);
@@ -33,8 +33,12 @@ export default function Home() {
                 console.log(response.data);
 
                 setResponse("File uploaded successfully. Upload status: " + response.data.status);
+                window.location.href = "/intent";
             } catch (error) {
-                console.error('Error sending prompt:', error);
+                console.error('Error sending form:', error);
+                alert('Error sending form');
+            } finally {
+                setLoading(false);
             }
         }
     };
