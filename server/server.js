@@ -55,24 +55,25 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
 
         // Parse CSV content (using csv-parser as an example)
 
-        // const tempFilePath = path.join(__dirname, 'tempFile.csv');
+        const tempFilePath = path.join(__dirname, 'tempFile.csv');
         
-        // // Write the uploaded content to the temporary file
-        // fs.writeFileSync(tempFilePath, fileContent);
+        // Write the uploaded content to the temporary file
+        fs.writeFileSync(tempFilePath, fileContent);
 
-        // // Append an empty line to the temporary file
-        // fs.appendFileSync(tempFilePath, '\n');
+        // Append an empty line to the temporary file
+        fs.appendFileSync(tempFilePath, '1,\n');
 
-        // // Now read and process the temporary file
-        // fs.createReadStream(tempFilePath)
-        //     .pipe(csv({ headers: false }))
-        csv({ headers: false })
+        // Now read and process the temporary file
+        fs.createReadStream(tempFilePath)
+            .pipe(csv({ headers: false }))
+        // csv({ headers: false })
             .on('data', async(row) => {
                 console.log(row);
                 if (!headers) {
                     // First row is the header
                     headers = Object.values(row);
                 } else {
+                    console.log('1');
                     // Subsequent rows are the data
                     const rowData = {};
                     headers.forEach((header, index) => {
@@ -164,7 +165,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     // writeRow({problem: "\""+rowData['problem']+"\"", solution: "\""+rowData['solution']+"\"", relevance: rowData['relevance'], problemPopularityScore: rowData['problemPopularityScore'],problemPopularityExplaination: "\""+rowData['problemPopularityExplaination']+"\"", problemGrowingScore: rowData['problemGrowingScore'], problemGrowingExplaination: "\""+rowData['problemGrowingExplaination']+"\"", problemUrgentScore: rowData['problemUrgentScore'], problemUrgentExplaination: "\""+rowData['problemUrgentExplaination']+"\"", problemExpenseScore: rowData['problemExpenseScore'], problemExpenseExplaination: "\""+rowData['problemExpenseExplaination']+"\"", problemFrequentScore: rowData['problemFrequentScore'], problemFrequentExplaination: "\""+rowData['problemFrequentExplaination']+"\"", solutionCompletenessScore: rowData['solutionCompletenessScore'], solutionCompletenessExplaination: "\""+rowData['solutionCompletenessExplaination']+"\"", solutionTargetScore: rowData['solutionTargetScore'], solutionTargetExplaination: "\""+rowData['solutionTargetExplaination']+"\"", solutionNoveltyScore: rowData['solutionNoveltyScore'], solutionNoveltyScore: "\""+rowData['solutionNoveltyScore'], solutionNoveltyExplaination: "\""+rowData['solutionNoveltyExplaination']+"\"", solutionFinImpactScore: rowData['solutionFinImpactScore'], solutionFinImpactExplaination: "\""+rowData['solutionFinImpactExplaination']+"\"", solutionImplementabilityScore: rowData['solutionImplementabilityScore'], solutionImplementabilityExplaination: "\""+rowData['solutionImplementabilityExplaination']+"\"", newName: rowData['newName'], tags: rowData['tags'], summary: "\""+rowData['summary']+"\""});
                 }
             })
-            .write(fileContent);
+            // .write(fileContent);
         
     } catch (error) {
         console.error(error);
@@ -222,41 +223,24 @@ app.get('/get-evaluation-goal', (req, res) => {
     res.json({ evaluationGoal: evaluationGoal });
 });
 
-app.get('/get-relevant-number', (req, res) => {
+app.get('/get-relevant-ideas-number', (req, res) => {
     if (!storedRows) {
         return res.status(400).json({ error: 'No CSV file loaded' });
     }
 
     const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
-    res.json({ relevantNumber: relevantRows.length });
+    res.json({ relevantIdeasNumber: relevantRows.length });
 });
 
-app.get('/get-max-freq-problem', (req, res) => {
+app.get('/get-average-idea-score', (req, res) => {
     if (!storedRows) {
         return res.status(400).json({ error: 'No CSV file loaded' });
     }
 
-    const problemFreq = {};
-    storedRows.forEach((row) => {
-        if (row.relevance === 'valid') {
-            const problem = row.problem;
-            if (!problemFreq[problem]) {
-                problemFreq[problem] = 0;
-            }
-            problemFreq[problem] += 1;
-        }
-    });
-
-    let maxFreq = 0;
-    let maxFreqProblem = null;
-    Object.keys(problemFreq).forEach((problem) => {
-        if (problemFreq[problem] > maxFreq) {
-            maxFreq = problemFreq[problem];
-            maxFreqProblem = problem;
-        }
-    });
-
-    res.json({ maxFreqProblem: maxFreqProblem });
+    const relevantRows = storedRows.filter((row) => row.relevance === 'valid');
+    const sum = relevantRows.reduce((acc, row) => acc + row.score, 0);
+    const average = sum / relevantRows.length;
+    res.json({ averageIdeaScore: average });
 });
 
 // app.get('/get-top-5-ideas', (req, res) => {

@@ -8,7 +8,14 @@ import axios from "axios";
 export default function Page() {
     const [open, setOpen] = useState(false);
     const [evaluationGoal, setEvaluationGoal] = useState('');
-    const [selectedValue, setSelectedValue] = useState('Select an option');
+    const [relevantIdeasNumber, setRelevantIdeasNumber] = useState(0);
+    const [averageIdeaScore, setAverageIdeaScore] = useState('');
+    const [pillars, setPillars] = useState([]);
+    const [topIdeas, setTopIdeas] = useState([]);
+
+    const [selectedValue, setSelectedValue] = useState('Water');
+    const [topIdeasByPillar, setTopIdeasByPillar] = useState([]);
+
 
     const handleToggleDropdown = () => {
         setOpen(!open);
@@ -47,43 +54,15 @@ export default function Page() {
         },
     ]);
 
-    const [pillars, setPillars] = useState([
-        {
-            "name": "Water",
-            "share": 0.4,
-            "color": "#00FFFF"  // Cyan
-        },
-        {
-            "name": "Value",
-            "share": 0.3,
-            "color": "#FF00FF"  // Purple
-        },
-        {
-            "name": "Material",
-            "share": 0.2,
-            "color": "#00FF00"  // Green
-        },
-        {
-            "name": "Society & Culture",
-            "share": 0.05,
-            "color": "#FFA500"  // Orange
-        },
-        {
-            "name": "Energy",
-            "share": 0.03,
-            "color": "#FFFF00"  // Yellow
-        },
-        {
-            "name": "Biodiversity",
-            "share": 0.01,
-            "color": "#FFC0CB"  // Pink
-        },
-        {
-            "name": "Health & Wellbeing",
-            "share": 0.01,
-            "color": "#FF0000"  // Red
-        }
-    ]);
+    const pillarColor = {
+        "Water": "#DAE06D",
+        "Material": "#88C4A6",
+        "Value": "#98C26C",
+        "Society & Culture": "#728F4F",
+        "Energy": "#3D6E5B",
+        "Biodiversity": "#CCE1B6",
+        "Health & Wellbeing": "#B9C7A7"
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -98,6 +77,82 @@ export default function Page() {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/get-relevant-ideas-number');
+                console.log("relevant ideas number: " + response);
+                setRelevantIdeasNumber(response.data.relevantIdeasNumber);
+            } catch (error) {
+                console.error('Error fetching relevant ideas number:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+       const fetchData = async () => {
+           try {
+                const response = await axios.get('http://localhost:4000/get-average-idea-score');
+                console.log("average idea score: " + response);
+                setAverageIdeaScore(response.data.averageIdeaScore);
+           } catch (error) {
+               console.error('Error fetching average idea score:', error);
+           }
+       };
+
+         fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/get-tag-frequency');
+                console.log("pillars: " + response);
+                setPillars(response.data.tagFreq);
+            } catch (error) {
+                console.error('Error fetching pillars:', error);
+            }
+        };
+
+        fetchData();
+    },[]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/get-top-5-ideas-by-category', {
+                    params: {
+                        category: "All"
+                    }
+                });
+                console.log("top ideas: " + response);
+                setTopIdeas(response.data.top5Rows);
+            } catch (error) {
+                console.error('Error fetching top ideas:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/get-top-5-ideas-by-category', {
+                    params: {
+                        category: selectedValue
+                    }
+                });
+                console.log("top ideas by pillar: " + response);
+                setTopIdeasByPillar(response.data.top5Rows);
+            } catch (error) {
+                console.error('Error fetching top ideas:', error);
+            }
+        };
+    }, [selectedValue]);
 
     return (
         <div className="flex flex-col justify-center items-center min-h-screen mt-16">
@@ -126,14 +181,17 @@ export default function Page() {
                                     <p className="text-md"> Total number of </p>
                                     <p className="font-bold text-2xl"> Relevant Ideas </p>
                                 </div>
-                                <p className="text-4xl font-bold text-right"> 1250 </p>
+                                <p className="text-4xl font-bold text-right"> {relevantIdeasNumber} </p>
                             </div>
                         </div>
 
                         <div className="card w-full m-4 bg-base-100 shadow-xl h-1/2">
-                            <div className="card-body">
-                                <p className="text-md"> Most Popular Idea </p>
-                                <p className="font-bold text-2xl"> Plastic Bottle Recycling </p>
+                            <div className="card-body flex-row justify-between w-full items-center">
+                                <div>
+                                    <p className="text-md"> Grading Standards </p>
+                                    <p className="font-bold text-2xl"> Average Idea Points </p>
+                                </div>
+                                <p className="text-4xl font-bold text-right"> {averageIdeaScore} </p>
                             </div>
                         </div>
                     </div>
@@ -167,13 +225,14 @@ export default function Page() {
 
                                         {open && (
                                             <div className="absolute mt-= w-48 bg-white rounded-md overflow-hidden shadow-md z-10">
-                                                {pillars.map((pillar, index) => (
+                                                {Object.entries(pillarColor).map(([key, value], index) => (
                                                     <button
                                                         key={index}
-                                                        onClick={() => handleOptionClick(pillar.name)}
+                                                        onClick={() => handleOptionClick(key)}
                                                         className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 w-full"
+                                                        style={{ backgroundColor: value }}
                                                     >
-                                                        {pillar.name}
+                                                        {key}
                                                     </button>
                                                 ))}
                                             </div>
