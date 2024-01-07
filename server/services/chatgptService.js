@@ -25,9 +25,8 @@ async function spamFilter(prompt) {
         max_tokens: 5,
         temperature: 0.0,
     });
-    
 
-    //console.log(completion.choices[0].message.content);
+    console.log(completion.choices[0].message.content);
     return completion.choices[0].message.content;
 }
 
@@ -37,22 +36,26 @@ async function problemPopularEval(prompt) {
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 50,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 50,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        score = scoreMatch ? scoreMatch[1] : null;
+        // console.log("1")
+    }   
     
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
+    console.log([score,explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -63,20 +66,23 @@ async function problemGrowingEval(prompt) {
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+    
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -88,20 +94,22 @@ async function problemUrgentEval(prompt) {
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
 
     // console.log([score, explanation]);
     return [score, explanation];
@@ -114,20 +122,22 @@ async function problemExpenseEval(prompt) {
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -139,20 +149,23 @@ async function problemFrequentEval(prompt) {
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
+    
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
 
     // console.log([score, explanation]);
     return [score, explanation];
@@ -162,20 +175,23 @@ async function problemFrequentEval(prompt) {
 //solution completeness evaluation
 async function solutionCompletenessEval(prompt) { 
     rolePlay = background + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? Note that problem is after Problem: and before Solution: and solution is everything after Solution:. For score, return a number between 0-10' + replyFormat;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
 
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -184,20 +200,23 @@ async function solutionCompletenessEval(prompt) {
 //solution completeness evaluation
 async function solutionCompletenessEval(prompt) { 
     rolePlay = background + inputFormat + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? For score, return a number between 0-10' + replyFormat;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
 
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -206,20 +225,24 @@ async function solutionCompletenessEval(prompt) {
 //solution target evaluation
 async function solutionTargetEval(prompt) { 
     rolePlay = background + inputFormat + 'Does it fit the 7 pillars of circular econ. For score, return a number between 0-10' + replyFormat;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        
+        score = scoreMatch ? scoreMatch[1] : null;
+    }   
 
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -228,20 +251,23 @@ async function solutionTargetEval(prompt) {
 //solution novelty evaluation
 async function solutionNoveltyEval(prompt) { 
     rolePlay = background + inputFormat + 'How creative is the solution? Does it exist already? For score, return a number between 0-10' + replyFormat;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
 
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -250,20 +276,23 @@ async function solutionNoveltyEval(prompt) {
 //solution financial impact evaluation
 async function solutionFinImpactEval(prompt) { 
     rolePlay = background + inputFormat + 'What is the financial impact? Does it create monetary value? For score, return a number between 0-10' + replyFormat;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
 
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -272,20 +301,23 @@ async function solutionFinImpactEval(prompt) {
 //solution Implementability evaluation
 async function solutionImplementabilityEval(prompt) { 
     rolePlay = background + inputFormat + 'What is the implementability? How feasible is the solution? How scalabale is the solution? For score, return a number between 0-10' + replyFormat;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    score = -1;
+    while (score < 0 || score > 10 || score === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: "gpt-3.5-turbo",
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        aiResponse = completion.choices[0].message.content;
+        scoreMatch = aiResponse.match(scoreRegex);
+        
+        score = scoreMatch ? scoreMatch[1] : null;
+    }
+    explanationMatch = aiResponse.match(explanationRegex);
+    explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log("score: " + [score, explanation][0]);
     // console.log([score, explanation]);
     return [score, explanation];
@@ -378,7 +410,7 @@ async function generateSummary(prompt) {
     // return completion.choices[0].message.content;
 }
 
-p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick building. Solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
+p = 'Problem: 1, Solution: 2'
 // problemPopularEval(p)
 // problemGrowingEval(p)
 // problemUrgentEval(p)
@@ -392,6 +424,7 @@ p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick buildin
 // generateName(p)
 // generateTags(p)
 // generateSummary(p);
+// spamFilter(p)
 
 module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 

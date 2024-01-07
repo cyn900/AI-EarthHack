@@ -72,6 +72,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     // First row is the header
                     headers = Object.values(row);
                 } else {
+                    console.log('1');
                     // Subsequent rows are the data
                     const rowData = {};
                     headers.forEach((header, index) => {
