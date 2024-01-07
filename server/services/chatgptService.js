@@ -9,13 +9,13 @@ gptModel = "gpt-3.5-turbo";
 const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
 const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
 const explanationRegex = /Explanation:\s*([^\.]+\.)/;
-const background = 'You are a very strict critic who knows a lot about circular economy and sustainability.'
-const inputFormat = 'The format of the user input is yhat problem is after Problem: and before Solution:. Solution is everything after Solution:'
-const replyFormat = 'The format of your reply must be Score: (number with one digit after the decimal from 0.0 to 10.0 where 10 means it is the best idea on the planet, 50 is just an average idea. Marks will be detucted if the given information is not descriptive enough. For example, if the problem description is just 5 words, it is probably too general so the mark should be realy low.). Explaination: (only one concise senetnce to comment on what does the user did well on and what does the user did bad on. you must not repeat what the user said)';
+const background = 'You are a very strict critic who knows a lot about circular economy and sustainability. Your mark things very harsh. You rarely give marks that is above 80.'
+const inputFormat = 'When evaluating user submissions, focus on the text immediately following "Problem:" and before "Solution:" for the problem statement. For the solution assessment, concentrate on the text that comes after "Solution:".'
+const replyFormat = 'To evaluate the ideas presented, a score will be provided alongside a brief explanation. The score will reflect the quality and potential impact of the idea, ranging from 0.0 for ideas with little to no potential, up to 10.0 for groundbreaking ideas. The explanation will comment concisely on the strengths and weaknesses of the users presentation without reiterating their content. For example: Score: 7.5 (A score here reflects the idea creativity, potential impact, and how well it is explained. Marks are deducted for lack of detail.) Explanation: The idea scope is promising, but the explanation lacks the specificity needed to fully grasp its potential impact and feasibility. (This is a concise sentence that highlights what was done well and what was lacking.)';
 
 // spam Filter
 async function spamFilter(prompt) { 
-    rolePlay =  'You are a judge assessing a competition submission. Each submission consists of a problem and its corresponding solution. A submission is "Valid" if the solution directly addresses the problem, is well thought out, and shows effort. It is "Invalid" if the solution is unrelated to the problem, lacks coherence, or shows signs of low effort, such as being incomplete or nonsensical. Based on this, judge the submission as either "Valid" or "Invalid".';
+    rolePlay =  'As a judge, your task is to evaluate each submission critically. A submission will be deemed "Valid" if the proposed solution aptly addresses the presented problem, demonstrates a thoughtful approach, and reflects a diligent effort. Conversely, a submission will be considered "Invalid" if the solution bears no clear relevance to the problem, is incoherent, or exhibits low effort — indicated by an incomplete development or a nonsensical proposition. Your judgment should categorically state whether the submission is "Valid" or "Invalid" based on these criteria.';
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     
@@ -56,7 +56,7 @@ async function problemPopularEval(prompt) {
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
-    console.log([score,explanation]);
+    // console.log([score,explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -84,7 +84,7 @@ async function problemGrowingEval(prompt) {
     }
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -112,7 +112,7 @@ async function problemUrgentEval(prompt) {
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
 
-    console.log([score, explanation]);
+    // ([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -139,14 +139,15 @@ async function problemExpenseEval(prompt) {
     }
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
 // problem frequent evaluation
 async function problemFrequentEval(prompt) {
-    rolePlay = background + 'You only about how frequesnt the problem happen, ex is it a daily issue. You only like a problem that is not a one-time problem, people come across the problem frequently. A problem desciption is given to you. You will rate on the urgency of the problem out of . Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is frequently happen in the explaination. Measurable Metric: Number of occurrences or frequency within a defined period (e.g., monthly, yearly). For score, return a number between 0-10.' + replyFormat
+    rolePlay = background + 'Your task is to assess the frequency of a given problem, specifically focusing on issues that are recurrent and not one-time events. Evaluate the problems frequency on a scale from 0 to 10. Allocate half of the score based on the overall significance of the problem and the other half based on the users detailed explanation of its frequency. Generous scores should be given to detailed and specific descriptions, while vague or overly general explanations warrant lower scores. Remember, your assessment should solely focus on the frequency of the problem without considering any potential solutions. Highlight in your explanation whether the problem occurs frequently. Use measurable metrics such as the number of occurrences or frequency within a defined period (e.g., daily, monthly, yearly) to guide your scoring. Provide a score that reflects both the severity of the recurring issue and the clarity of the users explanation, with scores ranging from 0 to 10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
@@ -175,7 +176,7 @@ async function problemFrequentEval(prompt) {
 
 //solution completeness evaluation
 async function solutionCompletenessEval(prompt) { 
-    rolePlay = background + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? Note that problem is after Problem: and before Solution: and solution is everything after Solution:. Measurable Metric: Percentage completion of the circular economy loop within the proposed solution.For score, return a number between 0-10' + replyFormat;
+    rolePlay = background + 'You are tasked with assessing the completeness of a solution in relation to a stated problem. Focus on whether the solution thoroughly addresses the problem detailed after "Problem:" and before "Solution:" in the users description. Examine if there is a coherent and relevant connection between the problem and the solution presented. The solution should be evaluated based on how effectively it solves the problem mentioned and its alignment with the problems context. Your assessment should consider the extent to which the solution completes the circular economy loop, a key measurable metric. This involves evaluating how well the solution contributes to a sustainable, closed-loop system where resources are reused, recycled, and conserved. Provide a score between 0 to 10, reflecting the degree of completeness and relevance of the solution to the problem. High scores should indicate a solution that fully addresses the problem and effectively contributes to the circular economy, while low scores suggest incomplete or irrelevant solutions.' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
@@ -200,7 +201,7 @@ async function solutionCompletenessEval(prompt) {
 
 //solution target evaluation
 async function solutionTargetEval(prompt) { 
-    rolePlay = background + inputFormat + 'Does it fit the 7 pillars of circular econ. Measurable Metric: Evaluate the extent of adherence to the principles of circular economy through a comprehensive analysis of materials life cycles, energy sources, biodiversity impact, societal preservation, health considerations, diverse value creation, and system resilience. For score, return a number between 0-10' + replyFormat;
+    rolePlay = background + inputFormat + 'Your role is to evaluate a given concepts alignment with the seven pillars of the circular economy, as depicted in the provided framework. Analyze whether the idea adheres to the principles of maintaining continuous high-value material cycles, utilizing renewable energy sources, ensuring sustainable water extraction and resource maximization, supporting biodiversity, preserving society and culture through social governance, contributing to human and species health and well-being, and creating diverse values beyond financial metrics. You will provide a score from 0 to 10, where 0 indicates no alignment and 10 signifies complete alignment with the circular economys principles. Your assessment should consider the life cycles of materials used, energy sustainability, impacts on biodiversity, cultural preservation, health implications, value generation, and overall system resilience. A thorough explanation of the score should reflect the extent to which the proposed concept integrates these seven foundational elements of the circular economy.' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
@@ -219,14 +220,14 @@ async function solutionTargetEval(prompt) {
 
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    // console.log([score, explanation]);
+    //console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
 //solution novelty evaluation
 async function solutionNoveltyEval(prompt) { 
-    rolePlay = background + inputFormat + 'How creative is the solution? Does it exist already? Measurable Metric: Measure the level of novelty by analyzing the degree of differentiation from existing solutions across various innovation categories (programmatic, technical, organizational, managerial, and methodological), emphasizing the unique value proposition introduced and its impact on current practices or products. For score, return a number between 0-10' + replyFormat;
+    rolePlay = background + inputFormat + 'Your task is to assess the creativity and novelty of a proposed solution. Determine if the solution is already in existence and evaluate its uniqueness. Measure the level of innovation by examining how the solution differs from existing alternatives. Focus on various aspects of innovation, including programmatic, technical, organizational, managerial, and methodological categories. Highlight the unique aspects of the solution and their potential to influence current practices or products. You will provide a score between 0 to 10, with 0 indicating no novelty and 10 indicating a highly creative and unprecedented solution. Your evaluation should reflect the distinctiveness of the solutions approach and its ability to introduce a new value proposition that could significantly impact the status quo.' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
@@ -244,14 +245,14 @@ async function solutionNoveltyEval(prompt) {
     }
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    // console.log([score, explanation]);
+    //console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
 //solution financial impact evaluation
 async function solutionFinImpactEval(prompt) { 
-    rolePlay = background + inputFormat + 'What is the financial impact? Does it create monetary value? For score, return a number between 0-10' + replyFormat;
+    rolePlay = background + inputFormat + 'Your role is to evaluate the financial impact of a proposed solution. Analyze its potential to generate monetary value and contribute to economic growth or savings. Consider the direct financial benefits, cost savings, revenue generation, and long-term financial sustainability of the solution.Provide a score from 0 to 10 based on the solutions capacity to create monetary value. A score of 0 would indicate no financial impact, while a score of 10 would signify a solution with significant potential for financial returns or savings. Your assessment should reflect the economic viability and potential profitability of the solution in question.' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
@@ -269,14 +270,14 @@ async function solutionFinImpactEval(prompt) {
 
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    // console.log([score, explanation]);
+    //console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
 //solution Implementability evaluation
 async function solutionImplementabilityEval(prompt) { 
-    rolePlay = background + inputFormat + 'What is the implementability? How feasible is the solution? How scalabale is the solution? Measurable Metric: Market size (TAM, SAM, SOM) and projected revenue streams (quantitative financial projections), Initial and ongoing costs, revenue projections, projected profit margins, break-even point, ROI (quantitative financial analysis).    . For score, return a number between 0-10.' + replyFormat;
+    rolePlay = background + inputFormat + 'Your role is to evaluate the implementability of a proposed solution, focusing specifically on its feasibility and scalability. You should consider the solutions alignment with market size indicators including Total Addressable Market (TAM), Serviceable Available Market (SAM), and Serviceable Obtainable Market (SOM). Analyze the provided financial projections, such as initial and ongoing costs, revenue forecasts, projected profit margins, the break-even point, and Return on Investment (ROI).Provide a rating between 0 to 10 based on these factors, where 0 indicates a solution with low feasibility and scalability, and 10 represents a highly feasible and scalable solution with strong financial prospects. Your score should comprehensively reflect the practicality of the solution and its potential for market success.' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
@@ -295,14 +296,14 @@ async function solutionImplementabilityEval(prompt) {
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log("score: " + [score, explanation][0]);
-    console.log([score, explanation]);
+    //console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
 // creative name
 async function generateName(prompt) { 
-    rolePlay = "You are a creative thinker! Make up a name with only 1 to 4 words for the given info. Just give me the name, nothing else!";
+    rolePlay = 'You possess a knack for creativity! Your challenge is to concoct a name consisting of 1 to 4 words that encapsulates the essence of the provided information. Your response should exclusively contain the name you have crafted, devoid of any additional commentary or explanation. Let your imagination lead the way to a succinct and resonant title.';
     
     n = null;
     attempts = 0;
@@ -316,7 +317,7 @@ async function generateName(prompt) {
             max_tokens: 10,
             temperature: 0.0,
         });
-        console.log(completion.choices[0].message.content);
+        //console.log(completion.choices[0].message.content);
         const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){0,3})/;
         const aiResponse = completion.choices[0].message.content;
         const nameMatch = aiResponse.match(nameRegex);
@@ -347,7 +348,7 @@ async function generateTags(prompt) {
     
     // console.log(categorize('Design for Longevity and Durability, Recycle and Recover'));
     // console.log(aiResponse);
-    console.log(categorize(aiResponse));
+    //console.log(categorize(aiResponse));
     return categorize(aiResponse);
     // return completion.choices[0].message.content;
 }
@@ -375,7 +376,7 @@ function categorize(input) {
 
 // overall summary
 async function generateSummary(prompt) { 
-    rolePlay = "write a one sentence summary. The structure of your response should be Summary:(following a one sentence summary)";
+    rolePlay = 'Your task is to distill the essence of the given information into a concise, one-sentence summary. The structure of your response should be as follows: "Summary: [insert your succinct, clear, and comprehensive summary here in one sentence]." This summary should capture the key points or the central theme of the provided information, presented in a brief and coherent manner.';
 
     sentence = null;
     while (sentence === null){
@@ -391,7 +392,7 @@ async function generateSummary(prompt) {
         const sentenceMatch = aiResponse.match(firstSentenceRegex);
         sentence = sentenceMatch? sentenceMatch[1].trim() : null;
     }
-    console.log(sentence);
+    //console.log(sentence);
     return sentence;
     // return completion.choices[0].message.content;
 }
@@ -401,13 +402,13 @@ p1 = 'The majority of the materials used in producing electronic goods are not b
 // problemPopularEval(p1)
 // problemGrowingEval(p1)
 // problemUrgentEval(p1)
-problemExpenseEval(p1)
+// problemExpenseEval(p1)
 // problemFrequentEval(p1)
 // solutionCompletenessEval(p)
 // solutionTargetEval(p)
 // solutionNoveltyEval(p)
 // solutionFinImpactEval(p)
-//solutionImplementabilityEval(p)
+// console.log(solutionImplementabilityEval(p))
 // generateName(p)
 // generateTags(p)
 // generateSummary(p);
