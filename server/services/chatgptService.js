@@ -33,7 +33,7 @@ async function problemPopularEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -57,7 +57,7 @@ async function problemGrowingEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -81,7 +81,7 @@ async function problemUrgentEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -105,7 +105,7 @@ async function problemExpenseEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -129,7 +129,7 @@ async function problemFrequentEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -150,7 +150,7 @@ async function solutionCompletenessEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -171,7 +171,7 @@ async function solutionCompletenessEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -192,7 +192,7 @@ async function solutionTargetEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -213,7 +213,7 @@ async function solutionNoveltyEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -234,7 +234,7 @@ async function solutionFinImpactEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -256,7 +256,7 @@ async function solutionImplementabilityEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log("score: " + [score, explanation][0]);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -275,11 +275,73 @@ async function generateName(prompt) {
     const nameMatch = aiResponse.match(nameRegex);
     const name = nameMatch ? nameMatch[1].trim() : null;
     
-    console.log(name);
-    return name
+    // console.log(name);
+    return name;
     // return completion.choices[0].message.content;
 }
 
+// generate tags
+async function generateTags(prompt) { 
+    rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy. If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Design for Longevity and Durability; 2. Maintain and Extend Product Life; 3. Reuse and Re-purpose; 4. Recycle and Recover; 5. Reduce Waste and Minimise Resource Use; 6. Shift to Sustainable Materials; 7. Embrace Digitalisation and Sharing."
+    
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 10,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    tags = categorize(aiResponse)
+    
+    // console.log(categorize('Design for Longevity and Durability, Recycle and Recover'));
+    // console.log(categorize(aiResponse));
+    return categorize(aiResponse);
+    // return completion.choices[0].message.content;
+}
+
+function categorize(input) {
+    const categories = [
+        { name: "Design for Longevity and Durability", regex: /longevity|durability/i },
+        { name: "Maintain and Extend Product Life", regex: /maintain|extend|product life/i },
+        { name: "Reuse and Re-purpose", regex: /reuse|re-purpose/i },
+        { name: "Recycle and Recover", regex: /recycle|recover/i },
+        { name: "Reduce Waste and Minimise Resource Use", regex: /reduce waste|minimise resource/i },
+        { name: "Shift to Sustainable Materials", regex: /sustainable materials/i },
+        { name: "Embrace Digitalisation and Sharing", regex: /digitalisation|sharing/i }
+    ];
+    cate = [];
+
+    for (const category of categories) {
+        if (category.regex.test(input)) {
+            cate.push(category.name);
+        }
+    }
+    if (cate == []) {
+        return ["other"];
+    }
+
+    return  cate;
+}
+
+// overall summary
+async function generateSummary(prompt) { 
+    rolePlay = "You are provided with a problem and a solution. Your task is to provide a one sentence summary. ";
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 50,
+        temperature: 0.0,
+    });
+    const firstSentenceRegex = /Summary:\s*([^\.]+\.)/;
+    const aiResponse = completion.choices[0].message.content;
+    const sentenceMatch = aiResponse.match(firstSentenceRegex);
+    const sentence = sentenceMatch? sentenceMatch[1].trim() : null;
+    
+    console.log(sentence);
+    return sentence;
+    // return completion.choices[0].message.content;
+}
 
 p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick building. Solution: Our solution to this is to transform the way we consume fashion through the creation of a shared fashion platform â€“ a fashion library. The fashion library will function on the concept of lending versus owning'
 // problemPopularEval(p)
@@ -293,6 +355,8 @@ p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick buildin
 // solutionFinImpactEval(p)
 // solutionImplementabilityEval(p)
 // generateName(p)
+// generateTags(p)
+// generateSummary(p);
 
-module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName};
+module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
