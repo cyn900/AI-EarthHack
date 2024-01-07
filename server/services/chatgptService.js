@@ -295,20 +295,20 @@ async function solutionImplementabilityEval(prompt) {
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log("score: " + [score, explanation][0]);
-    // console.log([score, explanation]);
+    console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
 // creative name
 async function generateName(prompt) { 
-    rolePlay = "You are a creative thinker! Make up a name with only 2 to 4 words for the given info. Just give me the name, nothing else!";
+    rolePlay = "You are a creative thinker! Make up a name with only 1 to 4 words for the given info. Just give me the name, nothing else!";
     
     n = null;
     attempts = 0;
-    const maxAttempts = 5;
+    const maxAttempts = 3;
 
-    while (!n && attempts < maxAttempts) {
+    while (n === null && attempts < maxAttempts) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
@@ -316,24 +316,24 @@ async function generateName(prompt) {
             max_tokens: 10,
             temperature: 0.0,
         });
-        // console.log(completion.choices[0].message.content);
-        const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){1,3})/;
+        console.log(completion.choices[0].message.content);
+        const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){0,3})/;
         const aiResponse = completion.choices[0].message.content;
         const nameMatch = aiResponse.match(nameRegex);
         n = nameMatch ? nameMatch[1].trim() : null;
         attempts++;
     }
-        if (!n) {
+        if (n === null || n === 'undefined') {
             n = "Default Name"; // Fallback name if none is generated
         }
-    console.log(n);
+    // console.log('name' + n);
     return n;
     // return completion.choices[0].message.content;
 }
 
 // generate tags
 async function generateTags(prompt) { 
-    rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy. If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
+    rolePlay = "Categorize the given problem and solution into ONLY ONE of the following 7 pillars of circular economy (choose the best fit one). If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         // model: "gpt-4",
@@ -360,20 +360,16 @@ function categorize(input) {
         { name: "Biodiversity", regex: /Biodiversity/i },
         { name: "Soceity & Culture", regex: /Society and Culture/i },
         { name: "Health & Wellbeing", regex: /Health and Wellbeing/i },
-        { name: "Value", regex: /value/i }
+        { name: "Value", regex: /Value/i }
     ];
     cate = [];
 
     for (const category of categories) {
         if (category.regex.test(input)) {
-            cate.push(category.name);
+            return category.name;
         }
     }
-    if (cate.length === 0) {
-        return ["other"];
-    }
-    else{ return cate }
-
+    return 'Other';
     
 }
 
@@ -400,7 +396,7 @@ async function generateSummary(prompt) {
     // return completion.choices[0].message.content;
 }
 
-p = "Problem: The construction industry is indubitably one of the significant contributors to global waste, contributing approximately 1.3 billion tons of waste annually, exerting significant pressure on our landfills and natural resources. Traditional construction methods entail single-use designs that require frequent demolitions, leading to resource depletion and wastage. Solution: Herein, we propose an innovative approach to mitigate this problem: Modular Construction. This method embraces recycling and reuse, taking a significant stride towards a circular economy.   Modular construction involves utilizing engineered components in a manufacturing facility that are later assembled on-site. These components are designed for easy disassembling, enabling them to be reused in diverse projects, thus significantly reducing waste and conserving resources.  Not only does this method decrease construction waste by up to 90%, but it also decreases construction time by 30-50%, optimizing both environmental and financial efficiency. This reduction in time corresponds to substantial financial savings for businesses. Moreover, the modular approach allows greater flexibility, adapting to changing needs over time.  We believe, by adopting modular construction, the industry can transit from a 'take, make and dispose' model to a more sustainable 'reduce, reuse, and recycle' model, driving the industry towards a more circular and sustainable future. The feasibility of this concept is already being proven in markets around the globe, indicating its potential for scalability and real-world application."
+p = "Problem: The majority of the materials used in producing electronic goods are not being utilized optimally. Numerous electronic devices are replaced before their lifespan ends, often due to minor malfunctioning or outdated components, resulting in significant production of electronic waste and underutilization of natural resources.  Solution: An innovative concept would be a modular electronic device model where users are able to upgrade or swap components, rather than replacing the entire device, thus promoting a circular economy. This goes beyond just restoration but rather the idea of creating an electronic gadget that thrives on reuse and modifications, maximising the life and value of each part.   Manufacturers need to design gadgets with modules for core components, allowing for easy upgrades or replacements. For instance, a smartphone could have individually upgradeable components: camera, battery, CPU, etc. When a module fails or becomes outdated, only that module needs to be replaced.  This idea promotes resource use efficiency and significantly cuts waste, under the 'reduce, reuse, repair' mantra. The replaced modules should be sent back to manufacturers for refurbishment or extraction of critical raw materials.   For businesses it opens a new market space, enabled by sale of modules and recycled components, providing long term value capture. It also increases customer loyalty as they continually engage with the manufacturers in the lifecycle of their device. The model is scalable as it allows for the continuous incorporation of technological advancements within the same core device.   This modular approach is not only novel but it clearly addresses the broader picture of how electronic devices should be designed for a circular economy, considering environmental protection, resource efficiency, economic viability, and customer value."
 // problemPopularEval(p)
 // problemGrowingEval(p)
 // problemUrgentEval(p)
@@ -410,8 +406,8 @@ p = "Problem: The construction industry is indubitably one of the significant co
 // solutionTargetEval(p)
 // solutionNoveltyEval(p)
 // solutionFinImpactEval(p)
-// solutionImplementabilityEval(p)
-generateName(p)
+//solutionImplementabilityEval(p)
+// generateName(p)
 // generateTags(p)
 // generateSummary(p);
 // spamFilter(p)

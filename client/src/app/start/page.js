@@ -60,8 +60,17 @@ export default function Home() {
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-row">
                 <div className="text-center lg:text-left">
-                    <h1 className="text-5xl font-bold"> How "NAME" Works </h1>
-                    <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                    <h1 className="text-5xl font-bold" style={{ color: 'black' }}> How Arbor Works </h1>
+                    <p className="py-6 font-bold" style={{ color: 'black' }}> 1. 📂 File Upload & Metric Prioritization: </p>
+                    <p className="py-6" style={{ color: 'black' }}> Upload your ideas and prioritize evaluation criteria to fit your needs and standards. </p>
+                    <p className="py-6 font-bold" style={{ color: 'black' }}> 2. 🤖 AI Analysis & Spam Purge </p>
+                    <p className="py-6" style={{ color: 'black' }}> Our AI sorts and bins the spam - ensuring relevance of ideas and adherence to circular economy principles. </p>
+                    <p className="py-6 font-bold" style={{ color: 'black' }}> 3. 📊 Weighted Metric Evaluation: </p>
+                    <p className="py-6" style={{ color: 'black' }}> Your ideas face the metrics you prioritize. AI evaluates, quantitatively through indexes used across industries while also considering qualitative factors. </p>
+                    <p className="py-6 font-bold" style={{ color: 'black' }}> 4. 🎉 Insightful Dashboard </p>
+                    <p className="py-6" style={{ color: 'black' }}> Witness the winners! Spot popular categories, visualize idea performance and explore the leaderboard </p>
+                    <p className="py-6 font-bold" style={{ color: 'black' }}> 5. 🏆 Detailed Insights </p>
+                    <p className="py-6" style={{ color: 'black' }}> Dive into the best! Filter to see top performers of different categories and how they rated based on each metrics! </p>
                 </div>
                 <div className="card self-center bg-gray-300 shadow-xl">
 

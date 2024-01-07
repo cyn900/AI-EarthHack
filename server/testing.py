@@ -2,7 +2,20 @@ import csv
 import pandas as pd
 import matplotlib.pyplot as plt
 
+def calculateAvg(score):
+    num = 0
+    i = 0
+    with open('server/output.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        
+        for row in reader:
+            num += float(row[score])
+            i += 1
 
+    return num/i
+
+# print the problemUrgentScore average
+# print('average problemUrgentScore: ', calculateAvg('problemUrgentScore'))
 
 def plot_histogram(data, column_name, bins=20, range=(0, 10)):
     """
@@ -28,5 +41,32 @@ file_path = 'server/output.csv'
 df = pd.read_csv(file_path, delimiter=';')
 
 # Plot histograms for different columns
-plot_histogram(df, 'problemPopularityScore')
-plot_histogram(df, 'solutionImplementabilityScore')
+# plot_histogram(df, 'problemPopularityScore')
+# plot_histogram(df, 'solutionImplementabilityScore')
+
+# Select the row - for example, the row with index 5
+selected_row = df.iloc[3]
+
+# Define outlier criteria for a specific column - for example, 'problemPopularityScore'
+column_name = 'problemPopularityScore'
+
+# Compute the IQR for the entire column
+Q1 = df[column_name].quantile(0.25)
+Q3 = df[column_name].quantile(0.75)
+IQR = Q3 - Q1
+
+# Define bounds for outliers
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Check if the selected row's value in the specified column is an outlier
+if selected_row[column_name] < lower_bound or selected_row[column_name] > upper_bound:
+    print(f"The value in row {selected_row.name} is an outlier in column '{column_name}'.")
+else:
+    print(f"The value in row {selected_row.name} is NOT an outlier in column '{column_name}'.")
+
+with open('server/output.csv', newline='') as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=';')
+        
+    for row in reader:
+        print(row['problemPopularityScore'])
