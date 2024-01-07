@@ -69,7 +69,7 @@ export default function Home() {
                     <div className="card-body">
                         <h2 className="card-title"> Evaluation Goal </h2>
                         <textarea
-                            className="textarea textarea-primary"
+                            className="textarea textarea-primary min-h-36"
                             placeholder="E.g. evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'."
                             onChange={handleChangeTextArea}
                             name="evaluation-goal"
