@@ -34,16 +34,26 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
 
         csv({ headers: false })
             .on('data', (row) => {
+                console.log("pass 1");
                 if (!headers) {
                     // First row is the header
                     headers = Object.values(row);
+                    console.log("pass 2");
                 } else {
                     // Subsequent rows are the data
                     const rowData = {};
+                    console.log("pass 3");
                     headers.forEach((header, index) => {
                         rowData[header] = row[index];
+                        console.log("pass 4");
                     });
+
                     const prompt = 'Problem: ' + rowData['problem'] + 'solution:' + rowData['solution'];
+                    if (prompt == null) {
+                        console.log('Prompt is null or undefined');
+                        return null; // or handle it as per your application's logic
+                    }
+                
                     const spamFilterReply = spamFilter(prompt);
                     const problemPopularityReply = problemPopularEval(prompt);
                     const problemGrowingReply = problemGrowingEval(prompt);
