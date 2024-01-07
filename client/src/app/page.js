@@ -7,6 +7,7 @@ import Image from 'next/image'
 
 export default function Home() {
     const [file, setFile] = useState(null);
+    const [evaluationGoal, setEvaluationGoal] = useState('');
     const [loading, setLoading] = useState(false); // Track the loading state
     const [response, setResponse] = useState('');
     const handleChangeForm = (e) => {
@@ -16,6 +17,13 @@ export default function Home() {
             setFile(selectedFile || null);
         }
     };
+
+    const handleChangeTextArea = (e) => {
+        e.preventDefault()
+        if (e.target.name === 'evaluation-goal') {
+            setEvaluationGoal(e.target.value);
+        }
+    }
 
     const handleSubmitForm = async(e) => {
         e.preventDefault();
@@ -28,8 +36,13 @@ export default function Home() {
             try {
                 const formData = new FormData();
                 formData.append('csvFile', file);
+                formData.append('evaluationGoal', evaluationGoal);
 
-                const response = await axios.post('http://localhost:4000/load-csv', formData);
+                const response = await axios.post('http://localhost:4000/load-csv', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                });
                 console.log(response.data);
 
                 setResponse("File uploaded successfully. Upload status: " + response.data.status);
@@ -51,19 +64,18 @@ export default function Home() {
                     <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
                 </div>
                 <div className="card self-center bg-gray-300 shadow-xl">
-                    <figure className='w-full aspect-square max-h-64 bg-white'>
-                        <div className='relative h-full aspect-square'>
-                            <Image
-                                src="/upload.gif"
-                                alt="upload"
-                                fill
-                            />
-                        </div>
-                    </figure>
 
                     <div className="card-body">
-                        <h2 className="card-title"> Upload File </h2>
-                        <p> Please only upload .csv file  </p>
+                        <h2 className="card-title"> Evaluation Goal </h2>
+                        <textarea
+                            className="textarea textarea-primary"
+                            placeholder="E.g. evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'."
+                            onChange={handleChangeTextArea}
+                            name="evaluation-goal"
+                        ></textarea>
+
+                        <h2 className="card-title mt-8"> Idea Database </h2>
+                        <p> Insert a csv file with a separate columns for problem and solution by clicking on the area below. See example data file.  </p>
                         <form onSubmit={handleSubmitForm} encType="multipart/form-data" className="card-actions justify-end">
                             <input id='file-input' type="file" onChange={handleChangeForm} name="csv-form" className="file-input file-input-bordered file-input-primary w-full bg-gray-100" />
                             {
