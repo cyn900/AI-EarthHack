@@ -93,7 +93,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     rowData['solutionImplementabilityExplaination'] = solutionImplementabilityReply[1];
 
                     rowData['name'] = generateNameReply;
-                    rowData['tags'] = generateTagsReply; // a list of tags
+                    rowData['tags'] = generateTagsReply; // a list of tags ex: ['Design for Longevity and Durability', 'Recycle and Recover']
                     rowData['summary'] = generateSummaryReply;
 
                     rows.push(rowData);
