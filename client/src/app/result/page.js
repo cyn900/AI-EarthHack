@@ -13,10 +13,8 @@ export default function Page() {
     const [averageIdeaScore, setAverageIdeaScore] = useState('');
     const [pillars, setPillars] = useState([]);
     const [topIdeas, setTopIdeas] = useState([]);
-
     const [selectedValue, setSelectedValue] = useState('Water');
     const [topIdeasByPillar, setTopIdeasByPillar] = useState([]);
-
 
     const handleToggleDropdown = () => {
         setOpen(!open);
@@ -83,7 +81,7 @@ export default function Page() {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:4000/get-relevant-ideas-number');
-                console.log("relevant ideas number: " + response);
+                // console.log("relevant ideas number: " + JSON.stringify(response));
                 setRelevantIdeasNumber(response.data.relevantIdeasNumber);
             } catch (error) {
                 console.error('Error fetching relevant ideas number:', error);
@@ -97,7 +95,7 @@ export default function Page() {
        const fetchData = async () => {
            try {
                 const response = await axios.get('http://localhost:4000/get-average-idea-score');
-                console.log("average idea score: " + response);
+                console.log("average idea score: " + JSON.stringify(response));
                 setAverageIdeaScore(response.data.averageIdeaScore);
            } catch (error) {
                console.error('Error fetching average idea score:', error);
@@ -201,7 +199,7 @@ export default function Page() {
                         <div className="card-body">
                             <h2 className="card-title text-xs"> Popularity of Each Pillars of Circular Economy </h2>
                             <div>
-                                <PieChart chartData={pillars} />
+                                {/*<PieChart chartData={pillars} />*/}
                             </div>
                         </div>
                     </div>
@@ -241,7 +239,7 @@ export default function Page() {
                                     </div>
                                 </div>
                                 <div className="mt-8">
-                                    <RadarChart chartData={pillars} />
+                                    {/*<RadarChart chartData={pillars} />*/}
                                 </div>
                             </div>
                         </div>
