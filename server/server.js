@@ -200,8 +200,8 @@ app.post('/read-csv', (req, res) => {
 
     const csvFilePath = path.join(__dirname, 'output.csv');
 
-    fs.createReadStream(csvFilePath, 'utf8')
-        .pipe(csv({ delimiter: ';' })) // Adjust the delimiter based on your CSV
+    fs.createReadStream(csvFilePath, 'utf-8')
+        .pipe(csv({ separator: ';' })) // Adjust the delimiter based on your CSV
         .on('data', (row) => {
             data.push(row);
         })
