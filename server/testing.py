@@ -60,13 +60,17 @@ lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 
 # Check if the selected row's value in the specified column is an outlier
-if selected_row[column_name] < lower_bound or selected_row[column_name] > upper_bound:
-    print(f"The value in row {selected_row.name} is an outlier in column '{column_name}'.")
-else:
-    print(f"The value in row {selected_row.name} is NOT an outlier in column '{column_name}'.")
+def idOutlier(score):
+    if selected_row[score] < lower_bound or selected_row[score] > upper_bound:
+        print(f"The value in row {selected_row.newName} is an outlier in column '{score}'.")
+    else:
+        print("There is no outlier.")
 
-with open('server/output.csv', newline='') as csvfile:
-    reader = csv.DictReader(csvfile, delimiter=';')
-        
-    for row in reader:
-        print(row['problemPopularityScore'])
+    # with open('server/output.csv', newline='') as csvfile:
+    #     reader = csv.DictReader(csvfile, delimiter=';')
+            
+    #     for row in reader:
+    #         print(row[score])
+
+# 'problemPopularityScore'
+idOutlier('problemPopularityScore')
