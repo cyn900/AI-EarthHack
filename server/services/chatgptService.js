@@ -40,7 +40,7 @@ async function problemPopularEval(prompt) {
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
-            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: 'Plastic Bottle'}, { role: 'system', content: "Score: 1.2. Explaination: This is a very popular topic but there is no explaination." },{ role: 'user', content: prompt}],
             // model: "gpt-4",
             model: gptModel,
             max_tokens: 50,
@@ -302,22 +302,32 @@ async function solutionImplementabilityEval(prompt) {
 
 // creative name
 async function generateName(prompt) { 
-    rolePlay = "You are a creative thinker! Make up a name with only 2 to 4 words for the given info. Just give me the name, nothing else!";
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: gptModel,
-        max_tokens: 10,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){1,3})/;
-    const aiResponse = completion.choices[0].message.content;
-    const nameMatch = aiResponse.match(nameRegex);
-    const name = nameMatch ? nameMatch[1].trim() : null;
+    rolePlay = "You are a creative thinker! Make up a name with only 1 to 4 words for the given info. Just give me the name, nothing else!";
     
-    // console.log(name);
-    return name;
+    n = null;
+    attempts = 0;
+    const maxAttempts = 3;
+
+    while (n === null && attempts < maxAttempts) {
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: gptModel,
+            max_tokens: 10,
+            temperature: 0.0,
+        });
+        console.log(completion.choices[0].message.content);
+        const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){0,3})/;
+        const aiResponse = completion.choices[0].message.content;
+        const nameMatch = aiResponse.match(nameRegex);
+        n = nameMatch ? nameMatch[1].trim() : null;
+        attempts++;
+    }
+        if (n === null || n === 'undefined') {
+            n = "Default Name"; // Fallback name if none is generated
+        }
+    console.log('name' + n);
+    return n;
     // return completion.choices[0].message.content;
 }
 
@@ -369,24 +379,28 @@ function categorize(input) {
 
 // overall summary
 async function generateSummary(prompt) { 
-    rolePlay = "write a one sentence summary.";
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        model: gptModel,
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    const firstSentenceRegex = /Summary:\s*([^\.]+\.)/;
-    const aiResponse = completion.choices[0].message.content;
-    const sentenceMatch = aiResponse.match(firstSentenceRegex);
-    const sentence = sentenceMatch? sentenceMatch[1].trim() : null;
-    
-    // console.log(sentence);
+    rolePlay = "write a one sentence summary. The structure of your response should be Summary:(following a one sentence summary)";
+
+    sentence = null;
+    while (sentence === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            model: gptModel,
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+
+        const firstSentenceRegex = /Summary:\s*([^\.]+\.)/;
+        const aiResponse = completion.choices[0].message.content;
+        const sentenceMatch = aiResponse.match(firstSentenceRegex);
+        sentence = sentenceMatch? sentenceMatch[1].trim() : null;
+    }
+    console.log(sentence);
     return sentence;
     // return completion.choices[0].message.content;
 }
 
-p = 'Problem: 1, Solution: 2'
+p = "Problem: The majority of the materials used in producing electronic goods are not being utilized optimally. Numerous electronic devices are replaced before their lifespan ends, often due to minor malfunctioning or outdated components, resulting in significant production of electronic waste and underutilization of natural resources.  Solution: An innovative concept would be a modular electronic device model where users are able to upgrade or swap components, rather than replacing the entire device, thus promoting a circular economy. This goes beyond just restoration but rather the idea of creating an electronic gadget that thrives on reuse and modifications, maximising the life and value of each part.   Manufacturers need to design gadgets with modules for core components, allowing for easy upgrades or replacements. For instance, a smartphone could have individually upgradeable components: camera, battery, CPU, etc. When a module fails or becomes outdated, only that module needs to be replaced.  This idea promotes resource use efficiency and significantly cuts waste, under the 'reduce, reuse, repair' mantra. The replaced modules should be sent back to manufacturers for refurbishment or extraction of critical raw materials.   For businesses it opens a new market space, enabled by sale of modules and recycled components, providing long term value capture. It also increases customer loyalty as they continually engage with the manufacturers in the lifecycle of their device. The model is scalable as it allows for the continuous incorporation of technological advancements within the same core device.   This modular approach is not only novel but it clearly addresses the broader picture of how electronic devices should be designed for a circular economy, considering environmental protection, resource efficiency, economic viability, and customer value."
 // problemPopularEval(p)
 // problemGrowingEval(p)
 // problemUrgentEval(p)
@@ -397,10 +411,10 @@ p = 'Problem: 1, Solution: 2'
 // solutionNoveltyEval(p)
 // solutionFinImpactEval(p)
 // solutionImplementabilityEval(p)
-// generateName(p)
+generateName(p)
 // generateTags(p)
 // generateSummary(p);
-spamFilter(p)
+// spamFilter(p)
 
 module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
