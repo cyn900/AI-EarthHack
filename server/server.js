@@ -55,6 +55,17 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
 
         // Parse CSV content (using csv-parser as an example)
 
+        // const tempFilePath = path.join(__dirname, 'tempFile.csv');
+        
+        // // Write the uploaded content to the temporary file
+        // fs.writeFileSync(tempFilePath, fileContent);
+
+        // // Append an empty line to the temporary file
+        // fs.appendFileSync(tempFilePath, '\n');
+
+        // // Now read and process the temporary file
+        // fs.createReadStream(tempFilePath)
+        //     .pipe(csv({ headers: false }))
         csv({ headers: false })
             .on('data', async(row) => {
                 console.log(row);
@@ -71,8 +82,8 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     const prob = rowData['problem'];
                     // const solu = rowData['solution']
                     const prompt = 'Problem: ' + rowData['problem'] + 'Solution:' + rowData['solution'];
-                    if (prompt == null) {
-                        return null; // or handle it as per your application's logic
+                    if (prob == null) {
+                        return "None"; // or handle it as per your application's logic
                     }
 
                     const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
