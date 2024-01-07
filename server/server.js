@@ -10,7 +10,36 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 let evaluationGoal = "Evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'.";
-let storedRows = null;
+let storedRows = [
+    {
+        "problem": "Urban areas are suffering from high air pollution levels",
+        "solution": "Implementing green public transportation systems powered by renewable energy sources.",
+        "relevance": "Valid",
+        "problemPopularityScore": 8.5,
+        "problemPopularityExplaination": "The user provided a clear and specific problem statement about high air pollution levels in urban areas, which affects a large number of individuals and communities.",
+        "problemGrowingScore": 8.5,
+        "problemGrowingExplaination": "The user provided a clear problem description about high air pollution levels in urban areas.",
+        "problemUrgentScore": 8.5,
+        "problemUrgentExplaination": "The user provided a clear and urgent problem description regarding high air pollution levels in urban areas.",
+        "problemExpenseScore": 8.5,
+        "problemExpenseExplaination": "The problem of high air pollution levels in urban areas is urgent as it poses a significant threat to public health and the environment.",
+        "problemFrequentScore": 8.5,
+        "problemFrequentExplaination": "The user provided a clear and common problem of high air pollution levels in urban areas.",
+        "solutionCompletenessScore": 8.5,
+        "solutionCompletenessExplaination": "The solution proposed is a good step towards reducing air pollution in urban areas by implementing green public transportation systems powered by renewable energy sources.",
+        "solutionTargetScore": 9.0,
+        "solutionTargetExplaination": "The solution proposed addresses the problem of high air pollution levels in urban areas by suggesting the implementation of green public transportation systems powered by renewable energy sources.",
+        "solutionNoveltyScore": 8.5,
+        "solutionNoveltyExplaination": "The user did a good job in identifying the problem of high air pollution levels in urban areas and proposing a solution of implementing green public transportation systems powered by renewable energy sources.",
+        "solutionFinImpactScore": 9.0,
+        "solutionFinImpactExplaination": "The user did a great job identifying the problem of high air pollution levels in urban areas and proposing a solution of implementing green public transportation systems powered by renewable energy sources.",
+        "solutionImplementabilityScore": 8.5,
+        "solutionImplementabilityExplaination": "The user did well in identifying the problem of high air pollution levels in urban areas and proposing a solution of implementing green public transportation systems powered by renewable energy sources.",
+        "newName": undefined,
+        "tags": "Energy",
+        "summary": "The solution to high air pollution in urban areas is to introduce green public transportation systems that run on renewable energy sources."
+    }
+];
 let userRatings = null;
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
@@ -39,11 +68,6 @@ const generateScore = () => {
                 parseFloat(row.solutionNoveltyScore) * userRatings['Novelty'] +
                 parseFloat(row.solutionFinImpactScore) * userRatings['Financial Impact'] +
                 parseFloat(row.solutionImplementabilityScore) * userRatings['Implementability'];
-
-            console.log("problem score", problemScore)
-            console.log("solution score", solutionScore)
-            console.log(row, userRatings);
-            return;
 
             row.score = problemScore + solutionScore;
 
@@ -102,7 +126,6 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         //     .pipe(csv({ headers: false }))
         csv({ headers: false })
             .on('data', async(row) => {
-                console.log(row);
                 if (!headers) {
                     // First row is the header
                     headers = Object.values(row);
