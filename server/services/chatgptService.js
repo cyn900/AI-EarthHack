@@ -40,7 +40,7 @@ async function problemPopularEval(prompt) {
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
-            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: 'Plastic Bottle'}, { role: 'system', content: "Score: 1.2. Explaination: This is a very popular topic but there is no explaination." },{ role: 'user', content: prompt}],
             // model: "gpt-4",
             model: gptModel,
             max_tokens: 50,
@@ -303,21 +303,31 @@ async function solutionImplementabilityEval(prompt) {
 // creative name
 async function generateName(prompt) { 
     rolePlay = "You are a creative thinker! Make up a name with only 2 to 4 words for the given info. Just give me the name, nothing else!";
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
-        model: gptModel,
-        max_tokens: 10,
-        temperature: 0.0,
-    });
-    // console.log(completion.choices[0].message.content);
-    const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){1,3})/;
-    const aiResponse = completion.choices[0].message.content;
-    const nameMatch = aiResponse.match(nameRegex);
-    const name = nameMatch ? nameMatch[1].trim() : null;
     
-    // console.log(name);
-    return name;
+    n = null;
+    attempts = 0;
+    const maxAttempts = 5;
+
+    while (!n && attempts < maxAttempts) {
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            // model: "gpt-4",
+            model: gptModel,
+            max_tokens: 10,
+            temperature: 0.0,
+        });
+        // console.log(completion.choices[0].message.content);
+        const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){1,3})/;
+        const aiResponse = completion.choices[0].message.content;
+        const nameMatch = aiResponse.match(nameRegex);
+        n = nameMatch ? nameMatch[1].trim() : null;
+        attempts++;
+    }
+        if (!n) {
+            n = "Default Name"; // Fallback name if none is generated
+        }
+    console.log(n);
+    return n;
     // return completion.choices[0].message.content;
 }
 
@@ -369,24 +379,28 @@ function categorize(input) {
 
 // overall summary
 async function generateSummary(prompt) { 
-    rolePlay = "write a one sentence summary.";
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        model: gptModel,
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    const firstSentenceRegex = /Summary:\s*([^\.]+\.)/;
-    const aiResponse = completion.choices[0].message.content;
-    const sentenceMatch = aiResponse.match(firstSentenceRegex);
-    const sentence = sentenceMatch? sentenceMatch[1].trim() : null;
-    
-    // console.log(sentence);
+    rolePlay = "write a one sentence summary. The structure of your response should be Summary:(following a one sentence summary)";
+
+    sentence = null;
+    while (sentence === null){
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+            model: gptModel,
+            max_tokens: 60,
+            temperature: 0.0,
+        });
+
+        const firstSentenceRegex = /Summary:\s*([^\.]+\.)/;
+        const aiResponse = completion.choices[0].message.content;
+        const sentenceMatch = aiResponse.match(firstSentenceRegex);
+        sentence = sentenceMatch? sentenceMatch[1].trim() : null;
+    }
+    console.log(sentence);
     return sentence;
     // return completion.choices[0].message.content;
 }
 
-p = 'Problem: 1, Solution: 2'
+p = "Problem: The construction industry is indubitably one of the significant contributors to global waste, contributing approximately 1.3 billion tons of waste annually, exerting significant pressure on our landfills and natural resources. Traditional construction methods entail single-use designs that require frequent demolitions, leading to resource depletion and wastage. Solution: Herein, we propose an innovative approach to mitigate this problem: Modular Construction. This method embraces recycling and reuse, taking a significant stride towards a circular economy.   Modular construction involves utilizing engineered components in a manufacturing facility that are later assembled on-site. These components are designed for easy disassembling, enabling them to be reused in diverse projects, thus significantly reducing waste and conserving resources.  Not only does this method decrease construction waste by up to 90%, but it also decreases construction time by 30-50%, optimizing both environmental and financial efficiency. This reduction in time corresponds to substantial financial savings for businesses. Moreover, the modular approach allows greater flexibility, adapting to changing needs over time.  We believe, by adopting modular construction, the industry can transit from a 'take, make and dispose' model to a more sustainable 'reduce, reuse, and recycle' model, driving the industry towards a more circular and sustainable future. The feasibility of this concept is already being proven in markets around the globe, indicating its potential for scalability and real-world application."
 // problemPopularEval(p)
 // problemGrowingEval(p)
 // problemUrgentEval(p)
@@ -397,10 +411,10 @@ p = 'Problem: 1, Solution: 2'
 // solutionNoveltyEval(p)
 // solutionFinImpactEval(p)
 // solutionImplementabilityEval(p)
-// generateName(p)
+generateName(p)
 // generateTags(p)
 // generateSummary(p);
-spamFilter(p)
+// spamFilter(p)
 
 module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
