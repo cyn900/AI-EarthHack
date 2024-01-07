@@ -7,6 +7,7 @@ const { spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, p
 const app = express();
 const port = process.env.PORT || 4000;
 
+let evaluationGoal = "Evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'.";
 let storedRows = null;
 let userRatings = null;
 const storage = multer.memoryStorage(); // Store the file in memory
@@ -33,7 +34,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
             return res.status(400).json({ error: 'No evaluation goal provided' });
         }
 
-        const evaluationGoal = req.body.evaluationGoal;  // do something with evaluation goal
+        evaluationGoal = req.body.evaluationGoal;  // do something with evaluation goal
         const fileBuffer = req.file.buffer;
         const fileContent = fileBuffer.toString('utf-8');
 
@@ -211,6 +212,14 @@ app.post('/load-user-rating', (req, res) => {
     });
 
     res.status(200).json({ status: 'OK' });
+});
+
+app.get('/get-evaluation-goal', (req, res) => {
+    if (!evaluationGoal) {
+        return res.status(400).json({ error: 'No evaluation goal provided' });
+    }
+
+    res.json({ evaluationGoal: evaluationGoal });
 });
 
 app.get('/get-relevant-number', (req, res) => {

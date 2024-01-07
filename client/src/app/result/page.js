@@ -1,11 +1,13 @@
 "use client";
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import PieChart from "@/components/PieChart";
 import RadarChart from "@/components/RadarChart";
+import axios from "axios";
 
 export default function Page() {
     const [open, setOpen] = useState(false);
+    const [evaluationGoal, setEvaluationGoal] = useState('');
     const [selectedValue, setSelectedValue] = useState('Select an option');
 
     const handleToggleDropdown = () => {
@@ -83,6 +85,20 @@ export default function Page() {
         }
     ]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/get-evaluation-goal');
+                console.log(response);
+                setEvaluationGoal(response.data.evaluationGoal);
+            } catch (error) {
+                console.error('Error fetching evaluation goal:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div className="flex flex-col justify-center items-center min-h-screen mt-16">
             <div className="max-w-screen-2xl">
@@ -99,7 +115,7 @@ export default function Page() {
                     <div className="card w-full m-4 bg-base-100 shadow-xl">
                         <div className="card-body">
                             <h2 className="card-title text-2xl"> Evaluation Goals </h2>
-                            <p> Evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'.  </p>
+                            <p> {evaluationGoal}  </p>
                         </div>
                     </div>
 
