@@ -20,7 +20,7 @@ app.get('/healthcheck', (req, res) => {
     res.status(200).json({ status: 'OK' });
 });
 
-app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
+app.post('/load-csv', upload.single('csvFile'), (req, res) => {
     const rows = [];
     let headers = null;
     let num = 0;
@@ -147,12 +147,14 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
 
                     // rows.push(rowData);
                     // console.log('rowData: ' + rowData['problem']);
+                    rows.push(rowData)
                     writeRow(rowData);
                     
                     // writeRow({problem: "\""+rowData['problem']+"\"", solution: "\""+rowData['solution']+"\"", relevance: rowData['relevance'], problemPopularityScore: rowData['problemPopularityScore'],problemPopularityExplaination: "\""+rowData['problemPopularityExplaination']+"\"", problemGrowingScore: rowData['problemGrowingScore'], problemGrowingExplaination: "\""+rowData['problemGrowingExplaination']+"\"", problemUrgentScore: rowData['problemUrgentScore'], problemUrgentExplaination: "\""+rowData['problemUrgentExplaination']+"\"", problemExpenseScore: rowData['problemExpenseScore'], problemExpenseExplaination: "\""+rowData['problemExpenseExplaination']+"\"", problemFrequentScore: rowData['problemFrequentScore'], problemFrequentExplaination: "\""+rowData['problemFrequentExplaination']+"\"", solutionCompletenessScore: rowData['solutionCompletenessScore'], solutionCompletenessExplaination: "\""+rowData['solutionCompletenessExplaination']+"\"", solutionTargetScore: rowData['solutionTargetScore'], solutionTargetExplaination: "\""+rowData['solutionTargetExplaination']+"\"", solutionNoveltyScore: rowData['solutionNoveltyScore'], solutionNoveltyScore: "\""+rowData['solutionNoveltyScore'], solutionNoveltyExplaination: "\""+rowData['solutionNoveltyExplaination']+"\"", solutionFinImpactScore: rowData['solutionFinImpactScore'], solutionFinImpactExplaination: "\""+rowData['solutionFinImpactExplaination']+"\"", solutionImplementabilityScore: rowData['solutionImplementabilityScore'], solutionImplementabilityExplaination: "\""+rowData['solutionImplementabilityExplaination']+"\"", newName: rowData['newName'], tags: rowData['tags'], summary: "\""+rowData['summary']+"\""});
                 }
             })
             .write(fileContent);
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -160,6 +162,7 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
 
     storedRows = rows;
     res.json({ csvData: rows });
+    console.log(storedRows);
     // res.status(200).json({ status: 'OK' });
 });
 
