@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const csv = require("csv-parser");
+const fs = require('fs');
+const path = require('path');
 const { spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary } = require('./services/chatgptService');
 
 const app = express();
@@ -38,9 +40,6 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         const fileBuffer = req.file.buffer;
         const fileContent = fileBuffer.toString('utf-8');
 
-        const fs = require('fs');
-        const path = require('path');
-        
         const outputCsvPath = path.join(__dirname, 'output.csv');
         const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
 
@@ -214,6 +213,28 @@ app.post('/load-user-rating', (req, res) => {
 
     res.status(200).json({ status: 'OK' });
 });
+
+app.post('/read-csv', (req, res) => {
+    const data = [];
+
+    const csvFilePath = path.join(__dirname, 'output.csv');
+
+    fs.createReadStream(csvFilePath, 'utf8')
+        .pipe(csv({ delimiter: ';' })) // Adjust the delimiter based on your CSV
+        .on('data', (row) => {
+            data.push(row);
+        })
+        .on('end', () => {
+            res.json(data);
+        })
+        .on('error', (error) => {
+            res.status(500).json({ error: 'Error parsing CSV' });
+        });
+
+    storedRows = data;
+    console.log(storedRows);
+});
+
 
 app.get('/get-evaluation-goal', (req, res) => {
     if (!evaluationGoal) {
