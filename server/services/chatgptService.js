@@ -295,7 +295,7 @@ async function solutionImplementabilityEval(prompt) {
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log("score: " + [score, explanation][0]);
-    // console.log([score, explanation]);
+    console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -333,7 +333,7 @@ async function generateName(prompt) {
 
 // generate tags
 async function generateTags(prompt) { 
-    rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy. If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
+    rolePlay = "Categorize the given problem and solution into ONLY ONE of the following 7 pillars of circular economy (choose the best fit one). If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         // model: "gpt-4",
@@ -360,20 +360,16 @@ function categorize(input) {
         { name: "Biodiversity", regex: /Biodiversity/i },
         { name: "Soceity & Culture", regex: /Society and Culture/i },
         { name: "Health & Wellbeing", regex: /Health and Wellbeing/i },
-        { name: "Value", regex: /value/i }
+        { name: "Value", regex: /Value/i }
     ];
     cate = [];
 
     for (const category of categories) {
         if (category.regex.test(input)) {
-            cate.push(category.name);
+            return category.name;
         }
     }
-    if (cate.length === 0) {
-        return ["other"];
-    }
-    else{ return cate }
-
+    return 'Other';
     
 }
 
@@ -410,8 +406,8 @@ p = "Problem: The majority of the materials used in producing electronic goods a
 // solutionTargetEval(p)
 // solutionNoveltyEval(p)
 // solutionFinImpactEval(p)
-// solutionImplementabilityEval(p)
-generateName(p)
+//solutionImplementabilityEval(p)
+// generateName(p)
 // generateTags(p)
 // generateSummary(p);
 // spamFilter(p)
