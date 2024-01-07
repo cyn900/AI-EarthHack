@@ -44,7 +44,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         const outputCsvPath = path.join(__dirname, 'output.csv');
         const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
 
-        const newHeader = 'problem,solution,solution,relevance,problemPopularityScore,problemPopularityExplaination,problemGrowingScore,problemGrowingExplaination,problemUrgentScore,problemUrgentExplaination,problemExpenseScore,problemExpenseExplaination,problemFrequentScore,problemFrequentExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionTargetScore,solutionTargetExplaination,solutionNoveltyScore,solutionNoveltyExplaination,solutionFinImpactScore,solutionFinImpactExplaination,solutionImplementabilityScore,solutionImplementabilityExplaination,newName,tags,summary\n';
+        const newHeader = 'problem,solution,relevance,problemPopularityScore,problemPopularityExplaination,problemGrowingScore,problemGrowingExplaination,problemUrgentScore,problemUrgentExplaination,problemExpenseScore,problemExpenseExplaination,problemFrequentScore,problemFrequentExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionTargetScore,solutionTargetExplaination,solutionNoveltyScore,solutionNoveltyExplaination,solutionFinImpactScore,solutionFinImpactExplaination,solutionImplementabilityScore,solutionImplementabilityExplaination,newName,tags,summary\n';
         writableStream.write(newHeader);
 
         // Example function to write a row
