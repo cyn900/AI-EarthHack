@@ -333,7 +333,7 @@ async function generateName(prompt) {
 
 // generate tags
 async function generateTags(prompt) { 
-    rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy. If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
+    rolePlay = "Categorize the given problem and solution into ONLY ONE of the following 7 pillars of circular economy (choose the best fit one). If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         // model: "gpt-4",
@@ -366,14 +366,10 @@ function categorize(input) {
 
     for (const category of categories) {
         if (category.regex.test(input)) {
-            cate.push(category.name);
+            return category.name;
         }
     }
-    if (cate.length === 0) {
-        return ["other"];
-    }
-    else{ return cate }
-
+    return 'other';
     
 }
 
