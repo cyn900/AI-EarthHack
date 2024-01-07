@@ -295,7 +295,7 @@ async function solutionImplementabilityEval(prompt) {
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log("score: " + [score, explanation][0]);
-    // console.log([score, explanation]);
+    console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -326,7 +326,7 @@ async function generateName(prompt) {
         if (n === null || n === 'undefined') {
             n = "Default Name"; // Fallback name if none is generated
         }
-    console.log('name' + n);
+    // console.log('name' + n);
     return n;
     // return completion.choices[0].message.content;
 }
@@ -410,8 +410,8 @@ p = "Problem: The majority of the materials used in producing electronic goods a
 // solutionTargetEval(p)
 // solutionNoveltyEval(p)
 // solutionFinImpactEval(p)
-// solutionImplementabilityEval(p)
-generateName(p)
+//solutionImplementabilityEval(p)
+// generateName(p)
 // generateTags(p)
 // generateSummary(p);
 // spamFilter(p)
