@@ -2,7 +2,19 @@ import csv
 import pandas as pd
 import matplotlib.pyplot as plt
 
+def calculateAvg(score):
+    num = 0
+    i = 0
+    with open('server/output.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        
+        for row in reader:
+            num += float(row[score])
+            i += 1
 
+    return num/i
+
+print('average problemUrgentScore: ', calculateAvg('problemUrgentScore'))
 
 def plot_histogram(data, column_name, bins=20, range=(0, 10)):
     """
