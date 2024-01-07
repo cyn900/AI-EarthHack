@@ -10,6 +10,7 @@ const port = process.env.PORT || 4000;
 let storedRows = null; // Global variable to store the rows data
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 app.use(cors());
 app.use(express.json());
@@ -88,46 +89,48 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
                     const generateSummaryReply = await generateSummary(prompt);
 
 
-                    rowData['relevance'] = spamFilterReply; // "valid" or "invalid" where "valid means it is relevant, "invalid means it is a spam
+                    rowData.relevance = spamFilterReply; // "valid" or "invalid" where "valid means it is relevant, "invalid means it is a spam
                     console.log(spamFilterReply);
-                    console.log("rel" + rowData['relevance']);
-                    rowData['problemPopularityScore'] = problemPopularityReply[0];
-                    console.log("pop score" + rowData['problemPopularityScore']);
-                    rowData['problemPopularityExplaination'] = problemPopularityReply[1];
 
-                    rowData['problemGrowingScore'] = problemGrowingReply[0];
-                    rowData['problemGrowingExplaination'] = problemGrowingReply[1];
+                    rowData.problemPopularityScore = problemPopularityReply[0];
 
-                    rowData['problemUrgentScore'] = problemUrgentReply[0];
-                    rowData['problemUrgentExplaination'] = problemUrgentReply[1];
+                    console.log("pop score: " + rowData['problemPopularityScore']);
 
-                    rowData['problemExpenseScore'] = problemExpenseReply[0];
-                    rowData['problemExpenseExplaination'] = problemExpenseReply[1];
+                    rowData.problemPopularityExplaination = problemPopularityReply[1];
 
-                    rowData['problemFrequentScore'] = problemFrequentReply[0];
-                    rowData['problemFrequentExplaination'] = problemFrequentReply[1];
+                    rowData.problemGrowingScore = problemGrowingReply[0];
+                    rowData.problemGrowingExplaination = problemGrowingReply[1];
 
-                    rowData['solutionCompletenessScore'] = solutionCompletenessReply[0];
-                    rowData['solutionCompletenessExplaination'] = solutionCompletenessReply[1];
+                    rowData.problemUrgentScore = problemUrgentReply[0];
+                    rowData.problemUrgentExplaination = problemUrgentReply[1];
 
-                    rowData['solutionTargetScore'] = solutionTargetReply[0];
-                    rowData['solutionTargetExplaination'] = solutionTargetReply[1];
+                    rowData.problemExpenseScore = problemExpenseReply[0];
+                    rowData.problemExpenseExplaination = problemExpenseReply[1];
 
-                    rowData['solutionNoveltyScore'] = solutionNoveltyReply[0];
-                    rowData['solutionNoveltyExplaination'] = solutionNoveltyReply[1];
+                    rowData.problemFrequentScore = problemFrequentReply[0];
+                    rowData.problemFrequentExplaination = problemFrequentReply[1];
 
-                    rowData['solutionTargetScore'] = solutionTargetReply[0];
-                    rowData['solutionTargetExplaination'] = solutionTargetReply[1];
+                    rowData.solutionCompletenessScore = solutionCompletenessReply[0];
+                    rowData.solutionCompletenessExplaination = solutionCompletenessReply[1];
 
-                    rowData['solutionFinImpactScore'] = solutionFinImpactReply[0];
-                    rowData['solutionFinImpactExplaination'] = solutionFinImpactReply[1];
+                    rowData.solutionTargetScore = solutionTargetReply[0];
+                    rowData.solutionTargetExplaination = solutionTargetReply[1];
 
-                    rowData['solutionImplementabilityScore'] = solutionImplementabilityReply[0];
-                    rowData['solutionImplementabilityExplaination'] = solutionImplementabilityReply[1];
+                    rowData.solutionNoveltyScore = solutionNoveltyReply[0];
+                    rowData.solutionNoveltyExplaination = solutionNoveltyReply[1];
 
-                    rowData['name'] = generateNameReply;
-                    rowData['tags'] = generateTagsReply; // a list of tags ex: ['Design for Longevity and Durability', 'Recycle and Recover']
-                    rowData['summary'] = generateSummaryReply;
+                    rowData.solutionTargetScore = solutionTargetReply[0];
+                    rowData.solutionTargetExplaination = solutionTargetReply[1];
+
+                    rowData.solutionFinImpactScore = solutionFinImpactReply[0];
+                    rowData.solutionFinImpactExplaination = solutionFinImpactReply[1];
+
+                    rowData.solutionImplementabilityScore = solutionImplementabilityReply[0];
+                    rowData.solutionImplementabilityExplaination = solutionImplementabilityReply[1];
+
+                    rowData.name = generateNameReply;
+                    rowData.tags = generateTagsReply; // a list of tags ex: ['Design for Longevity and Durability', 'Recycle and Recover']
+                    rowData.summary = generateSummaryReply;
 
                     rows.push(rowData);
                 }

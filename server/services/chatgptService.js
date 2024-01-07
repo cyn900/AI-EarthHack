@@ -42,14 +42,14 @@ async function problemPopularEval(prompt) {
         max_tokens: 50,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -66,14 +66,14 @@ async function problemGrowingEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -90,7 +90,7 @@ async function problemUrgentEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
@@ -98,7 +98,7 @@ async function problemUrgentEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
 
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -115,14 +115,14 @@ async function problemExpenseEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -139,7 +139,7 @@ async function problemFrequentEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
@@ -147,7 +147,7 @@ async function problemFrequentEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
 
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -161,14 +161,14 @@ async function solutionCompletenessEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -182,14 +182,14 @@ async function solutionCompletenessEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -203,14 +203,14 @@ async function solutionTargetEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -224,14 +224,14 @@ async function solutionNoveltyEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -245,14 +245,14 @@ async function solutionFinImpactEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log([score, explanation]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
