@@ -84,7 +84,7 @@ export default function Page() {
     ]);
 
     return (
-        <div className="flex flex-col justify-center items-center min-h-screen">
+        <div className="flex flex-col justify-center items-center min-h-screen mt-16">
             <div className="max-w-screen-2xl">
                 <div className="flex flex-row">
                     <h1 className="font-bold text-2xl w-80"> Evaluation Results </h1>
@@ -133,7 +133,7 @@ export default function Page() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
-                    <div>
+                    <div className="mt-6">
                         <h1 className="text-3xl font-bold"> Idea Comparisons </h1>
 
                         <div className="flex justify-center items-center mt-8 rounded-md bg-gray-200">
