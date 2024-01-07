@@ -4,8 +4,26 @@ import {useEffect, useState} from "react";
 
 export default function Page() {
     const categories = [
-        { name: 'Problem Significance', sliders: ['Popularity', 'Growing', 'Urgent', 'Expensive', 'Frequent'] },
-        { name: 'Solution Significance', sliders: ['Completeness', 'Targeted', 'Novelty', 'Financial Impact', 'Implementability'] },
+        {
+            name: 'Problem Significance',
+            sliders: [
+                ['Popularity', '#people impacted'],
+                ['Growing', 'escalates overtime'],
+                ['Urgent', 'create impact now'],
+                ['Expensive', 'solving it saves money'],
+                ['Frequent', 'not one just one']
+            ]
+        },
+        {
+            name: 'Solution Significance',
+            sliders: [
+                ['Completeness', 'circular econ. model'],
+                ['Targeted', '7 pillars of circular econ.'],
+                ['Novelty', 'not an existing solution'],
+                ['Financial Impact', 'creates monetary value'],
+                ['Implementability', 'feasibility & scalability']
+            ]
+        },
     ];
 
     const [categoryScores, setCategoryScores] = useState(
@@ -51,7 +69,12 @@ export default function Page() {
                                 <div className="mx-4 mt-4">
                                     {category.sliders.map((slider, sliderIndex) => (
                                         <div key={sliderIndex} className="grid grid-cols-9">
-                                            <label className="col-span-3">{slider}</label>
+                                            <label className="col-span-3">
+                                                <div className="flex flex-col">
+                                                    <span className="text-md font-bold">{slider[0]}</span>
+                                                    <span className="text-xs">{slider[1]}</span>
+                                                </div>
+                                            </label>
                                             <div className="col-span-5 mx-4">
                                                 <input
                                                     type="range"
