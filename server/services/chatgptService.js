@@ -19,7 +19,7 @@ async function spamFilter(prompt) {
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: 'Problem: Plastic bottle. Solution: Encourage save water'}, { role: 'system', content: 'Invalid'}, { role: 'user', content: prompt}],
         // model: "gpt-4",
         model: gptModel,
         max_tokens: 5,
@@ -32,7 +32,7 @@ async function spamFilter(prompt) {
 
 // problem popularity evaluation
 async function problemPopularEval(prompt) { 
-    rolePlay =  background + 'You only care about popularity (how many people are/will be impacted). You will rate on the popularity of the given information out of 100. Half of the points should given on the big idea of the given information, and half of the points should given on how detailed the user explain its popularity. If the user only give a gneral idea, no or very little marks will be given. For score, return a number between 0-10' + replyFormat
+    rolePlay =  background + 'You only care about popularity (how many people are/will be impacted). You will rate on the popularity of the given information out of 100. Half of the points should given on the big idea of the given information, and half of the points should given on how detailed the user explain its popularity. If the user only give a gneral idea, no or very little marks will be given. Some Measurable Metric: Number of affected individuals/organizations/communities (quantitative count of impacted stakeholders). For score, return a number between 0-10' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
@@ -62,7 +62,7 @@ async function problemPopularEval(prompt) {
 
 // problem growing evaluation
 async function problemGrowingEval(prompt) { 
-    rolePlay = background + 'You only care about the future/ potential (will the issue grow with the time and impact more people). A problem desciption is given to you. You will rate on the potential of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain popularity of the problem. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is/will be growing in the explaination. For score, return a number between 0-10.' + replyFormat
+    rolePlay = background + 'You only care about the future/ potential (will the issue grow with the time and impact more people). A problem desciption is given to you. You will rate on the potential of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain popularity of the problem. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is/will be growing in the explaination. Measurable Metric: Percentage increase in the frequency/incidence of the problem over time. For score, return a number between 0-10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
@@ -90,7 +90,7 @@ async function problemGrowingEval(prompt) {
 
 // problem urgent evaluation
 async function problemUrgentEval(prompt) { 
-    rolePlay = background + 'You only care about the urgency (it is a really big issue that we must pay attention right now). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is urgent. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination. For score, return a number between 0-10.' + replyFormat
+    rolePlay = background + 'You only care about the urgency (it is a really big issue that we must pay attention right now). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is urgent. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination. Measurable Metric: Time sensitivity; how quickly the problem needs resolution. For score, return a number between 0-10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
@@ -118,7 +118,7 @@ async function problemUrgentEval(prompt) {
 
 // problem expense evaluation
 async function problemExpenseEval(prompt) {
-    rolePlay = background + 'You only care about the money. You only like a problem that will grow with the time and more people will have the problem). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination. For score, return a number between 0-10.' + replyFormat
+    rolePlay = background + 'You only care about the money. You only like a problem that will grow with the time and more people will have the problem). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination. Measurable Metric: Financial cost incurred due to the problem (cost of inefficiency, resource wastage, etc.) For score, return a number between 0-10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
@@ -145,7 +145,7 @@ async function problemExpenseEval(prompt) {
 
 // problem frequent evaluation
 async function problemFrequentEval(prompt) {
-    rolePlay = background + 'You only about how frequesnt the problem happen, ex is it a daily issue. You only like a problem that is not a one-time problem, people come across the problem frequently. A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is frequently happen in the explaination. For score, return a number between 0-10.' + replyFormat
+    rolePlay = background + 'You only about how frequesnt the problem happen, ex is it a daily issue. You only like a problem that is not a one-time problem, people come across the problem frequently. A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is frequently happen in the explaination. Measurable Metric: Number of occurrences or frequency within a defined period (e.g., monthly, yearly). For score, return a number between 0-10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
@@ -174,7 +174,7 @@ async function problemFrequentEval(prompt) {
 
 //solution completeness evaluation
 async function solutionCompletenessEval(prompt) { 
-    rolePlay = background + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? Note that problem is after Problem: and before Solution: and solution is everything after Solution:. For score, return a number between 0-10' + replyFormat;
+    rolePlay = background + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? Note that problem is after Problem: and before Solution: and solution is everything after Solution:. Measurable Metric: Percentage completion of the circular economy loop within the proposed solution.For score, return a number between 0-10' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
@@ -190,31 +190,6 @@ async function solutionCompletenessEval(prompt) {
 
         score = scoreMatch ? scoreMatch[1] : null;
     }
-    explanationMatch = aiResponse.match(explanationRegex);
-    explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    // console.log([score, explanation]);
-    return [score, explanation];
-    // return completion.choices[0].message.content;
-}
-
-//solution completeness evaluation
-async function solutionCompletenessEval(prompt) { 
-    rolePlay = background + inputFormat + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? For score, return a number between 0-10' + replyFormat;
-    score = -1;
-    while (score < 0 || score > 10 || score === null){
-        const completion = await openai.chat.completions.create({
-            messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-            // model: "gpt-4",
-            model: gptModel,
-            max_tokens: 60,
-            temperature: 0.0,
-        });
-        // console.log(completion.choices[0].message.content);
-        aiResponse = completion.choices[0].message.content;
-        scoreMatch = aiResponse.match(scoreRegex);
-        score = scoreMatch ? scoreMatch[1] : null;
-    }
-
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
@@ -224,7 +199,7 @@ async function solutionCompletenessEval(prompt) {
 
 //solution target evaluation
 async function solutionTargetEval(prompt) { 
-    rolePlay = background + inputFormat + 'Does it fit the 7 pillars of circular econ. For score, return a number between 0-10' + replyFormat;
+    rolePlay = background + inputFormat + 'Does it fit the 7 pillars of circular econ. Measurable Metric: Evaluate the extent of adherence to the principles of circular economy through a comprehensive analysis of materials life cycles, energy sources, biodiversity impact, societal preservation, health considerations, diverse value creation, and system resilience. For score, return a number between 0-10' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
@@ -250,7 +225,7 @@ async function solutionTargetEval(prompt) {
 
 //solution novelty evaluation
 async function solutionNoveltyEval(prompt) { 
-    rolePlay = background + inputFormat + 'How creative is the solution? Does it exist already? For score, return a number between 0-10' + replyFormat;
+    rolePlay = background + inputFormat + 'How creative is the solution? Does it exist already? Measurable Metric: Measure the level of novelty by analyzing the degree of differentiation from existing solutions across various innovation categories (programmatic, technical, organizational, managerial, and methodological), emphasizing the unique value proposition introduced and its impact on current practices or products. For score, return a number between 0-10' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
@@ -300,7 +275,7 @@ async function solutionFinImpactEval(prompt) {
 
 //solution Implementability evaluation
 async function solutionImplementabilityEval(prompt) { 
-    rolePlay = background + inputFormat + 'What is the implementability? How feasible is the solution? How scalabale is the solution? For score, return a number between 0-10' + replyFormat;
+    rolePlay = background + inputFormat + 'What is the implementability? How feasible is the solution? How scalabale is the solution? Measurable Metric: Market size (TAM, SAM, SOM) and projected revenue streams (quantitative financial projections), Initial and ongoing costs, revenue projections, projected profit margins, break-even point, ROI (quantitative financial analysis).    . For score, return a number between 0-10.' + replyFormat;
     score = -1;
     while (score < 0 || score > 10 || score === null){
         const completion = await openai.chat.completions.create({
