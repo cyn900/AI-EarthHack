@@ -360,7 +360,7 @@ function categorize(input) {
         { name: "Biodiversity", regex: /Biodiversity/i },
         { name: "Soceity & Culture", regex: /Society and Culture/i },
         { name: "Health & Wellbeing", regex: /Health and Wellbeing/i },
-        { name: "Value", regex: /value/i }
+        { name: "Value", regex: /Value/i }
     ];
     cate = [];
 
@@ -369,7 +369,7 @@ function categorize(input) {
             return category.name;
         }
     }
-    return 'other';
+    return 'Other';
     
 }
 
