@@ -27,6 +27,11 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
+        if (!req.body.evaluationGoal) {
+            return res.status(400).json({ error: 'No evaluation goal provided' });
+        }
+
+        const evaluationGoal = req.body.evaluationGoal;  // do something with evaluation goal
         const fileBuffer = req.file.buffer;
         const fileContent = fileBuffer.toString('utf-8');
 
