@@ -19,7 +19,7 @@ app.get('/healthcheck', (req, res) => {
     res.status(200).json({ status: 'OK' });
 });
 
-app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
+app.post('/load-csv', upload.single('csvFile'), (req, res) => {
     const rows = [];
     let headers = null;
     let num = 0;
@@ -43,7 +43,7 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
         const outputCsvPath = path.join(__dirname, 'output.csv');
         const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
 
-        const newHeader = 'problem,solution,solution,relevance,problemPopularityScore,problemPopularityExplaination,problemGrowingScore,problemGrowingExplaination,problemUrgentScore,problemUrgentExplaination,problemExpenseScore,problemExpenseExplaination,problemFrequentScore,problemFrequentExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionTargetScore,solutionTargetExplaination,solutionNoveltyScore,solutionNoveltyExplaination,solutionFinImpactScore,solutionFinImpactExplaination,solutionImplementabilityScore,solutionImplementabilityExplaination,newName,tags,summary\n';
+        const newHeader = 'problem,solution,relevance,problemPopularityScore,problemPopularityExplaination,problemGrowingScore,problemGrowingExplaination,problemUrgentScore,problemUrgentExplaination,problemExpenseScore,problemExpenseExplaination,problemFrequentScore,problemFrequentExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionTargetScore,solutionTargetExplaination,solutionNoveltyScore,solutionNoveltyExplaination,solutionFinImpactScore,solutionFinImpactExplaination,solutionImplementabilityScore,solutionImplementabilityExplaination,newName,tags,summary\n';
         writableStream.write(newHeader);
 
         // Example function to write a row
@@ -54,6 +54,17 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
 
         // Parse CSV content (using csv-parser as an example)
 
+        // const tempFilePath = path.join(__dirname, 'tempFile.csv');
+        
+        // // Write the uploaded content to the temporary file
+        // fs.writeFileSync(tempFilePath, fileContent);
+
+        // // Append an empty line to the temporary file
+        // fs.appendFileSync(tempFilePath, '\n');
+
+        // // Now read and process the temporary file
+        // fs.createReadStream(tempFilePath)
+        //     .pipe(csv({ headers: false }))
         csv({ headers: false })
             .on('data', async(row) => {
                 console.log(row);
@@ -70,8 +81,8 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
                     const prob = rowData['problem'];
                     // const solu = rowData['solution']
                     const prompt = 'Problem: ' + rowData['problem'] + 'Solution:' + rowData['solution'];
-                    if (prompt == null) {
-                        return null; // or handle it as per your application's logic
+                    if (prob == null) {
+                        return "None"; // or handle it as per your application's logic
                     }
 
                     const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
@@ -146,12 +157,14 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
 
                     // rows.push(rowData);
                     // console.log('rowData: ' + rowData['problem']);
+                    rows.push(rowData)
                     writeRow(rowData);
                     
                     // writeRow({problem: "\""+rowData['problem']+"\"", solution: "\""+rowData['solution']+"\"", relevance: rowData['relevance'], problemPopularityScore: rowData['problemPopularityScore'],problemPopularityExplaination: "\""+rowData['problemPopularityExplaination']+"\"", problemGrowingScore: rowData['problemGrowingScore'], problemGrowingExplaination: "\""+rowData['problemGrowingExplaination']+"\"", problemUrgentScore: rowData['problemUrgentScore'], problemUrgentExplaination: "\""+rowData['problemUrgentExplaination']+"\"", problemExpenseScore: rowData['problemExpenseScore'], problemExpenseExplaination: "\""+rowData['problemExpenseExplaination']+"\"", problemFrequentScore: rowData['problemFrequentScore'], problemFrequentExplaination: "\""+rowData['problemFrequentExplaination']+"\"", solutionCompletenessScore: rowData['solutionCompletenessScore'], solutionCompletenessExplaination: "\""+rowData['solutionCompletenessExplaination']+"\"", solutionTargetScore: rowData['solutionTargetScore'], solutionTargetExplaination: "\""+rowData['solutionTargetExplaination']+"\"", solutionNoveltyScore: rowData['solutionNoveltyScore'], solutionNoveltyScore: "\""+rowData['solutionNoveltyScore'], solutionNoveltyExplaination: "\""+rowData['solutionNoveltyExplaination']+"\"", solutionFinImpactScore: rowData['solutionFinImpactScore'], solutionFinImpactExplaination: "\""+rowData['solutionFinImpactExplaination']+"\"", solutionImplementabilityScore: rowData['solutionImplementabilityScore'], solutionImplementabilityExplaination: "\""+rowData['solutionImplementabilityExplaination']+"\"", newName: rowData['newName'], tags: rowData['tags'], summary: "\""+rowData['summary']+"\""});
                 }
             })
             .write(fileContent);
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -159,6 +172,7 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
 
     storedRows = rows;
     res.json({ csvData: rows });
+    console.log(storedRows);
     // res.status(200).json({ status: 'OK' });
 });
 
