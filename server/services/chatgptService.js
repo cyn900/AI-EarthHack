@@ -5,7 +5,7 @@ const OpenAI = require("openai");
 const openai = new OpenAI();
 // if API key is not set up in the project
 // const openai = new OpenAI("YOUR_API_KEY");
-
+gptModel = "gpt-3.5-turbo";
 const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
 const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
 const explanationRegex = /Explanation:\s*([^\.]+\.)/;
@@ -21,7 +21,7 @@ async function spamFilter(prompt) {
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         // model: "gpt-4",
-        model: "gpt-3.5-turbo",
+        model: gptModel,
         max_tokens: 5,
         temperature: 0.0,
     });
@@ -41,7 +41,7 @@ async function problemPopularEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 50,
             temperature: 0.0,
         });
@@ -71,7 +71,7 @@ async function problemGrowingEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -99,7 +99,7 @@ async function problemUrgentEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -127,7 +127,7 @@ async function problemExpenseEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -154,7 +154,7 @@ async function problemFrequentEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -180,7 +180,7 @@ async function solutionCompletenessEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -205,7 +205,7 @@ async function solutionCompletenessEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -230,7 +230,7 @@ async function solutionTargetEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -256,7 +256,7 @@ async function solutionNoveltyEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -281,7 +281,7 @@ async function solutionFinImpactEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -306,7 +306,7 @@ async function solutionImplementabilityEval(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: "gpt-3.5-turbo",
+            model: gptModel,
             max_tokens: 60,
             temperature: 0.0,
         });
@@ -330,7 +330,7 @@ async function generateName(prompt) {
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         // model: "gpt-4",
-        model: "gpt-3.5-turbo",
+        model: gptModel,
         max_tokens: 10,
         temperature: 0.0,
     });
@@ -351,7 +351,7 @@ async function generateTags(prompt) {
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         // model: "gpt-4",
-        model: "gpt-3.5-turbo",
+        model: gptModel,
         max_tokens: 10,
         temperature: 0.0,
     });
@@ -396,7 +396,7 @@ async function generateSummary(prompt) {
     rolePlay = "write a one sentence summary.";
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        model: "gpt-4",
+        model: gptModel,
         max_tokens: 60,
         temperature: 0.0,
     });
