@@ -43,7 +43,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     headers.forEach((header, index) => {
                         rowData[header] = row[index];
                     });
-                    const prompt = req
+                    const prompt = 'Problem: ' + rowData['problem'] + 'solution:' + rowData['solution'];
                     const spamFilterReply = spamFilter(prompt);
                     const problemPopularityReply = problemPopularEval(prompt);
                     const problemGrowingReply = problemGrowingEval(prompt);
