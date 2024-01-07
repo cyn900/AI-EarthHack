@@ -18,16 +18,17 @@ async function spamFilter(prompt) {
     rolePlay =  'You are a judge assessing a competition submission. Each submission consists of a problem and its corresponding solution. A submission is "Valid" if the solution directly addresses the problem, is well thought out, and shows effort. It is "Invalid" if the solution is unrelated to the problem, lacks coherence, or shows signs of low effort, such as being incomplete or nonsensical. Based on this, judge the submission as either "Valid" or "Invalid".';
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    
     const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: 'Problem: Plastic bottle. Solution: Encourage save water'}, { role: 'system', content: 'Invalid'}, { role: 'user', content: prompt}],
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: 'Problem: Plastic bottle. Solution: Encourage save energy'}, { role: 'system', content: 'Invalid'}, { role: 'user', content: 'Problem: Plastic bottle. Solution: Encourage recycle plastic bottle'}, { role: 'system', content: 'Valid'},{ role: 'user', content: prompt}],
         // model: "gpt-4",
         model: gptModel,
         max_tokens: 5,
         temperature: 0.0,
     });
-
-    console.log(completion.choices[0].message.content);
-    return completion.choices[0].message.content;
+    relevance = completion.choices[0].message.content;
+    // console.log(relevance);
+    return relevance;
 }
 
 // problem popularity evaluation
@@ -399,7 +400,7 @@ p = 'Problem: 1, Solution: 2'
 // generateName(p)
 // generateTags(p)
 // generateSummary(p);
-// spamFilter(p)
+spamFilter(p)
 
 module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
