@@ -15,13 +15,13 @@ const replyFormat = 'The format of your reply must be Score: (number with one di
 
 // spam Filter
 async function spamFilter(prompt) { 
-    rolePlay =  'You are a judge for the competition. You have to detect a pair of porblem and solution is valid or not. If the submission is written with low effort and does not make sense it is invalid. For example, if the solution does not match with the problem, it is also invalid. Return Valid if it is a fair submission, else return Invalid. You can only return Valid or Invalid';
-    const problemMactch = prompt.match(problemRegex);
-    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    rolePlay =  'You are a judge assessing a competition submission. Each submission consists of a problem and its corresponding solution. A submission is "Valid" if the solution directly addresses the problem, is well thought out, and shows effort. It is "Invalid" if the solution is unrelated to the problem, lacks coherence, or shows signs of low effort, such as being incomplete or nonsensical. Based on this, judge the submission as either "Valid" or "Invalid".';
+    // const problemMactch = prompt.match(problemRegex);
+    // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
-        max_tokens: 50,
+        max_tokens: 5,
         temperature: 0.0,
     });
     
@@ -29,13 +29,15 @@ async function spamFilter(prompt) {
     console.log(completion.choices[0].message.content);
     return completion.choices[0].message.content;
 }
+
 // problem popularity evaluation
 async function problemPopularEval(prompt) { 
     rolePlay =  background + 'You only care about popularity (how many people are/will be impacted). You will rate on the popularity of the given information out of 100. Half of the points should given on the big idea of the given information, and half of the points should given on how detailed the user explain its popularity. If the user only give a gneral idea, no or very little marks will be given.' + replyFormat
-    const problemMactch = prompt.match(problemRegex);
-    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // const problemMactch = prompt.match(problemRegex);
+    // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
         max_tokens: 50,
         temperature: 0.0,
@@ -47,7 +49,6 @@ async function problemPopularEval(prompt) {
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log(problemDescription);
     console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -56,10 +57,11 @@ async function problemPopularEval(prompt) {
 // problem growing evaluation
 async function problemGrowingEval(prompt) { 
     rolePlay = background + 'You only care about the future/ potential (will the issue grow with the time and impact more people). A problem desciption is given to you. You will rate on the potential of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain popularity of the problem. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is/will be growing in the explaination.' + replyFormat
-    const problemMactch = prompt.match(problemRegex);
-    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // const problemMactch = prompt.match(problemRegex);
+    // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -71,7 +73,6 @@ async function problemGrowingEval(prompt) {
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log(problemDescription);
     console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -80,10 +81,11 @@ async function problemGrowingEval(prompt) {
 // problem urgent evaluation
 async function problemUrgentEval(prompt) { 
     rolePlay = background + 'You only care about the urgency (it is a really big issue that we must pay attention right now). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is urgent. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination.' + replyFormat
-    const problemMactch = prompt.match(problemRegex);
-    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // const problemMactch = prompt.match(problemRegex);
+    // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -95,7 +97,7 @@ async function problemUrgentEval(prompt) {
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log(problemDescription);
+
     console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -104,10 +106,11 @@ async function problemUrgentEval(prompt) {
 // problem expense evaluation
 async function problemExpenseEval(prompt) {
     rolePlay = background + 'You only care about the money. You only like a problem that will grow with the time and more people will have the problem). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination.' + replyFormat
-    const problemMactch = prompt.match(problemRegex);
-    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // const problemMactch = prompt.match(problemRegex);
+    // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -119,7 +122,6 @@ async function problemExpenseEval(prompt) {
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log(problemDescription);
     console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -128,10 +130,11 @@ async function problemExpenseEval(prompt) {
 // problem frequent evaluation
 async function problemFrequentEval(prompt) {
     rolePlay = background + 'You only about how frequesnt the problem happen, ex is it a daily issue. You only like a problem that is not a one-time problem, people come across the problem frequently. A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is frequently happen in the explaination.' + replyFormat
-    const problemMactch = prompt.match(problemRegex);
-    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // const problemMactch = prompt.match(problemRegex);
+    // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -143,7 +146,7 @@ async function problemFrequentEval(prompt) {
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log(problemDescription);
+
     console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -263,15 +266,15 @@ async function solutionImplementabilityEval(prompt) {
         max_tokens: 60,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     const scoreMatch = aiResponse.match(scoreRegex);
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log("score: " + [score, explanation][0]);
-    console.log([score, explanation]);
+    // console.log("score: " + [score, explanation][0]);
+    // console.log([score, explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
 }
@@ -285,7 +288,7 @@ async function generateName(prompt) {
         max_tokens: 10,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){1,3})/;
     const aiResponse = completion.choices[0].message.content;
     const nameMatch = aiResponse.match(nameRegex);
@@ -305,13 +308,13 @@ async function generateTags(prompt) {
         max_tokens: 10,
         temperature: 0.0,
     });
-    console.log(completion.choices[0].message.content);
+    // console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     tags = categorize(aiResponse)
     
     // console.log(categorize('Design for Longevity and Durability, Recycle and Recover'));
-    console.log(aiResponse);
-    console.log(categorize(aiResponse));
+    // console.log(aiResponse);
+    // console.log(categorize(aiResponse));
     return categorize(aiResponse);
     // return completion.choices[0].message.content;
 }
@@ -343,11 +346,11 @@ function categorize(input) {
 
 // overall summary
 async function generateSummary(prompt) { 
-    rolePlay = "You are provided with a problem and a solution. Your task is to provide a one sentence summary. ";
+    rolePlay = "You are provided with a problem and a solution. Your task is to provide a one sentence summary.";
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
-        max_tokens: 50,
+        max_tokens: 60,
         temperature: 0.0,
     });
     const firstSentenceRegex = /Summary:\s*([^\.]+\.)/;
@@ -355,7 +358,7 @@ async function generateSummary(prompt) {
     const sentenceMatch = aiResponse.match(firstSentenceRegex);
     const sentence = sentenceMatch? sentenceMatch[1].trim() : null;
     
-    console.log(sentence);
+    // console.log(sentence);
     return sentence;
     // return completion.choices[0].message.content;
 }
