@@ -5,7 +5,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image'
 import Link from "next/link";
-import './globals.css'
+import './globals.css';
 
 export default function Home() {
     const [file, setFile] = useState(null);
