@@ -44,12 +44,13 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         const outputCsvPath = path.join(__dirname, 'output.csv');
         const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
 
-        const newHeader = 'problem,solution,relevance,problemPopularityScore,problemPopularityExplaination,problemGrowingScore,problemGrowingExplaination,problemUrgentScore,problemUrgentExplaination,problemExpenseScore,problemExpenseExplaination,problemFrequentScore,problemFrequentExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionTargetScore,solutionTargetExplaination,solutionNoveltyScore,solutionNoveltyExplaination,solutionFinImpactScore,solutionFinImpactExplaination,solutionImplementabilityScore,solutionImplementabilityExplaination,newName,tags,summary\n';
+        const newHeader = 'problem;solution;relevance;problemPopularityScore;problemPopularityExplaination;problemGrowingScore;problemGrowingExplaination;problemUrgentScore;problemUrgentExplaination;problemExpenseScore;problemExpenseExplaination;problemFrequentScore;problemFrequentExplaination;solutionCompletenessScore;solutionCompletenessExplaination;solutionCompletenessScore;solutionCompletenessExplaination;solutionTargetScore;solutionTargetExplaination;solutionNoveltyScore;solutionNoveltyExplaination;solutionFinImpactScore;solutionFinImpactExplaination;solutionImplementabilityScore;solutionImplementabilityExplaination;newName;tags;summary\n';
         writableStream.write(newHeader);
 
         // Example function to write a row
         function writeRow(rowData) {
-            const rowString = `${rowData.problem},${rowData.solution},${rowData.relevance},${rowData.problemPopularityScore},${rowData.problemPopularityExplaination},${rowData.problemGrowingScore},${rowData.problemGrowingExplaination},${rowData.problemUrgentScore},${rowData.problemUrgentExplaination},${rowData.problemExpenseScore},${rowData.problemExpenseExplaination},${rowData.problemFrequentScore},${rowData.problemFrequentExplaination},${rowData.solutionCompletenessScore},${rowData.solutionCompletenessExplaination},${rowData.solutionTargetScore},${rowData.solutionTargetExplaination},${rowData.solutionNoveltyScore},${rowData.solutionNoveltyExplaination},${rowData.solutionFinImpactScore},${rowData.solutionFinImpactExplaination},${rowData.solutionImplementabilityScore},${rowData.solutionImplementabilityExplaination},${rowData.newName},${rowData.tags},${rowData.summary}\n`;
+            // const rowString = `${rowData.problem},${rowData.solution},${rowData.relevance},${rowData.problemPopularityScore},${rowData.problemPopularityExplaination},${rowData.problemGrowingScore},${rowData.problemGrowingExplaination},${rowData.problemUrgentScore},${rowData.problemUrgentExplaination},${rowData.problemExpenseScore},${rowData.problemExpenseExplaination},${rowData.problemFrequentScore},${rowData.problemFrequentExplaination},${rowData.solutionCompletenessScore},${rowData.solutionCompletenessExplaination},${rowData.solutionTargetScore},${rowData.solutionTargetExplaination},${rowData.solutionNoveltyScore},${rowData.solutionNoveltyExplaination},${rowData.solutionFinImpactScore},${rowData.solutionFinImpactExplaination},${rowData.solutionImplementabilityScore},${rowData.solutionImplementabilityExplaination},${rowData.newName},${rowData.tags},${rowData.summary}\n`;
+            const rowString = rowData;
             writableStream.write(rowString);
 }
 
@@ -120,53 +121,52 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     //console.log(spamFilterReply);
 
                     rowData.problemPopularityScore = problemPopularityReply[0];
-
                     
                     //console.log("pop score: " + rowData['problemPopularityScore']);
 
-                    rowData.problemPopularityExplaination = "\""+problemPopularityReply[1]+"\"";
+                    rowData.problemPopularityExplaination = problemPopularityReply[1];
 
                     rowData.problemGrowingScore = problemGrowingReply[0];
-                    rowData.problemGrowingExplaination = "\""+problemGrowingReply[1]+"\"";
+                    rowData.problemGrowingExplaination = problemGrowingReply[1];
 
                     rowData.problemUrgentScore = problemUrgentReply[0];
-                    rowData.problemUrgentExplaination = "\""+problemUrgentReply[1]+"\"";
+                    rowData.problemUrgentExplaination = problemUrgentReply[1];
 
                     rowData.problemExpenseScore = problemExpenseReply[0];
-                    rowData.problemExpenseExplaination = "\""+problemExpenseReply[1]+"\"";
+                    rowData.problemExpenseExplaination = problemExpenseReply[1];
 
                     rowData.problemFrequentScore = problemFrequentReply[0];
-                    rowData.problemFrequentExplaination = "\""+problemFrequentReply[1]+"\"";
+                    rowData.problemFrequentExplaination = problemFrequentReply[1];
 
                     rowData.solutionCompletenessScore = solutionCompletenessReply[0];
-                    rowData.solutionCompletenessExplaination = "\""+solutionCompletenessReply[1]+"\"";
+                    rowData.solutionCompletenessExplaination = solutionCompletenessReply[1];
 
                     rowData.solutionTargetScore = solutionTargetReply[0];
-                    rowData.solutionTargetExplaination = "\""+solutionTargetReply[1]+"\"";
+                    rowData.solutionTargetExplaination = solutionTargetReply[1];
 
                     rowData.solutionNoveltyScore = solutionNoveltyReply[0];
-                    rowData.solutionNoveltyExplaination = "\""+solutionNoveltyReply[1]+"\"";
+                    rowData.solutionNoveltyExplaination = solutionNoveltyReply[1];
 
                     rowData.solutionFinImpactScore = solutionFinImpactReply[0];
-                    rowData.solutionFinImpactExplaination = "\""+solutionFinImpactReply[1]+"\"";
+                    rowData.solutionFinImpactExplaination = solutionFinImpactReply[1];
 
                     rowData.solutionImplementabilityScore = solutionImplementabilityReply[0];
-                    rowData.solutionImplementabilityExplaination = "\""+solutionImplementabilityReply[1]+"\"";
+                    rowData.solutionImplementabilityExplaination = solutionImplementabilityReply[1];
 
                     rowData.name = generateNameReply;
                     rowData.tags = generateTagsReply; // a list of tags ex: ['Water', 'Value'] 0<len(list)<=2
                     rowData.summary = "\""+generateSummaryReply+"\"";
 
                     // rows.push(rowData);
-                    // console.log('rowData: ' + rowData['problem']);
+                    console.log('rowData: ' + rowData['problem']);
                     rows.push(rowData)
-                    writeRow(rowData);
+                    writeRow(rowData['problem'] + "; "+rowData['solution']+"; " + rowData['relevance'] + "; " + rowData['problemPopularityScore'] + "; "+rowData['problemPopularityExplaination']+"; "+ rowData['problemGrowingScore']+ "; "+rowData['problemGrowingExplaination']+ "; "+rowData['problemUrgentScore']+ "; "+rowData['problemUrgentExplaination']+ "; "+rowData['problemExpenseScore']+ "; "+rowData['problemExpenseExplaination']+ "; "+ rowData['problemFrequentScore']+ "; "+rowData['problemFrequentExplaination']+ "; "+ rowData['solutionCompletenessScore']+ "; "+ rowData['solutionCompletenessExplaination']+ "; "+ rowData['solutionTargetScore']+ "; "+rowData['solutionTargetExplaination']+ "; "+ rowData['solutionNoveltyScore']+ "; "+rowData['solutionNoveltyExplaination']+ "; "+ rowData['solutionFinImpactScore']+ "; "+rowData['solutionFinImpactExplaination']+ "; "+ rowData['solutionImplementabilityScore']+ "; "+rowData['solutionImplementabilityExplaination']+ "; "+ rowData['newName']+ "; "+ rowData['tags']+ "; "+rowData['summary']);
                     
                     // writeRow({problem: "\""+rowData['problem']+"\"", solution: "\""+rowData['solution']+"\"", relevance: rowData['relevance'], problemPopularityScore: rowData['problemPopularityScore'],problemPopularityExplaination: "\""+rowData['problemPopularityExplaination']+"\"", problemGrowingScore: rowData['problemGrowingScore'], problemGrowingExplaination: "\""+rowData['problemGrowingExplaination']+"\"", problemUrgentScore: rowData['problemUrgentScore'], problemUrgentExplaination: "\""+rowData['problemUrgentExplaination']+"\"", problemExpenseScore: rowData['problemExpenseScore'], problemExpenseExplaination: "\""+rowData['problemExpenseExplaination']+"\"", problemFrequentScore: rowData['problemFrequentScore'], problemFrequentExplaination: "\""+rowData['problemFrequentExplaination']+"\"", solutionCompletenessScore: rowData['solutionCompletenessScore'], solutionCompletenessExplaination: "\""+rowData['solutionCompletenessExplaination']+"\"", solutionTargetScore: rowData['solutionTargetScore'], solutionTargetExplaination: "\""+rowData['solutionTargetExplaination']+"\"", solutionNoveltyScore: rowData['solutionNoveltyScore'], solutionNoveltyScore: "\""+rowData['solutionNoveltyScore'], solutionNoveltyExplaination: "\""+rowData['solutionNoveltyExplaination']+"\"", solutionFinImpactScore: rowData['solutionFinImpactScore'], solutionFinImpactExplaination: "\""+rowData['solutionFinImpactExplaination']+"\"", solutionImplementabilityScore: rowData['solutionImplementabilityScore'], solutionImplementabilityExplaination: "\""+rowData['solutionImplementabilityExplaination']+"\"", newName: rowData['newName'], tags: rowData['tags'], summary: "\""+rowData['summary']+"\""});
                 }
             })
             // .write(fileContent);
-        
+        ''
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
