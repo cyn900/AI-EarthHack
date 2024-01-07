@@ -20,6 +20,7 @@ async function spamFilter(prompt) {
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 5,
         temperature: 0.0,
@@ -32,12 +33,13 @@ async function spamFilter(prompt) {
 
 // problem popularity evaluation
 async function problemPopularEval(prompt) { 
-    rolePlay =  background + 'You only care about popularity (how many people are/will be impacted). You will rate on the popularity of the given information out of 100. Half of the points should given on the big idea of the given information, and half of the points should given on how detailed the user explain its popularity. If the user only give a gneral idea, no or very little marks will be given.' + replyFormat
+    rolePlay =  background + 'You only care about popularity (how many people are/will be impacted). You will rate on the popularity of the given information out of 100. Half of the points should given on the big idea of the given information, and half of the points should given on how detailed the user explain its popularity. If the user only give a gneral idea, no or very little marks will be given. For score, return a number between 0-10' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 50,
         temperature: 0.0,
@@ -48,6 +50,7 @@ async function problemPopularEval(prompt) {
     const explanationMatch = aiResponse.match(explanationRegex);
 
     const score = scoreMatch ? scoreMatch[1] : null;
+    
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
     return [score, explanation];
@@ -56,12 +59,13 @@ async function problemPopularEval(prompt) {
 
 // problem growing evaluation
 async function problemGrowingEval(prompt) { 
-    rolePlay = background + 'You only care about the future/ potential (will the issue grow with the time and impact more people). A problem desciption is given to you. You will rate on the potential of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain popularity of the problem. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is/will be growing in the explaination.' + replyFormat
+    rolePlay = background + 'You only care about the future/ potential (will the issue grow with the time and impact more people). A problem desciption is given to you. You will rate on the potential of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain popularity of the problem. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is/will be growing in the explaination. For score, return a number between 0-10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -80,12 +84,13 @@ async function problemGrowingEval(prompt) {
 
 // problem urgent evaluation
 async function problemUrgentEval(prompt) { 
-    rolePlay = background + 'You only care about the urgency (it is a really big issue that we must pay attention right now). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is urgent. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination.' + replyFormat
+    rolePlay = background + 'You only care about the urgency (it is a really big issue that we must pay attention right now). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is urgent. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination. For score, return a number between 0-10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -105,12 +110,13 @@ async function problemUrgentEval(prompt) {
 
 // problem expense evaluation
 async function problemExpenseEval(prompt) {
-    rolePlay = background + 'You only care about the money. You only like a problem that will grow with the time and more people will have the problem). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination.' + replyFormat
+    rolePlay = background + 'You only care about the money. You only like a problem that will grow with the time and more people will have the problem). A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is urgent in the explaination. For score, return a number between 0-10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -129,12 +135,13 @@ async function problemExpenseEval(prompt) {
 
 // problem frequent evaluation
 async function problemFrequentEval(prompt) {
-    rolePlay = background + 'You only about how frequesnt the problem happen, ex is it a daily issue. You only like a problem that is not a one-time problem, people come across the problem frequently. A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is frequently happen in the explaination.' + replyFormat
+    rolePlay = background + 'You only about how frequesnt the problem happen, ex is it a daily issue. You only like a problem that is not a one-time problem, people come across the problem frequently. A problem desciption is given to you. You will rate on the urgency of the problem out of 100. Half of the points should given on the big problem is, and half of the points should given on how detailed the user explain why the problem is api. If the user only give a general idea, no or very little marks will be given. No solution is required for the problem so do not talk about missing one in the explaination. Mention if the problem is frequently happen in the explaination. For score, return a number between 0-10.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
     // if (problemDescription == null){ problemDescription = prompt};
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -154,9 +161,10 @@ async function problemFrequentEval(prompt) {
 
 //solution completeness evaluation
 async function solutionCompletenessEval(prompt) { 
-    rolePlay = background + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? Note that problem is after Problem: and before Solution: and solution is everything after Solution:' + replyFormat;
+    rolePlay = background + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? Note that problem is after Problem: and before Solution: and solution is everything after Solution:. For score, return a number between 0-10' + replyFormat;
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -175,9 +183,10 @@ async function solutionCompletenessEval(prompt) {
 
 //solution completeness evaluation
 async function solutionCompletenessEval(prompt) { 
-    rolePlay = background + inputFormat + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related?' + replyFormat;
+    rolePlay = background + inputFormat + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related? For score, return a number between 0-10' + replyFormat;
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -196,9 +205,10 @@ async function solutionCompletenessEval(prompt) {
 
 //solution target evaluation
 async function solutionTargetEval(prompt) { 
-    rolePlay = background + inputFormat + 'Does it fit the 7 pillars of circular econ.' + replyFormat;
+    rolePlay = background + inputFormat + 'Does it fit the 7 pillars of circular econ. For score, return a number between 0-10' + replyFormat;
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -217,9 +227,10 @@ async function solutionTargetEval(prompt) {
 
 //solution novelty evaluation
 async function solutionNoveltyEval(prompt) { 
-    rolePlay = background + inputFormat + 'How creative is the solution? Does it exist already?' + replyFormat;
+    rolePlay = background + inputFormat + 'How creative is the solution? Does it exist already? For score, return a number between 0-10' + replyFormat;
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -238,9 +249,10 @@ async function solutionNoveltyEval(prompt) {
 
 //solution financial impact evaluation
 async function solutionFinImpactEval(prompt) { 
-    rolePlay = background + inputFormat + 'What is the financial impact? Does it create monetary value?' + replyFormat;
+    rolePlay = background + inputFormat + 'What is the financial impact? Does it create monetary value? For score, return a number between 0-10' + replyFormat;
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -259,9 +271,10 @@ async function solutionFinImpactEval(prompt) {
 
 //solution Implementability evaluation
 async function solutionImplementabilityEval(prompt) { 
-    rolePlay = background + inputFormat + 'What is the implementability? How feasible is the solution? How scalabale is the solution?' + replyFormat;
+    rolePlay = background + inputFormat + 'What is the implementability? How feasible is the solution? How scalabale is the solution? For score, return a number between 0-10' + replyFormat;
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 60,
         temperature: 0.0,
@@ -284,6 +297,7 @@ async function generateName(prompt) {
     rolePlay = "You are a creative thinker! Make up a name with only 2 to 4 words for the given info. Just give me the name, nothing else!";
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 10,
         temperature: 0.0,
@@ -304,6 +318,7 @@ async function generateTags(prompt) {
     rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy. If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        // model: "gpt-4",
         model: "gpt-3.5-turbo",
         max_tokens: 10,
         temperature: 0.0,
@@ -314,7 +329,7 @@ async function generateTags(prompt) {
     
     // console.log(categorize('Design for Longevity and Durability, Recycle and Recover'));
     // console.log(aiResponse);
-    // console.log(categorize(aiResponse));
+    console.log(categorize(aiResponse));
     return categorize(aiResponse);
     // return completion.choices[0].message.content;
 }
@@ -336,7 +351,7 @@ function categorize(input) {
             cate.push(category.name);
         }
     }
-    if (cate == []) {
+    if (cate.length === 0) {
         return ["other"];
     }
     else{ return cate }
@@ -346,10 +361,10 @@ function categorize(input) {
 
 // overall summary
 async function generateSummary(prompt) { 
-    rolePlay = "You are provided with a problem and a solution. Your task is to provide a one sentence summary.";
+    rolePlay = "write a one sentence summary.";
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         max_tokens: 60,
         temperature: 0.0,
     });
@@ -377,7 +392,6 @@ p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick buildin
 // generateName(p)
 // generateTags(p)
 // generateSummary(p);
-// spamFilter(p);
 
 module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
