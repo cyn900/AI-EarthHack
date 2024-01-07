@@ -61,6 +61,61 @@ body {
 
 .hero-content{
   max-width: 100rem;
+  padding: 0;
+  gap:0;
+}
+
+.tag{
+  width: 72px;
+  height: 21px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  background-color: var(--forest_green);
+  color: var(--white);
+}
+
+.tag{
+  width: 72px;
+  height: 21px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  background-color: var(--card_color);
+  color: var(--dark_green);
+}
+
+.squared_button{
+  width: 122px;
+  height: 28px;
+  margin-top: 4.67px;
+  margin-bottom: 4.67px;
+  background-color: var(--forest_green);
+  color: var(--white);
+}
+
+.squared_button{
+  width: 217px;
+  height: 28px;
+  margin-top: 3.33px;
+  margin-bottom: 4.67px;
+  background-color: var(--forest_green);
+  color: var(--white);
+}
+
+.max-screen {
+  height: 100%;
+}
+
+.button{
+  color: var(--dark_forest);
+  padding: 1rem;
+  background-color: white;
+  border-radius: 10px;
+  font-family: 'Lexend Deca Bold';
+  font-size: 18px;
+  line-height: 150%; /* 27px */
+  letter-spacing: -0.198px;
+  height: 60px;
+  width: 218px;
 }
 
 .button:hover{
@@ -68,6 +123,23 @@ body {
   color:var(--white)
 }
 
+.buttong{
+  color: white;
+  padding: 1rem;
+  background-color: var(--light_forest);
+  border-radius: 10px;
+  font-family: 'Lexend Deca Bold';
+  font-size: 18px;
+  line-height: 150%; /* 27px */
+  letter-spacing: -0.198px;
+  height: 60px;
+  width: 218px;
+}
+
+.buttong:hover{
+  background-color: var(--white);
+  color:var(--light_forest)
+}
 
 
 .title1{

@@ -14,7 +14,7 @@ module.exports = {
         dark_forest_50: '#728F4F 50%',
         light_forest: '#98C26C',
         dark_gray: '#6D6D6D',
-        dark_forest: '#728F4F',
+        forest_green: '#728F4F',
         dark_green: '#3D6F5B',
         forest_50: '#98C26C 50%',
         light_green: '#DFEDE7',
@@ -23,7 +23,6 @@ module.exports = {
         middle_green: '#88C4A6',
         middle_gray: '#B4B4B4',
         white: '#FFFFFF',
-        forest_green: '#728F4F'
 
       },
       fontFamily: {
