@@ -13,6 +13,22 @@ const background = 'You are a very strict critic who knows a lot about circular 
 const inputFormat = 'The format of the user input is yhat problem is after Problem: and before Solution:. Solution is everything after Solution:'
 const replyFormat = 'The format of your reply must be Score: (number with one digit after the decimal from 0.0 to 10.0 where 10 means it is the best idea on the planet, 50 is just an average idea. Marks will be detucted if the given information is not descriptive enough. For example, if the problem description is just 5 words, it is probably too general so the mark should be realy low.). Explaination: (only one concise senetnce to comment on what does the user did well on and what does the user did bad on. you must not repeat what the user said)';
 
+// spam Filter
+async function spamFilter(prompt) { 
+    rolePlay =  'You are a judge for the competition. You have to detect a pair of porblem and solution is valid or not. If the submission is written with low effort and does not make sense it is invalid. For example, if the solution does not match with the problem, it is also invalid. Return Valid if it is a fair submission, else return Invalid. You can only return Valid or Invalid';
+    const problemMactch = prompt.match(problemRegex);
+    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 50,
+        temperature: 0.0,
+    });
+    
+
+    console.log(completion.choices[0].message.content);
+    return completion.choices[0].message.content;
+}
 // problem popularity evaluation
 async function problemPopularEval(prompt) { 
     rolePlay =  background + 'You only care about popularity (how many people are/will be impacted). You will rate on the popularity of the given information out of 100. Half of the points should given on the big idea of the given information, and half of the points should given on how detailed the user explain its popularity. If the user only give a gneral idea, no or very little marks will be given.' + replyFormat
@@ -356,8 +372,9 @@ p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick buildin
 // solutionFinImpactEval(p)
 // solutionImplementabilityEval(p)
 // generateName(p)
-generateTags(p)
+// generateTags(p)
 // generateSummary(p);
+// spamFilter(p);
 
-module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
+module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 

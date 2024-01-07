@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const csv = require("csv-parser");
-const { problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary } = require('./services/chatgptService');
+const { spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary } = require('./services/chatgptService');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -44,6 +44,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                         rowData[header] = row[index];
                     });
                     const prompt = req
+                    const spamFilterReply = spamFilter(prompt);
                     const problemPopularityReply = problemPopularEval(prompt);
                     const problemGrowingReply = problemGrowingEval(prompt);
                     const problemUrgentReply = problemUrgentEval(prompt);
@@ -59,6 +60,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     const generateSummaryReply = generateSummary(prompt);
 
 
+                    rowData['relevance'] = spamFilterReply; // "valid" or "invalid" where "valid means it is relevant, "invalid means it is a spam
                     rowData['problemPopularityScore'] = problemPopularityReply[0];
                     rowData['problemPopularityExplaination'] = problemPopularityReply[1];
 
