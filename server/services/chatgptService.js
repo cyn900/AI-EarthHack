@@ -13,6 +13,22 @@ const background = 'You are a very strict critic who knows a lot about circular 
 const inputFormat = 'The format of the user input is yhat problem is after Problem: and before Solution:. Solution is everything after Solution:'
 const replyFormat = 'The format of your reply must be Score: (number with one digit after the decimal from 0.0 to 10.0 where 10 means it is the best idea on the planet, 50 is just an average idea. Marks will be detucted if the given information is not descriptive enough. For example, if the problem description is just 5 words, it is probably too general so the mark should be realy low.). Explaination: (only one concise senetnce to comment on what does the user did well on and what does the user did bad on. you must not repeat what the user said)';
 
+// spam Filter
+async function spamFilter(prompt) { 
+    rolePlay =  'You are a judge for the competition. You have to detect a pair of porblem and solution is valid or not. If the submission is written with low effort and does not make sense it is invalid. For example, if the solution does not match with the problem, it is also invalid. Return Valid if it is a fair submission, else return Invalid. You can only return Valid or Invalid';
+    const problemMactch = prompt.match(problemRegex);
+    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 50,
+        temperature: 0.0,
+    });
+    
+
+    console.log(completion.choices[0].message.content);
+    return completion.choices[0].message.content;
+}
 // problem popularity evaluation
 async function problemPopularEval(prompt) { 
     rolePlay =  background + 'You only care about popularity (how many people are/will be impacted). You will rate on the popularity of the given information out of 100. Half of the points should given on the big idea of the given information, and half of the points should given on how detailed the user explain its popularity. If the user only give a gneral idea, no or very little marks will be given.' + replyFormat
@@ -33,7 +49,7 @@ async function problemPopularEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -57,7 +73,7 @@ async function problemGrowingEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -81,7 +97,7 @@ async function problemUrgentEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -105,7 +121,7 @@ async function problemExpenseEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -129,32 +145,7 @@ async function problemFrequentEval(prompt) {
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log(problemDescription);
     console.log([score, explanation]);
-    return [score, explanation]
-    // return completion.choices[0].message.content;
-}
-
-// problem customize evaluation
-// customizeInput is a metric that the user what to use for evaluation
-async function problemCustomEval(prompt, customizeInput) {
-    rolePlay = background + 'You only care about ' + customizeInput +'Talk about'+ customizeInput + 'in your explaination' + replyFormat;
-    const problemMactch = prompt.match(problemRegex);
-    const problemDescription = problemMactch ? problemMactch[1].trim() : null;
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: problemDescription}],
-        model: "gpt-3.5-turbo",
-        max_tokens: 60,
-        temperature: 0.0,
-    });
-    console.log(completion.choices[0].message.content);
-    const aiResponse = completion.choices[0].message.content;
-    const scoreMatch = aiResponse.match(scoreRegex);
-    const explanationMatch = aiResponse.match(explanationRegex);
-
-    const score = scoreMatch ? scoreMatch[1] : null;
-    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
-    console.log(problemDescription);
-    console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
@@ -175,13 +166,13 @@ async function solutionCompletenessEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
     // return completion.choices[0].message.content;
 }
 
 //solution completeness evaluation
 async function solutionCompletenessEval(prompt) { 
-    rolePlay = background + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related?' + replyFormat;
+    rolePlay = background + inputFormat + 'Is the solution complete? Can it solve the problem described after Problem:? Are the problem and soluation even related?' + replyFormat;
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         model: "gpt-3.5-turbo",
@@ -196,7 +187,176 @@ async function solutionCompletenessEval(prompt) {
     const score = scoreMatch ? scoreMatch[1] : null;
     const explanation = explanationMatch ? explanationMatch[1].trim() : null;
     console.log([score, explanation]);
-    return [score, explanation]
+    return [score, explanation];
+    // return completion.choices[0].message.content;
+}
+
+//solution target evaluation
+async function solutionTargetEval(prompt) { 
+    rolePlay = background + inputFormat + 'Does it fit the 7 pillars of circular econ.' + replyFormat;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 60,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    const scoreMatch = aiResponse.match(scoreRegex);
+    const explanationMatch = aiResponse.match(explanationRegex);
+
+    const score = scoreMatch ? scoreMatch[1] : null;
+    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    console.log([score, explanation]);
+    return [score, explanation];
+    // return completion.choices[0].message.content;
+}
+
+//solution novelty evaluation
+async function solutionNoveltyEval(prompt) { 
+    rolePlay = background + inputFormat + 'How creative is the solution? Does it exist already?' + replyFormat;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 60,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    const scoreMatch = aiResponse.match(scoreRegex);
+    const explanationMatch = aiResponse.match(explanationRegex);
+
+    const score = scoreMatch ? scoreMatch[1] : null;
+    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    console.log([score, explanation]);
+    return [score, explanation];
+    // return completion.choices[0].message.content;
+}
+
+//solution financial impact evaluation
+async function solutionFinImpactEval(prompt) { 
+    rolePlay = background + inputFormat + 'What is the financial impact? Does it create monetary value?' + replyFormat;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 60,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    const scoreMatch = aiResponse.match(scoreRegex);
+    const explanationMatch = aiResponse.match(explanationRegex);
+
+    const score = scoreMatch ? scoreMatch[1] : null;
+    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    console.log([score, explanation]);
+    return [score, explanation];
+    // return completion.choices[0].message.content;
+}
+
+//solution Implementability evaluation
+async function solutionImplementabilityEval(prompt) { 
+    rolePlay = background + inputFormat + 'What is the implementability? How feasible is the solution? How scalabale is the solution?' + replyFormat;
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 60,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    const scoreMatch = aiResponse.match(scoreRegex);
+    const explanationMatch = aiResponse.match(explanationRegex);
+
+    const score = scoreMatch ? scoreMatch[1] : null;
+    const explanation = explanationMatch ? explanationMatch[1].trim() : null;
+    console.log("score: " + [score, explanation][0]);
+    console.log([score, explanation]);
+    return [score, explanation];
+    // return completion.choices[0].message.content;
+}
+
+// creative name
+async function generateName(prompt) { 
+    rolePlay = "You are a creative thinker! Make up a name with only 2 to 4 words for the given info. Just give me the name, nothing else!";
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 10,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){1,3})/;
+    const aiResponse = completion.choices[0].message.content;
+    const nameMatch = aiResponse.match(nameRegex);
+    const name = nameMatch ? nameMatch[1].trim() : null;
+    
+    // console.log(name);
+    return name;
+    // return completion.choices[0].message.content;
+}
+
+// generate tags
+async function generateTags(prompt) { 
+    rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy. If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 10,
+        temperature: 0.0,
+    });
+    console.log(completion.choices[0].message.content);
+    const aiResponse = completion.choices[0].message.content;
+    tags = categorize(aiResponse)
+    
+    // console.log(categorize('Design for Longevity and Durability, Recycle and Recover'));
+    console.log(aiResponse);
+    console.log(categorize(aiResponse));
+    return categorize(aiResponse);
+    // return completion.choices[0].message.content;
+}
+
+function categorize(input) {
+    const categories = [
+        { name: "Materials", regex: /Materials/i },
+        { name: "Energy", regex: /Energy/i },
+        { name: "Water", regex: /Water/i },
+        { name: "Biodiversity", regex: /Biodiversity/i },
+        { name: "Soceity & Culture", regex: /Society and Culture/i },
+        { name: "Health & Wellbeing", regex: /Health and Wellbeing/i },
+        { name: "Value", regex: /value/i }
+    ];
+    cate = [];
+
+    for (const category of categories) {
+        if (category.regex.test(input)) {
+            cate.push(category.name);
+        }
+    }
+    if (cate == []) {
+        return ["other"];
+    }
+    else{ return cate }
+
+    
+}
+
+// overall summary
+async function generateSummary(prompt) { 
+    rolePlay = "You are provided with a problem and a solution. Your task is to provide a one sentence summary. ";
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
+        model: "gpt-3.5-turbo",
+        max_tokens: 50,
+        temperature: 0.0,
+    });
+    const firstSentenceRegex = /Summary:\s*([^\.]+\.)/;
+    const aiResponse = completion.choices[0].message.content;
+    const sentenceMatch = aiResponse.match(firstSentenceRegex);
+    const sentence = sentenceMatch? sentenceMatch[1].trim() : null;
+    
+    console.log(sentence);
+    return sentence;
     // return completion.choices[0].message.content;
 }
 
@@ -204,11 +364,17 @@ p = 'Problem: Create Awareness of the propensity of Reduce, Reuse, Brick buildin
 // problemPopularEval(p)
 // problemGrowingEval(p)
 // problemUrgentEval(p)
-// problemUrgentEval(p)
 // problemExpenseEval(p)
 // problemFrequentEval(p)
-// problemCustomEval(p, 'creativity')
-solutionCompletenessEval(p)
+// solutionCompletenessEval(p)
+// solutionTargetEval(p)
+// solutionNoveltyEval(p)
+// solutionFinImpactEval(p)
+// solutionImplementabilityEval(p)
+// generateName(p)
+// generateTags(p)
+// generateSummary(p);
+// spamFilter(p);
 
-module.exports = {problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval};
+module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 

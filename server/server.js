@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const csv = require("csv-parser");
-const { problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval } = require('./services/chatgptService');
+const { spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary } = require('./services/chatgptService');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -43,12 +43,67 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     headers.forEach((header, index) => {
                         rowData[header] = row[index];
                     });
+                    const prompt = 'Problem: ' + rowData['problem'] + 'solution:' + rowData['solution'];
+                    const spamFilterReply = spamFilter(prompt);
+                    const problemPopularityReply = problemPopularEval(prompt);
+                    const problemGrowingReply = problemGrowingEval(prompt);
+                    const problemUrgentReply = problemUrgentEval(prompt);
+                    const problemExpenseReply= problemExpenseEval(prompt);
+                    const problemFrequentReply  = problemFrequentEval(prompt);
+                    const solutionCompletenessReply = solutionCompletenessEval(prompt);
+                    const solutionTargetReply = solutionTargetEval(prompt);
+                    const solutionNoveltyReply = solutionNoveltyEval(prompt);
+                    const solutionFinImpactReply = solutionFinImpactEval(prompt);
+                    const solutionImplementabilityReply = solutionImplementabilityEval(prompt);
+                    const generateNameReply = generateName(prompt);
+                    const generateTagsReply = generateTags(prompt);
+                    const generateSummaryReply = generateSummary(prompt);
+
+
+                    rowData['relevance'] = spamFilterReply; // "valid" or "invalid" where "valid means it is relevant, "invalid means it is a spam
+                    rowData['problemPopularityScore'] = problemPopularityReply[0];
+                    rowData['problemPopularityExplaination'] = problemPopularityReply[1];
+
+                    rowData['problemGrowingScore'] = problemGrowingReply[0];
+                    rowData['problemGrowingExplaination'] = problemGrowingReply[1];
+
+                    rowData['problemUrgentScore'] = problemUrgentReply[0];
+                    rowData['problemUrgentExplaination'] = problemUrgentReply[1];
+
+                    rowData['problemExpenseScore'] = problemExpenseReply[0];
+                    rowData['problemExpenseExplaination'] = problemExpenseReply[1];
+
+                    rowData['problemFrequentScore'] = problemFrequentReply[0];
+                    rowData['problemFrequentExplaination'] = problemFrequentReply[1];
+
+                    rowData['solutionCompletenessScore'] = solutionCompletenessReply[0];
+                    rowData['solutionCompletenessExplaination'] = solutionCompletenessReply[1];
+
+                    rowData['solutionTargetScore'] = solutionTargetReply[0];
+                    rowData['solutionTargetExplaination'] = solutionTargetReply[1];
+
+                    rowData['solutionNoveltyScore'] = solutionNoveltyReply[0];
+                    rowData['solutionNoveltyExplaination'] = solutionNoveltyReply[1];
+
+                    rowData['solutionTargetScore'] = solutionTargetReply[0];
+                    rowData['solutionTargetExplaination'] = solutionTargetReply[1];
+
+                    rowData['solutionFinImpactScore'] = solutionFinImpactReply[0];
+                    rowData['solutionFinImpactExplaination'] = solutionFinImpactReply[1];
+
+                    rowData['solutionImplementabilityScore'] = solutionImplementabilityReply[0];
+                    rowData['solutionImplementabilityExplaination'] = solutionImplementabilityReply[1];
+
+                    rowData['name'] = generateNameReply;
+                    rowData['tags'] = generateTagsReply; // a list of tags ex: ['Design for Longevity and Durability', 'Recycle and Recover']
+                    rowData['summary'] = generateSummaryReply;
+
                     rows.push(rowData);
                 }
             })
             .write(fileContent);
     } catch (error) {
-        console.error(error);
+console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 
