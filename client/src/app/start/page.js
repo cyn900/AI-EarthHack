@@ -60,37 +60,41 @@ export default function Home() {
     return (
         <div className="hero min-h-screen " >
             <div className="hero-content flex-col lg:flex-row" >
-                <div className="text-center lg:text-left bg-middle_green " style={{ padding: '100px', margin: '0' }}>
-                    <h1 className="text-5xl font-bold" style={{ color: 'white' }}> How Arbor Works </h1>
-                    <p className="py-2 font-bold" style={{ color: 'white' }}> 1. 📂 File Upload & Metric Prioritization: </p>
-                    <p className="py-2" style={{ color: 'black' }}> Upload your ideas and prioritize evaluation criteria to fit your needs and standards. </p>
-                    <p className="py-2 font-bold" style={{ color: 'white' }}> 2. 🤖 AI Analysis & Spam Purge </p>
-                    <p className="py-2" style={{ color: 'black' }}> Our AI sorts and bins the spam - ensuring relevance of ideas and adherence to circular economy principles. </p>
-                    <p className="py-2 font-bold" style={{ color: 'white' }}> 3. 📊 Weighted Metric Evaluation: </p>
-                    <p className="py-2" style={{ color: 'black' }}> Your ideas face the metrics you prioritize. AI evaluates, quantitatively through indexes used across industries while also considering qualitative factors. </p>
-                    <p className="py-2 font-bold" style={{ color: 'white' }}> 4. 🎉 Insightful Dashboard </p>
-                    <p className="py-2" style={{ color: 'black' }}> Witness the winners! Spot popular categories, visualize idea performance and explore the leaderboard </p>
-                    <p className="py-2 font-bold" style={{ color: 'white' }}> 5. 🏆 Detailed Insights </p>
-                    <p className="py-2" style={{ color: 'white' }}> Dive into the best! Filter to see top performers of different categories and how they rated based on each metrics! </p>
-                </div>
-                <div className="card self-center bg-gray-300 shadow-xl">
+                <div className="text-center lg:text-left bg-middle_green " style={{ padding: '100px', width: "60%"}}>
+                    <h1 className="subtitle1" style={{  color: 'white', marginTop: '40px', marginBottom: '20px'}}> How Arbor Works </h1>
+                    <p className="py-2 font-bold" style={{ marginLeft: '-20px',color: 'white', marginBottom: '-10px'}}> 1. 📂 File Upload & Metric Prioritization: </p>
+                    <p className="py-2" style={{ color: 'white',marginRight: '-20px', marginBottom: '10px'}}> Upload your ideas and prioritize evaluation criteria to fit your needs and standards. </p>
+                    <p className="py-2 font-bold" style={{ marginLeft: '-20px', color: 'white' , marginBottom: '-10px',marginRight: '-20px'}}> 2. 🤖 AI Analysis & Spam Purge </p>
+                    <p className="py-2" style={{ color: 'white', marginBottom: '10px' }}> Our AI sorts and bins the spam - ensuring relevance of ideas and adherence to circular economy principles. </p>
+                    <p className="py-2 font-bold" style={{ marginLeft: '-20px', color: 'white' , marginBottom: '-10px',marginRight: '-20px'}}> 3. 📊 Weighted Metric Evaluation: </p>
+                    <p className="py-2" style={{ color: 'white' , marginBottom: '10px' }}> Your ideas face the metrics you prioritize. AI evaluates, quantitatively through indexes used across industries while also considering qualitative factors. </p>
+                    <p className="py-2 font-bold" style={{ marginLeft: '-20px', color: 'white' , marginBottom: '-10px',marginRight: '-20px'}}> 4. 🎉 Insightful Dashboard </p>
+                    <p className="py-2" style={{ color: 'white'  , marginBottom: '10px'}}> Witness the winners! Spot popular categories, visualize idea performance and explore the leaderboard </p>
+                    <p className="py-2 font-bold" style={{ marginLeft: '-20px',color: 'white' , marginBottom: '-10px',marginRight: '-20px'}}> 5. 🏆 Detailed Insights </p>
+                    <p className="py-2" style={{ color: 'white' , marginBottom: '10px'}}> Dive into the best! Filter to see top performers of different categories and how they rated based on each metrics! </p>
+                    <p className="py-2" style={{ color: 'white' , marginLeft: '-30px', marginRight: '-30px'}}> ⚠️ Disclaimer: Our AI evaluation tool is a guide, not a replacement for human insight.  </p>
 
-                    <div className="card-body">
-                        <h2 className="card-title"> Evaluation Goal </h2>
+                </div>
+                <div className=" text-center lg:text-left self-center bg-white">
+
+                    <div className="">
+                        <h2 className="title1" style={{ marginTop: '60px' }}> Evaluation Goal </h2>
+                        <h2 className="subtitle2" style={{ color: '#6D6D6D', marginLeft: '90px', marginTop:"20px", marginBottom:"-80px"}}> Evaluation Goal (max 30 words) </h2>
                         <textarea
-                            className="textarea textarea-primary min-h-36"
+                            className="textarea textarea-primary min-h-36 boarder-color-light_gray" 
+                            style={{ margin: '90px', width: "74%"}}
                             placeholder="E.g. evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'."
                             onChange={handleChangeTextArea}
                             name="evaluation-goal"
                         ></textarea>
 
-                        <h2 className="card-title mt-8"> Idea Database </h2>
-                        <p> Insert a csv file with a separate columns for problem and solution by clicking on the area below. <Link href="https://drive.google.com/file/d/1cgeZPGsntnJckH7_ROSQm1JG5pFuE0u6/view" className="link"  > See example data file. </Link>  </p>
-                        <form onSubmit={handleSubmitForm} encType="multipart/form-data" className="card-actions justify-end">
-                            <input id='file-input' type="file" onChange={handleChangeForm} name="csv-form" className="file-input file-input-bordered file-input-primary w-full bg-gray-100" />
+                        <h2 className="subtitle2"style={{ color: '#6D6D6D', marginLeft:'90px', marginTop:'-40px'}}> Idea Database </h2>
+                        <p style={{  marginLeft:'90px', marginTop:'10px'}}> Insert a csv file with a separate columns for problem and solution by clicking on the area below. <Link href="https://drive.google.com/file/d/1cgeZPGsntnJckH7_ROSQm1JG5pFuE0u6/view" className="link"  > See example data file. </Link>  </p>
+                        <form style={{  marginLeft:'90px', marginTop:'10px', width: "74%"}} onSubmit={handleSubmitForm} encType="multipart/form-data" className="card-actions justify-end">
+                            <input id='file-input' type="file" onChange={handleChangeForm} name="csv-form" className="file-input file-input-primary w-full bg-gray-100" />
                             {
                                 loading ? <span className="btn loading loading-spinner text-primary"></span> :
-                                    <button className='buttong' type='submit'> Next </button>
+                                    <button className='buttong' type='submit' style={{marginTop:'20px'}}> Next </button>
                                     
                             }
                         </form>

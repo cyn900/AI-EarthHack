@@ -74,6 +74,7 @@ body {
   color: var(--white);
 }
 
+<<<<<<< Updated upstream
 .tag{
   width: 72px;
   height: 21px;
@@ -99,10 +100,32 @@ body {
   margin-bottom: 4.67px;
   background-color: var(--forest_green);
   color: var(--white);
+=======
+.textarea-primary{
+  border-color: transparent;
+  background-color: var(--card_color);
+}
+
+.textarea-primary:focus{
+  border-color: var(--middle_gray);
+  outline-color: var(--middle_gray);
+  background-color: var(--card_color);
+>>>>>>> Stashed changes
 }
 
 .max-screen {
   height: 100%;
+}
+
+.file-input.file-input{
+  border: #FFFFFF;
+  background-color: var(--card_color);
+}
+
+.file-input::file-selector-button{
+  background-color: var(--dark_forest);
+  color: var(--white);
+  border: none;
 }
 
 .button{
