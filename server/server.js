@@ -7,10 +7,11 @@ const { spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, p
 const app = express();
 const port = process.env.PORT || 4000;
 
+
+
 let storedRows = null; // Global variable to store the rows data
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 app.use(cors());
 app.use(express.json());
@@ -37,6 +38,21 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
         const fileBuffer = req.file.buffer;
         const fileContent = fileBuffer.toString('utf-8');
 
+        const fs = require('fs');
+        const path = require('path');
+
+        const outputCsvPath = path.join(__dirname, 'output.csv');
+        const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
+
+        const newHeader = 'problem,solution,solution,relevance,problemPopularityScore,problemPopularityExplaination,problemGrowingScore,problemGrowingExplaination,problemUrgentScore,problemUrgentExplaination,problemExpenseScore,problemExpenseExplaination,problemFrequentScore,problemFrequentExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionCompletenessScore,solutionCompletenessExplaination,solutionTargetScore,solutionTargetExplaination,solutionNoveltyScore,solutionNoveltyExplaination,solutionFinImpactScore,solutionFinImpactExplaination,solutionImplementabilityScore,solutionImplementabilityExplaination,newName,tags,summary\n';
+        writableStream.write(newHeader);
+
+        // Example function to write a row
+        function writeRow(rowData) {
+            const rowString = `${rowData.problem},${rowData.solution},${rowData.relevance},${rowData.problemPopularityScore},${rowData.problemPopularityExplaination},${rowData.problemGrowingScore},${rowData.problemGrowingExplaination},${rowData.problemUrgentScore},${rowData.problemUrgentExplaination},${rowData.problemExpenseScore},${rowData.problemExpenseExplaination},${rowData.problemFrequentScore},${rowData.problemFrequentExplaination},${rowData.solutionCompletenessScore},${rowData.solutionCompletenessExplaination},${rowData.solutionTargetScore},${rowData.solutionTargetExplaination},${rowData.solutionNoveltyScore},${rowData.solutionNoveltyExplaination},${rowData.solutionFinImpactScore},${rowData.solutionFinImpactExplaination},${rowData.solutionImplementabilityScore},${rowData.solutionImplementabilityExplaination},${rowData.newName},${rowData.tags},${rowData.summary}\n`;
+            writableStream.write(rowString);
+}
+
         // Parse CSV content (using csv-parser as an example)
 
         csv({ headers: false })
@@ -55,7 +71,6 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
                     // const solu = rowData['solution']
                     const prompt = 'Problem: ' + rowData['problem'] + 'Solution:' + rowData['solution'];
                     if (prompt == null) {
-                        console.log('Prompt is null or undefined');
                         return null; // or handle it as per your application's logic
                     }
 
@@ -63,22 +78,22 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
                     const problemMactch = prompt.match(problemRegex);
                     const problemDescription = problemMactch ? problemMactch[1].trim() : null;
 
-                    console.log(problemDescription);
+                    //console.log(problemDescription);
 
 
                     num += 1;
                     console.log("num"+num);
-                    console.log(prompt);
+                    //console.log(prompt);
 
                     const spamFilterReply = await spamFilter(prompt);
 
-                    console.log("reply" + spamFilterReply);
+                    //console.log("reply" + spamFilterReply);
 
-                    const problemPopularityReply = await problemPopularEval(prompt);
-                    const problemGrowingReply = await problemGrowingEval(prompt);
-                    const problemUrgentReply = await problemUrgentEval(prompt);
-                    const problemExpenseReply = await problemExpenseEval(prompt);
-                    const problemFrequentReply = await problemFrequentEval(prompt);
+                    const problemPopularityReply = await problemPopularEval(prob);
+                    const problemGrowingReply = await problemGrowingEval(prob);
+                    const problemUrgentReply = await problemUrgentEval(prob);
+                    const problemExpenseReply = await problemExpenseEval(prob);
+                    const problemFrequentReply = await problemFrequentEval(prob);
                     const solutionCompletenessReply = await solutionCompletenessEval(prompt);
                     const solutionTargetReply = await solutionTargetEval(prompt);
                     const solutionNoveltyReply = await solutionNoveltyEval(prompt);
@@ -90,11 +105,12 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
 
 
                     rowData.relevance = spamFilterReply; // "valid" or "invalid" where "valid means it is relevant, "invalid means it is a spam
-                    console.log(spamFilterReply);
+                    //console.log(spamFilterReply);
 
                     rowData.problemPopularityScore = problemPopularityReply[0];
 
-                    console.log("pop score: " + rowData['problemPopularityScore']);
+                    
+                    //console.log("pop score: " + rowData['problemPopularityScore']);
 
                     rowData.problemPopularityExplaination = problemPopularityReply[1];
 
@@ -119,9 +135,6 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
                     rowData.solutionNoveltyScore = solutionNoveltyReply[0];
                     rowData.solutionNoveltyExplaination = solutionNoveltyReply[1];
 
-                    rowData.solutionTargetScore = solutionTargetReply[0];
-                    rowData.solutionTargetExplaination = solutionTargetReply[1];
-
                     rowData.solutionFinImpactScore = solutionFinImpactReply[0];
                     rowData.solutionFinImpactExplaination = solutionFinImpactReply[1];
 
@@ -129,15 +142,18 @@ app.post('/load-csv', upload.single('csvFile'), async(req, res) => {
                     rowData.solutionImplementabilityExplaination = solutionImplementabilityReply[1];
 
                     rowData.name = generateNameReply;
-                    rowData.tags = generateTagsReply; // a list of tags ex: ['Design for Longevity and Durability', 'Recycle and Recover']
+                    rowData.tags = generateTagsReply; // a list of tags ex: ['Water', 'Value'] 0<len(list)<=2
                     rowData.summary = generateSummaryReply;
 
                     rows.push(rowData);
+                    // console.log('rowData: ' + rowData['problem']);
+                    
+                    writeRow({problem: "\""+rowData['problem']+"\"", solution: "\""+rowData['solution']+"\"", relevance: rowData['relevance'], problemPopularityScore: rowData['problemPopularityScore'],problemPopularityExplaination: "\""+rowData['problemPopularityExplaination']+"\"", problemGrowingScore: rowData['problemGrowingScore'], problemGrowingExplaination: "\""+rowData['problemGrowingExplaination']+"\"", problemUrgentScore: rowData['problemUrgentScore'], problemUrgentExplaination: "\""+rowData['problemUrgentExplaination']+"\"", problemExpenseScore: rowData['problemExpenseScore'], problemExpenseExplaination: "\""+rowData['problemExpenseExplaination']+"\"", problemFrequentScore: rowData['problemFrequentScore'], problemFrequentExplaination: "\""+rowData['problemFrequentExplaination']+"\"", solutionCompletenessScore: rowData['solutionCompletenessScore'], solutionCompletenessExplaination: "\""+rowData['solutionCompletenessExplaination']+"\"", solutionTargetScore: rowData['solutionTargetScore'], solutionTargetExplaination: "\""+rowData['solutionTargetExplaination']+"\"", solutionNoveltyScore: rowData['solutionNoveltyScore'], solutionNoveltyScore: "\""+rowData['solutionNoveltyScore'], solutionNoveltyExplaination: "\""+rowData['solutionNoveltyExplaination']+"\"", solutionFinImpactScore: rowData['solutionFinImpactScore'], solutionFinImpactExplaination: "\""+rowData['solutionFinImpactExplaination']+"\"", solutionImplementabilityScore: rowData['solutionImplementabilityScore'], solutionImplementabilityExplaination: "\""+rowData['solutionImplementabilityExplaination']+"\"", newName: rowData['newName'], tags: rowData['tags'], summary: "\""+rowData['summary']+"\""});
                 }
             })
             .write(fileContent);
     } catch (error) {
-console.error(error);
+        console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 

@@ -26,7 +26,7 @@ async function spamFilter(prompt) {
     });
     
 
-    console.log(completion.choices[0].message.content);
+    //console.log(completion.choices[0].message.content);
     return completion.choices[0].message.content;
 }
 
