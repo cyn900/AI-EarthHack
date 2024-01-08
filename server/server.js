@@ -264,7 +264,7 @@ app.get('/get-average-idea-score', (req, res) => {
     }
 
     const relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
-    const sum = relevantRows.reduce((acc, row) => acc + row.score, 0);
+    const sum = relevantRows.reduce((acc, row) => acc + parseFloat(row.score), 0);
     const average = sum / relevantRows.length;
 
     console.log(sum, relevantRows.length, average)

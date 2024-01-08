@@ -348,7 +348,7 @@ export default function Page() {
                                         <h2 className="mr-6 text-xl font-bold"> {index + 1} </h2>
                                         <div>
                                             <h2 className="card-title"> {idea.newName} </h2>
-                                            <p>{idea.summary.length > 50 ? idea.summary.slice(0, 50) + '...' : idea.summary}</p>
+                                            <p className="text-xs">{idea.summary.length > 50 ? idea.summary.slice(0, 50) + '...' : idea.summary}</p>
                                         </div>
                                     </div>
                                     <h2 className="text-2xl font-bold text-green-800">{idea.score}pt</h2>

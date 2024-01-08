@@ -63,6 +63,33 @@ export default function Page() {
     const handleSubmit = async(e) => {
         e.preventDefault();
         try {
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            setLoading(true)
+            for (let i = 0; i < 100; i++) {
+                const relevantIdeasResponse = await axios.get('http://localhost:4000/get-relevant-ideas-number');
+                const relevantIdeasJson = relevantIdeasResponse.data;
+
+                if (relevantIdeasJson.relevantIdeasNumber > 0) {
+                    break; // Exit the loop if relevantIdeasNumber is greater than 0
+                } else {
+                    await sleep(1000);
+                }
+
+                // const averageIdeaResponse = await axios.get('http://localhost:4000/get-average-idea-score');
+                // const averageIdeaJson = averageIdeaResponse.data;
+                //
+                // if (averageIdeaJson.averageIdeaScore !== "NaN" && averageIdeaJson.averageIdeaScore > 0) {
+                //     break; // Exit the loop if averageIdeaScore is greater than 0
+                // } else {
+                //     await sleep(1000);
+                // }
+            }
+
+            await sleep(3000);
+
             const transformedCategoryScores = Object.keys(categoryScores).reduce((acc, categoryName) => {
                 const sliderScores = categoryScores[categoryName];
 
@@ -79,24 +106,13 @@ export default function Page() {
 
             const response = await axios.post('http://localhost:4000/load-user-rating', { rating: transformedCategoryScores });
             const json = response.data;
-            console.log(json);
 
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-
-            setLoading(true)
-            for (let i = 0; i < 100; i++) {
-                const relevantIdeasResponse = await axios.get('http://localhost:4000/get-relevant-ideas-number');
-                const relevantIdeasJson = relevantIdeasResponse.data;
-
-                if (relevantIdeasJson.relevantIdeasNumber > 0) {
-                    window.location.href = "/result";
-                    setLoading(false);
-                    break; // Exit the loop if relevantIdeasNumber is greater than 0
-                } else {
-                    await sleep(1000);
-                }
+            if (response.status !== 200) {
+                console.error('Error sending form:', json);
+                alert('Error sending form');
+            } else {
+                setLoading(false);
+                window.location.href = "/result";
             }
         } catch (error) {
             console.error('Error sending form:', error);
