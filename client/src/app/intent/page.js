@@ -84,10 +84,10 @@ export default function Page() {
     }
 
     return (
-        <div className="hero min-h-screen bg-base-200">
+        <div className="hero min-h-screen bg-light_green">
             <div className="hero-content max-w-screen-xl text-center">
                 <div className="max-w-screen-2xl w-full">
-                    <h1 className="text-5xl font-bold" style={{ color: 'black' }}> Evaluation Personalization </h1>
+                    <h1 className="text-5xl font-bold text-dark_forest"> Evaluation Personalization </h1>
                     <p className="py-6" style={{ color: 'black' }}>*Each project gets a score out of the combined points of problem and solution, adjust success indicators based on your standards</p>
                     <div className="flex w-full">
                         {categories.map((category, index) => (
@@ -113,8 +113,6 @@ export default function Page() {
                                                     onChange={(e) => handleScoreChange(category.name, slider, parseInt(e.target.value, 10))}
                                                 />
                                                 <div className="w-full flex justify-between text-xs px-2">
-
-
                                                     <span>0</span>
                                                     <span>2</span>
                                                     <span>4</span>
@@ -132,7 +130,10 @@ export default function Page() {
                         ))}
                     </div>
 
-                    <button className="btn btn-primary" onClick={handleSubmit}> Submit </button>
+                    <div className="">
+                        <button className="btn btn-primary mx-4" onClick={() => { window.location.href = '/start' }}> Prev </button>
+                        <button className="btn btn-primary mx-4" onClick={handleSubmit}> Next </button>
+                    </div>
                 </div>
             </div>
         </div>
