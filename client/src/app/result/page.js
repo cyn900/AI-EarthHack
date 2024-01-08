@@ -195,7 +195,7 @@ export default function Page() {
                 <div className="flex flex-row justify-between">
                     <h1 className="font-bold text-2xl w-80"> Evaluation Results </h1>
                     {/* You can open the modal using document.getElementById('ID').showModal() method */}
-                    <button className="btn" onClick={()=>document.getElementById('my_modal_3').showModal()}> New Evaluation </button>
+                    <button className="btn bg-light_forest hover:bg-dark_forest border-light_forest" onClick={()=>document.getElementById('my_modal_3').showModal()}> New Evaluation </button>
                     <dialog id="my_modal_3" className="modal">
                         <div className="modal-box text-center">
                             <form method="dialog">
@@ -215,7 +215,8 @@ export default function Page() {
                         <form method="dialog" className="modal-backdrop">
                             <button>close</button>
                         </form>
-                    </dialog>                </div>
+                    </dialog>
+                </div>
 
                 <label className="flex flex-row justify-around w-full p-2 h-fit bg-green-100 rounded-xl mt-4">
                     <p className="text-gray-600"> Criteria </p>
@@ -268,7 +269,7 @@ export default function Page() {
                     <div className="mt-6">
                         <h1 className="text-3xl font-bold"> Idea Comparisons </h1>
 
-                        <div className="flex justify-center items-center mt-8 rounded-md bg-gray-200">
+                        <div className="flex justify-center items-center mt-8 rounded-md bg-green-100">
                             <div className="flex flex-col justify-between items-center p-4">
                                 <div className="flex flex-row items-end">
                                     <h1 className="text-3xl font-bold mx-4"> Top Ideas Comparisons </h1>
@@ -323,7 +324,20 @@ export default function Page() {
                     <div className="bg-green-100 p-6 rounded-lg">
                         <div className="flex">
                             <h1 className="text-3xl font-bold"> Idea Leaderboard </h1>
-                            <button className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4"> All Entries </button>
+                            <button className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4 bg-light_forest hover:bg-dark_forest border-light_forest" onClick={()=>document.getElementById('my_modal_4').showModal()}> All Entries </button>
+                            <dialog id="my_modal_4" className="modal">
+                                <div className="modal-box text-center">
+                                    <form method="dialog">
+                                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                    </form>
+                                    <h3 className="font-bold text-lg"> Feature is under construction!! </h3>
+                                    <p> Check Figma to see the result </p>
+                                </div>
+                                <form method="dialog" className="modal-backdrop">
+                                    <button>close</button>
+                                </form>
+                            </dialog>
+
                         </div>
                         {topIdeas.map((idea, index) => (
                             <div className="card m-4 bg-base-100 shadow-xl" key={index}>
