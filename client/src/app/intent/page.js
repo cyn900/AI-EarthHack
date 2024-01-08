@@ -125,22 +125,26 @@ export default function Page() {
         );
     } else {
         return (
-            <div className="hero min-h-screen bg-light_green">
+            <div className="hero min-h-screen">
                 <div className="hero-content max-w-screen-xl text-center">
                     <div className="max-w-screen-2xl w-full">
                         <h1 className="text-5xl font-bold text-dark_forest"> Evaluation Personalization </h1>
-                        <p className="py-6" style={{ color: 'black' }}>*Each project gets a score out of the combined points of problem and solution, adjust success indicators based on your standards</p>
+                        <p className="py-6" style={{color: 'black'}}>*Each project gets a score out of the combined
+                            points of problem and solution, adjust success indicators based on your standards</p>
                         <div className="flex w-full">
                             {categories.map((category, index) => (
-                                <div key={index} className="flex flex-col text-right mx-8 w-1/2" style={{ color: 'black' }}>
+                                <div key={index} className="flex flex-col text-right mx-8 w-1/2"
+                                     style={{color: 'black'}}>
                                     <h1 className="text-2xl font-bold">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
                                     <div className="mx-4 mt-4">
                                         {category.sliders.map((slider, sliderIndex) => (
                                             <div key={sliderIndex} className="grid grid-cols-9">
                                                 <label className="col-span-3">
                                                     <div className="flex flex-col">
-                                                        <span className="text-md font-bold" style={{ color: 'black' }}>{slider[0]}</span>
-                                                        <span className="text-xs" style={{ color: 'black' }}>{slider[1]}</span>
+                                                        <span className="text-md font-bold"
+                                                              style={{color: 'black'}}>{slider[0]}</span>
+                                                        <span className="text-xs"
+                                                              style={{color: 'black'}}>{slider[1]}</span>
                                                     </div>
                                                 </label>
                                                 <div className="col-span-5 mx-4">
@@ -162,7 +166,6 @@ export default function Page() {
                                                         <span>10</span>
                                                     </div>
                                                 </div>
-
                                                 <p className="col-span-1">{categoryScores[category.name][slider]}pts </p>
                                             </div>
                                         ))}
@@ -170,14 +173,31 @@ export default function Page() {
                                 </div>
                             ))}
                         </div>
-
                         <div className="">
-                            <button className="btn btn-primary mx-4" onClick={() => { window.location.href = '/start' }}> Prev </button>
-                            <button className="btn btn-primary mx-4" onClick={handleSubmit}> Next </button>
+                            <button className="btn btn-primary mx-4" onClick={() => {
+                                window.location.href = '/start'
+                            }} style={{
+                                backgroundColor: '#DFEDE7',
+                                marginTop: '10pt',
+                                border: 'none',
+                                paddingLeft: '30px',
+                                paddingRight: '30px',
+                                color: '#3D6F5B'
+                            }}> Prev
+                            </button>
+                            <button className="btn btn-primary mx-4" onClick={handleSubmit} style={{
+                                backgroundColor: '#98C26C',
+                                marginTop: '30pt',
+                                border: 'none',
+                                paddingLeft: '30px',
+                                paddingRight: '30px',
+                                color: 'white'
+                            }}> Next
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 }

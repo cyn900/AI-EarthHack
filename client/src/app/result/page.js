@@ -190,12 +190,12 @@ export default function Page() {
     }, [selectedValue]);
 
     return (
-        <div className="flex flex-col justify-center items-center min-h-screen mt-16">
+        <div className="flex flex-col justify-center items-center min-h-screen mt-16" style={{ padding: '50px', marginTop: '10px', backgroundColor: '#DFEDE7'}}>
             <div className="max-w-screen-2xl">
-                <div className="flex flex-row justify-between">
-                    <h1 className="font-bold text-2xl w-80"> Evaluation Results </h1>
+                <div className="flex flex-row justify-between" >
+                    <h1 className="font-bold text-2xl w-80 subtitle1" style={{ padding: '20px'}}> Evaluation Results </h1>
                     {/* You can open the modal using document.getElementById('ID').showModal() method */}
-                    <button className="btn bg-light_forest hover:bg-dark_forest border-light_forest" onClick={()=>document.getElementById('my_modal_3').showModal()}> New Evaluation </button>
+                    <button className="button bg-light_forest hover:bg-dark_green border-light_forest" onClick={()=>document.getElementById('my_modal_3').showModal()} style={{ backgroundColor:'#98C26C', color: '#ffffff'}}> New Evaluation </button>
                     <dialog id="my_modal_3" className="modal">
                         <div className="modal-box text-center">
                             <form method="dialog">
@@ -204,11 +204,13 @@ export default function Page() {
                             <h3 className="font-bold text-lg"> This Action Cannot be Undone!! </h3>
                             <p className="py-4"> <strong>You won’t be able to access the current evaluation when you start a new evaluation.</strong> If you want to re-evaluate current ideas with new priorities, click “Modify Metrics”. If you have new ideas to evaluate, click “Start New Evaluation” to clear current files and start fresh! </p>
                             <button
-                                className="btn btn-primary w-4/5 m-4 text-lg bg-light_forest hover:bg-dark_forest border-light_forest"
+                                style={{ color: 'white', border: 'none'}}
+                                className="btn btn-primary w-4/5 m-4 text-lg bg-light_forest hover:bg-dark_forest border-none"
                                 onClick={() => window.location.href = '/intent'}
                             > Modify Metrics </button>
                             <button
-                                className="btn btn-primary w-4/5 m-4 text-lg bg-white text-dark_forest hover:bg-light_forest border-light_forest"
+                            
+                                className="btn btn-primary w-4/5 m-4 text-lg bg-white text-dark_forest hover:bg-light_green border-light_forest"
                                 onClick={() => window.location.href = '/'}
                             > Start New Evaluation </button>
                         </div>
@@ -218,8 +220,8 @@ export default function Page() {
                     </dialog>
                 </div>
 
-                <label className="flex flex-row justify-around w-full p-2 h-fit bg-green-100 rounded-xl mt-4">
-                    <p className="text-gray-600"> Criteria </p>
+                <label className="flex flex-row justify-around w-full p-2 h-fit bg-green-100 rounded-xl mt-4 content2">
+                    <p className="text-gray-600 content2_bold"> Criteria </p>
                     <p> <strong>Problem</strong>: Popularity, Growth, Urgency, Cost-saving, Frequency </p>
                     <p> <strong>Solution</strong>: Completeness, Targeted, Novelty, Financial Impact, Implementability </p>
                 </label>
@@ -228,7 +230,7 @@ export default function Page() {
                 <div className="grid grid-cols-3 gap-4">
                     <div className="card w-full m-4 bg-base-100 shadow-xl">
                         <div className="card-body">
-                            <h2 className="card-title text-2xl"> Evaluation Goals </h2>
+                            <h2 className="card-title text-2xl subtitle2"> Evaluation Goals </h2>
                             <p> {evaluationGoal}  </p>
                         </div>
                     </div>
@@ -237,8 +239,8 @@ export default function Page() {
                         <div className="card w-full m-4 bg-base-100 shadow-xl h-1/2">
                             <div className="card-body flex-row justify-between w-full items-center">
                                 <div>
-                                    <p className="text-md"> Total number of </p>
-                                    <p className="font-bold text-2xl"> Relevant Ideas </p>
+                                    <p className="text-md content2"> Total number of </p>
+                                    <p className="font-bold text-2xl subtitle2"> Relevant Ideas </p>
                                 </div>
                                 <p className="text-4xl font-bold text-right"> {relevantIdeasNumber} </p>
                             </div>
@@ -247,8 +249,8 @@ export default function Page() {
                         <div className="card w-full m-4 bg-base-100 shadow-xl h-1/2">
                             <div className="card-body flex-row justify-between w-full items-center">
                                 <div>
-                                    <p className="text-md"> Grading Standards </p>
-                                    <p className="font-bold text-2xl"> Average Idea Points </p>
+                                    <p className="text-md content2"> Grading Standards </p>
+                                    <p className="font-bold text-2xl subtitle2"> Average Idea Points </p>
                                 </div>
                                 <p className="text-4xl font-bold text-right"> {averageIdeaScore} </p>
                             </div>
@@ -257,7 +259,7 @@ export default function Page() {
 
                     <div className="card w-full m-4 bg-base-100 shadow-xl">
                         <div className="card-body">
-                            <h2 className="card-title text-xs"> Popularity of Each Pillars of Circular Economy </h2>
+                            <h2 className="card-title text-xs content2"> Popularity of Each Pillars of Circular Economy </h2>
                             <div>
                                 <PieChart chartData={pillars} />
                             </div>
@@ -265,14 +267,14 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6 mt-4">
-                    <div className="mt-6">
-                        <h1 className="text-3xl font-bold"> Idea Comparisons </h1>
+                <div className="grid grid-cols-2 gap-6 mt-4 ">
+                    <div className="mt-6 bg-white card" style={{ marginLeft: '15px'}}>
+                        <h1 className="text-3xl font-bold subtitle2" style={{ padding: '25px'}}> Idea Comparisons </h1>
 
-                        <div className="flex justify-center items-center mt-8 rounded-md bg-green-100">
+                        <div className="flex justify-center items-center mt-8 rounded-md ">
                             <div className="flex flex-col justify-between items-center p-4">
                                 <div className="flex flex-row items-end">
-                                    <h1 className="text-3xl font-bold mx-4"> Top Ideas Comparisons </h1>
+                                    <h1 className="text-3xl font-bold mx-4 subtitle2"> Top Ideas Comparisons </h1>
 
                                     <div className="relative z-10">
                                         <button onClick={handleToggleDropdown} className="btn w-56 flex justify-between">
@@ -321,10 +323,10 @@ export default function Page() {
                         </div>
                     </div>
 
-                    <div className="bg-green-100 p-6 rounded-lg">
+                    <div className=" p-6 rounded-lg subtitle2 card" style={{ padding: '30px', backgroundColor: '#EFEFEF'}}>
                         <div className="flex">
                             <h1 className="text-3xl font-bold"> Idea Leaderboard </h1>
-                            <button className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4 bg-light_forest hover:bg-dark_forest border-light_forest" onClick={()=>document.getElementById('my_modal_4').showModal()}> All Entries </button>
+                            <button className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4 bg-light_forest hover:bg-dark_forest border-light_forest" style={{ color: 'white', border: 'none'}} onClick={()=>document.getElementById('my_modal_4').showModal()}> All Entries </button>
                             <dialog id="my_modal_4" className="modal">
                                 <div className="modal-box text-center">
                                     <form method="dialog">
