@@ -84,7 +84,7 @@ export default function Page() {
     }
 
     return (
-        <div className="hero min-h-screen bg-light_green">
+        <div className="hero min-h-screen bg-white">
             <div className="hero-content max-w-screen-xl text-center">
                 <div className="max-w-screen-2xl w-full">
                     <h1 className="title1"> Evaluation Personalization </h1>
@@ -131,7 +131,7 @@ export default function Page() {
                     </div>
 
                     <div className="">
-                        <button className="btn btn-primary mx-4" onClick={() => { window.location.href = '/start' }} style={{ backgroundColor: 'white' , marginTop: '10pt', border : 'none', paddingLeft : '30px', paddingRight : '30px', color:'#3D6F5B' }}> Prev </button>
+                        <button className="btn btn-primary mx-4" onClick={() => { window.location.href = '/start' }} style={{ backgroundColor: '#DFEDE7' , marginTop: '10pt', border : 'none', paddingLeft : '30px', paddingRight : '30px', color:'#3D6F5B' }}> Prev </button>
                         <button className="btn btn-primary mx-4" onClick={handleSubmit} style={{ backgroundColor: '#98C26C' , marginTop: '30pt', border : 'none', paddingLeft : '30px', paddingRight : '30px', color:'white' }}> Next </button>
                     </div>
                 </div>
