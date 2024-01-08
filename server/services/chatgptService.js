@@ -5,7 +5,7 @@ const OpenAI = require("openai");
 const openai = new OpenAI();
 // if API key is not set up in the project
 // const openai = new OpenAI("YOUR_API_KEY");
-gptModel = "gpt-3.5-turbo";
+gptModel = "gpt-4";
 const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
 const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
 const explanationRegex = /Explanation:\s*([^\.]+\.)/;
