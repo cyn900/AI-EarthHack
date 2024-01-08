@@ -87,12 +87,12 @@ export default function Page() {
         <div className="hero min-h-screen bg-light_green">
             <div className="hero-content max-w-screen-xl text-center">
                 <div className="max-w-screen-2xl w-full">
-                    <h1 className="text-5xl font-bold text-dark_forest"> Evaluation Personalization </h1>
+                    <h1 className="text-5xl font-bold"> Evaluation Personalization </h1>
                     <p className="py-6" style={{ color: 'black' }}>*Each project gets a score out of the combined points of problem and solution, adjust success indicators based on your standards</p>
                     <div className="flex w-full">
                         {categories.map((category, index) => (
-                            <div key={index} className="flex flex-col text-right mx-8 w-1/2" style={{ color: 'black' }}>
-                                <h1 className="text-2xl font-bold">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
+                            <div key={index} className="flex flex-col text-right mx-8 w-1/2" style={{ color: 'black' , marginTop: '10pt'}}>
+                                <h1 className="text-2xl font-bold color-dark_gray">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
                                 <div className="mx-4 mt-4">
                                     {category.sliders.map((slider, sliderIndex) => (
                                         <div key={sliderIndex} className="grid grid-cols-9">
