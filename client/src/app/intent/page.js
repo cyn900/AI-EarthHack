@@ -1,7 +1,8 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Image from "next/image";
 
 export default function Page() {
     const categories = [
@@ -38,6 +39,8 @@ export default function Page() {
         }, {})
     );
 
+    const [loading, setLoading] = useState(false);
+
     const handleScoreChange = (category, slider, score) => {
         setCategoryScores((prevScores) => ({
             ...prevScores,
@@ -55,6 +58,7 @@ export default function Page() {
         });
         setCategoryTotals(totals);
     }, [categoryScores]);
+
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -76,66 +80,104 @@ export default function Page() {
             const response = await axios.post('http://localhost:4000/load-user-rating', { rating: transformedCategoryScores });
             const json = response.data;
             console.log(json);
-            window.location.href = "/result";
+
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            setLoading(true)
+            for (let i = 0; i < 100; i++) {
+                const relevantIdeasResponse = await axios.get('http://localhost:4000/get-relevant-ideas-number');
+                const relevantIdeasJson = relevantIdeasResponse.data;
+
+                if (relevantIdeasJson.relevantIdeasNumber > 0) {
+                    window.location.href = "/result";
+                    setLoading(false);
+                    break; // Exit the loop if relevantIdeasNumber is greater than 0
+                } else {
+                    await sleep(1000);
+                }
+            }
         } catch (error) {
             console.error('Error sending form:', error);
             alert('Error sending form');
+        } finally {
+            if (loading) {
+                alert('No relevant ideas found. Please try again.');
+                setLoading(false);
+            }
         }
     }
 
-    return (
-        <div className="hero min-h-screen bg-light_green">
-            <div className="hero-content max-w-screen-xl text-center">
-                <div className="max-w-screen-2xl w-full">
-                    <h1 className="text-5xl font-bold text-dark_forest"> Evaluation Personalization </h1>
-                    <p className="py-6" style={{ color: 'black' }}>*Each project gets a score out of the combined points of problem and solution, adjust success indicators based on your standards</p>
-                    <div className="flex w-full">
-                        {categories.map((category, index) => (
-                            <div key={index} className="flex flex-col text-right mx-8 w-1/2" style={{ color: 'black' }}>
-                                <h1 className="text-2xl font-bold">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
-                                <div className="mx-4 mt-4">
-                                    {category.sliders.map((slider, sliderIndex) => (
-                                        <div key={sliderIndex} className="grid grid-cols-9">
-                                            <label className="col-span-3">
-                                                <div className="flex flex-col">
-                                                    <span className="text-md font-bold" style={{ color: 'black' }}>{slider[0]}</span>
-                                                    <span className="text-xs" style={{ color: 'black' }}>{slider[1]}</span>
+    if (loading) {
+        return (
+            <div className="hero min-h-screen bg-white">
+                <div className="hero-content flex-col max-w-screen-lg">
+                    <Image
+                        src="/Growing_Tree.gif"
+                        alt="Growing Tree"
+                        width={500}
+                        height={500}
+                    />
+                    <p> Loading ... </p>
+                </div>
+            </div>
+        );
+    } else {
+        return (
+            <div className="hero min-h-screen bg-light_green">
+                <div className="hero-content max-w-screen-xl text-center">
+                    <div className="max-w-screen-2xl w-full">
+                        <h1 className="text-5xl font-bold text-dark_forest"> Evaluation Personalization </h1>
+                        <p className="py-6" style={{ color: 'black' }}>*Each project gets a score out of the combined points of problem and solution, adjust success indicators based on your standards</p>
+                        <div className="flex w-full">
+                            {categories.map((category, index) => (
+                                <div key={index} className="flex flex-col text-right mx-8 w-1/2" style={{ color: 'black' }}>
+                                    <h1 className="text-2xl font-bold">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
+                                    <div className="mx-4 mt-4">
+                                        {category.sliders.map((slider, sliderIndex) => (
+                                            <div key={sliderIndex} className="grid grid-cols-9">
+                                                <label className="col-span-3">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-md font-bold" style={{ color: 'black' }}>{slider[0]}</span>
+                                                        <span className="text-xs" style={{ color: 'black' }}>{slider[1]}</span>
+                                                    </div>
+                                                </label>
+                                                <div className="col-span-5 mx-4">
+                                                    <input
+                                                        type="range"
+                                                        min={0}
+                                                        max={10}
+                                                        step={1}
+                                                        className="range range-primary"
+                                                        value={categoryScores[category.name][slider]}
+                                                        onChange={(e) => handleScoreChange(category.name, slider, parseInt(e.target.value, 10))}
+                                                    />
+                                                    <div className="w-full flex justify-between text-xs px-2">
+                                                        <span>0</span>
+                                                        <span>2</span>
+                                                        <span>4</span>
+                                                        <span>6</span>
+                                                        <span>8</span>
+                                                        <span>10</span>
+                                                    </div>
                                                 </div>
-                                            </label>
-                                            <div className="col-span-5 mx-4">
-                                                <input
-                                                    type="range"
-                                                    min={0}
-                                                    max={10}
-                                                    step={1}
-                                                    className="range range-primary"
-                                                    value={categoryScores[category.name][slider]}
-                                                    onChange={(e) => handleScoreChange(category.name, slider, parseInt(e.target.value, 10))}
-                                                />
-                                                <div className="w-full flex justify-between text-xs px-2">
-                                                    <span>0</span>
-                                                    <span>2</span>
-                                                    <span>4</span>
-                                                    <span>6</span>
-                                                    <span>8</span>
-                                                    <span>10</span>
-                                                </div>
+
+                                                <p className="col-span-1">{categoryScores[category.name][slider]}pts </p>
                                             </div>
-
-                                            <p className="col-span-1">{categoryScores[category.name][slider]}pts </p>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
 
-                    <div className="">
-                        <button className="btn btn-primary mx-4" onClick={() => { window.location.href = '/start' }}> Prev </button>
-                        <button className="btn btn-primary mx-4" onClick={handleSubmit}> Next </button>
+                        <div className="">
+                            <button className="btn btn-primary mx-4" onClick={() => { window.location.href = '/start' }}> Prev </button>
+                            <button className="btn btn-primary mx-4" onClick={handleSubmit}> Next </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }

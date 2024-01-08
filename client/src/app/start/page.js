@@ -47,7 +47,9 @@ export default function Home() {
                 });
 
                 setResponse("File uploaded successfully. Upload status: " + response.data.status);
-                window.location.href = "/intent";
+                if (response.status === 200) {
+                    window.location.href = "/intent";
+                }
             } catch (error) {
                 console.error('Error sending form:', error);
                 alert('Error sending form');

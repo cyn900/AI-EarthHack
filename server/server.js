@@ -22,6 +22,10 @@ const generateScore = () => {
 
     storedRows.forEach((row) => {
         if (row.relevance === 'Valid') {
+            const problemSum = userRatings['Popularity'] + userRatings['Growing'] + userRatings['Urgent'] + userRatings['Expensive'] + userRatings['Frequent'];
+            const solutionSum = userRatings['Completeness'] + userRatings['Targeted'] + userRatings['Novelty'] + userRatings['Financial Impact'] + userRatings['Implementability'];
+            const totalSum = problemSum + solutionSum;
+
             const problemScore =
                 parseFloat(row.problemPopularityScore) * userRatings['Popularity'] +
                 parseFloat(row.problemGrowingScore) * userRatings['Growing'] +
@@ -36,7 +40,8 @@ const generateScore = () => {
                 parseFloat(row.solutionFinImpactScore) * userRatings['Financial Impact'] +
                 parseFloat(row.solutionImplementabilityScore) * userRatings['Implementability'];
 
-            row.score = problemScore + solutionScore;
+            const score = (problemScore + solutionScore) / totalSum * 10;
+            row.score = score.toFixed(2);
         } else {
             row.score = 0;
         }
@@ -78,7 +83,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         function writeRow(rowData) {
             const rowString = `${rowData.problem};${rowData.solution};${rowData.relevance};${rowData.problemPopularityScore};${rowData.problemPopularityExplaination};${rowData.problemGrowingScore};${rowData.problemGrowingExplaination};${rowData.problemUrgentScore};${rowData.problemUrgentExplaination};${rowData.problemExpenseScore};${rowData.problemExpenseExplaination};${rowData.problemFrequentScore};${rowData.problemFrequentExplaination};${rowData.solutionCompletenessScore};${rowData.solutionCompletenessExplaination};${rowData.solutionTargetScore};${rowData.solutionTargetExplaination};${rowData.solutionNoveltyScore};${rowData.solutionNoveltyExplaination};${rowData.solutionFinImpactScore};${rowData.solutionFinImpactExplaination};${rowData.solutionImplementabilityScore};${rowData.solutionImplementabilityExplaination};${rowData.newName};${rowData.tags};${rowData.summary}\n`;
             writableStream.write(rowString);
-}
+        }
         // Parse CSV content (using csv-parser as an example)
         // const tempFilePath = path.join(__dirname, 'tempFile.csv');
         
@@ -175,13 +180,17 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
             })
             .write(fileContent);
 
+        storedRows = rows;
+        // res.json({ csvData: rows });
+        res.status(200).json({ status: 'OK' });
+
+        console.log("Done " + storedRows);
+
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-    storedRows = rows;
-    res.json({ csvData: rows });
-    // res.status(200).json({ status: 'OK' });
 });
 
 app.post('/load-user-rating', (req, res) => {
@@ -257,6 +266,8 @@ app.get('/get-average-idea-score', (req, res) => {
     const relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
     const sum = relevantRows.reduce((acc, row) => acc + row.score, 0);
     const average = sum / relevantRows.length;
+
+    console.log(sum, relevantRows.length, average)
     res.json({ averageIdeaScore: average.toFixed(2) });
 });
 
