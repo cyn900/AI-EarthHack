@@ -92,6 +92,11 @@ body {
   color: var(--white);
 }
 
+.range{
+  --range-shdw: var(--middle_green)
+}
+
+
 .squared_button{
   width: 217px;
   height: 28px;

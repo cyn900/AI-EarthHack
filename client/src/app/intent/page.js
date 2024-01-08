@@ -87,22 +87,22 @@ export default function Page() {
         <div className="hero min-h-screen bg-light_green">
             <div className="hero-content max-w-screen-xl text-center">
                 <div className="max-w-screen-2xl w-full">
-                    <h1 className="text-5xl font-bold"> Evaluation Personalization </h1>
+                    <h1 className="title1"> Evaluation Personalization </h1>
                     <p className="py-6" style={{ color: 'black' }}>*Each project gets a score out of the combined points of problem and solution, adjust success indicators based on your standards</p>
-                    <div className="flex w-full">
+                    <div className="flex w-full subtitle1">
                         {categories.map((category, index) => (
-                            <div key={index} className="flex flex-col text-right mx-8 w-1/2" style={{ color: 'black' , marginTop: '10pt'}}>
+                            <div key={index} className="flex flex-col text-right mx-4 w-1/2 content2" style={{ color: 'black' , marginTop: '15pt'}}>
                                 <h1 className="text-2xl font-bold color-dark_gray">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
                                 <div className="mx-4 mt-4">
                                     {category.sliders.map((slider, sliderIndex) => (
-                                        <div key={sliderIndex} className="grid grid-cols-9">
+                                        <div key={sliderIndex} className="grid grid-cols-9 " style={{ color: 'black' , marginTop: '10pt'}}>
                                             <label className="col-span-3">
                                                 <div className="flex flex-col">
                                                     <span className="text-md font-bold" style={{ color: 'black' }}>{slider[0]}</span>
-                                                    <span className="text-xs" style={{ color: 'black' }}>{slider[1]}</span>
+                                                    <span className="button_text2" style={{ color: 'black' }}>{slider[1]}</span>
                                                 </div>
                                             </label>
-                                            <div className="col-span-5 mx-4">
+                                            <div className="col-span-5 mx-4 button_text2">
                                                 <input
                                                     type="range"
                                                     min={0}
@@ -131,8 +131,8 @@ export default function Page() {
                     </div>
 
                     <div className="">
-                        <button className="btn btn-primary mx-4" onClick={() => { window.location.href = '/start' }}> Prev </button>
-                        <button className="btn btn-primary mx-4" onClick={handleSubmit}> Next </button>
+                        <button className="btn btn-primary mx-4" onClick={() => { window.location.href = '/start' }} style={{ backgroundColor: 'white' , marginTop: '10pt', border : 'none', paddingLeft : '30px', paddingRight : '30px', color:'#3D6F5B' }}> Prev </button>
+                        <button className="btn btn-primary mx-4" onClick={handleSubmit} style={{ backgroundColor: '#98C26C' , marginTop: '30pt', border : 'none', paddingLeft : '30px', paddingRight : '30px', color:'white' }}> Next </button>
                     </div>
                 </div>
             </div>
