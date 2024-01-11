@@ -5,9 +5,11 @@ import { useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image'
 import Link from "next/link";
+import { useRouter } from 'next/navigation'
 
 
 export default function Home() {
+    const router = useRouter()
     const [file, setFile] = useState(null);
     const [evaluationGoal, setEvaluationGoal] = useState('');
     const [loading, setLoading] = useState(false); // Track the loading state
@@ -48,7 +50,8 @@ export default function Home() {
 
                 setResponse("File uploaded successfully. Upload status: " + response.data.status);
                 if (response.status === 200) {
-                    window.location.href = "/intent";
+                    router.push('/intent');
+                    // window.location.href = "/intent";
                 }
             } catch (error) {
                 console.error('Error sending form:', error);

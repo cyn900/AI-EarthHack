@@ -5,9 +5,11 @@ import PieChart from "@/components/PieChart";
 import RadarChart from "@/components/RadarChart";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 export default function Page() {
+    const router = useRouter();
     const [open, setOpen] = useState(false);
     const [evaluationGoal, setEvaluationGoal] = useState('');
     const [relevantIdeasNumber, setRelevantIdeasNumber] = useState(0);
@@ -207,15 +209,12 @@ export default function Page() {
                             <button
                                 style={{ color: 'white', border: 'none'}}
                                 className="btn btn-primary w-4/5 m-4 text-lg bg-light_forest hover:bg-dark_forest border-none"
-                            >
-                                <Link href="/intent"> Modify Metrics </Link>
-                            </button>
+                                onClick={() => router.push('/intent')}
+                            > Modify Metrics </button>
                             <button
-
                                 className="btn btn-primary w-4/5 m-4 text-lg bg-white text-dark_forest hover:bg-light_green border-light_forest"
-                            >
-                                <Link href="/"> Start New Evaluation </Link>
-                            </button>
+                                onClick={() => router.push('/')}
+                            > Start New Evaluation </button>
                         </div>
                         <form method="dialog" className="modal-backdrop">
                             <button>close</button>

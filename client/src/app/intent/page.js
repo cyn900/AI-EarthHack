@@ -3,9 +3,10 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Image from "next/image";
-import {useRouter} from "next/router";
+import {useRouter} from "next/navigation";
 
 export default function Page() {
+    const router = useRouter();
     const categories = [
         {
             name: 'Problem Significance',
@@ -113,7 +114,8 @@ export default function Page() {
                 alert('Error sending form');
             } else {
                 setLoading(false);
-                window.location.href = "/result";
+                router.push('/result');
+                // window.location.href = "/result";
             }
         } catch (error) {
             console.error('Error sending form:', error);
@@ -192,7 +194,8 @@ export default function Page() {
                         </div>
                         <div className="">
                             <button className="btn btn-primary mx-4" onClick={() => {
-                                window.location.href = '/start'
+                                router.push('/start');
+                                // window.location.href = "/start";
                             }} style={{
                                 backgroundColor: '#DFEDE7',
                                 marginTop: '10pt',
