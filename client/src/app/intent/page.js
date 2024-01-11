@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
+import API_URL from '../config';
 
 export default function Page() {
     const router = useRouter();
@@ -71,7 +72,8 @@ export default function Page() {
 
             setLoading(true)
             for (let i = 0; i < 100; i++) {
-                const relevantIdeasResponse = await axios.get('http://localhost:4000/get-relevant-ideas-number');
+                // const relevantIdeasResponse = await axios.get(API_URL + '/get-relevant-ideas-number');
+                const relevantIdeasResponse = await axios.get('https://ai-earthhack.onrender.com/get-relevant-ideas-number');
                 const relevantIdeasJson = relevantIdeasResponse.data;
 
                 if (relevantIdeasJson.relevantIdeasNumber > 0) {
@@ -80,7 +82,7 @@ export default function Page() {
                     await sleep(1000);
                 }
 
-                // const averageIdeaResponse = await axios.get('http://localhost:4000/get-average-idea-score');
+                // const averageIdeaResponse = await axios.get(API_URL + '/get-average-idea-score');
                 // const averageIdeaJson = averageIdeaResponse.data;
                 //
                 // if (averageIdeaJson.averageIdeaScore !== "NaN" && averageIdeaJson.averageIdeaScore > 0) {
@@ -106,7 +108,7 @@ export default function Page() {
                 return acc;
             }, {});
 
-            const response = await axios.post('http://localhost:4000/load-user-rating', { rating: transformedCategoryScores });
+            const response = await axios.post(API_URL + '/load-user-rating', { rating: transformedCategoryScores });
             const json = response.data;
 
             if (response.status !== 200) {

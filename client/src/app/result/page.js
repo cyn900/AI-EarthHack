@@ -6,6 +6,7 @@ import RadarChart from "@/components/RadarChart";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import API_URL from '../config';
 
 
 export default function Page() {
@@ -47,7 +48,7 @@ export default function Page() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/get-evaluation-goal');
+                const response = await axios.get(API_URL + '/get-evaluation-goal');
                 setEvaluationGoal(response.data.evaluationGoal);
             } catch (error) {
                 console.error('Error fetching evaluation goal:', error);
@@ -60,7 +61,7 @@ export default function Page() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/get-relevant-ideas-number');
+                const response = await axios.get(API_URL + '/get-relevant-ideas-number');
                 // console.log("relevant ideas number: " + JSON.stringify(response));
                 setRelevantIdeasNumber(response.data.relevantIdeasNumber);
             } catch (error) {
@@ -74,7 +75,7 @@ export default function Page() {
     useEffect(() => {
        const fetchData = async () => {
            try {
-                const response = await axios.get('http://localhost:4000/get-average-idea-score');
+                const response = await axios.get(API_URL + '/get-average-idea-score');
                 // console.log("average idea score: " + JSON.stringify(response));
                 setAverageIdeaScore(response.data.averageIdeaScore);
            } catch (error) {
@@ -88,7 +89,7 @@ export default function Page() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/get-tag-frequency');
+                const response = await axios.get(API_URL + '/get-tag-frequency');
 
                 const _pillars = [];
                 for (const [key, value] of Object.entries(response.data.tagFreq)) {
@@ -119,7 +120,7 @@ export default function Page() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/get-top-5-ideas-by-category', {
+                const response = await axios.get(API_URL + '/get-top-5-ideas-by-category', {
                     params: {
                         category: "All"
                     }
@@ -137,7 +138,7 @@ export default function Page() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/get-top-5-ideas-by-category', {
+                const response = await axios.get(API_URL + '/get-top-5-ideas-by-category', {
                     params: {
                         category: selectedValue
                     }

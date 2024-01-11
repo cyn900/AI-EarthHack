@@ -6,7 +6,7 @@ import axios from 'axios';
 import Image from 'next/image'
 import Link from "next/link";
 import { useRouter } from 'next/navigation'
-
+import API_URL from '../config';
 
 export default function Home() {
     const router = useRouter()
@@ -42,7 +42,7 @@ export default function Home() {
                 formData.append('csvFile', file);
                 formData.append('evaluationGoal', evaluationGoal);
 
-                const response = await axios.post('http://localhost:4000/load-csv', formData, {
+                const response = await axios.post(API_URL + '/load-csv', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
