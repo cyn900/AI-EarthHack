@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import PieChart from "@/components/PieChart";
 import RadarChart from "@/components/RadarChart";
 import axios from "axios";
@@ -21,6 +21,9 @@ export default function Page() {
     const [genRadarChart, setGenRadarChart] = useState(false);
     const [topIdeasByPillarProblem, setTopIdeasByPillarProblem] = useState([]);
     const [topIdeasByPillarSolution, setTopIdeasByPillarSolution] = useState([]);
+
+    const myModal3 = useRef();
+    const myModal4 = useRef();
 
     const handleToggleDropdown = () => {
         setOpen(!open);
@@ -198,8 +201,17 @@ export default function Page() {
                 <div className="flex flex-row justify-between" >
                     <h1 className="font-bold text-2xl w-80 subtitle1" style={{ padding: '20px'}}> Evaluation Results </h1>
                     {/* You can open the modal using document.getElementById('ID').showModal() method */}
-                    <button className="button bg-light_forest hover:bg-dark_green border-light_forest" onClick={()=>document.getElementById('my_modal_3').showModal()} style={{ backgroundColor:'#98C26C', color: '#ffffff'}}> New Evaluation </button>
-                    <dialog id="my_modal_3" className="modal">
+                    <button className="button bg-light_forest hover:bg-dark_green border-light_forest"
+                            onClick={() => {
+                                myModal3?.current.showModal()
+                                // if (document) {
+                                //     document.getElementById('my_modal_3').showModal()
+                                // }
+                            }}
+                            style={{ backgroundColor:'#98C26C', color: '#ffffff'}}>
+                        New Evaluation
+                    </button>
+                    <dialog ref={myModal3} id="my_modal_3" className="modal">
                         <div className="modal-box text-center">
                             <form method="dialog">
                                 <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -328,8 +340,17 @@ export default function Page() {
                     <div className=" p-6 rounded-lg subtitle2 card" style={{ padding: '30px', backgroundColor: '#EFEFEF'}}>
                         <div className="flex">
                             <h1 className="text-3xl font-bold"> Idea Leaderboard </h1>
-                            <button className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4 bg-light_forest hover:bg-dark_forest border-light_forest" style={{ color: 'white', border: 'none'}} onClick={()=>document.getElementById('my_modal_4').showModal()}> All Entries </button>
-                            <dialog id="my_modal_4" className="modal">
+                            <button className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4 bg-light_forest hover:bg-dark_forest border-light_forest"
+                                    style={{ color: 'white', border: 'none'}}
+                                    onClick={() => {
+                                        myModal4?.current.showModal()
+                                        // if (document) {
+                                        //     document.getElementById('my_modal_4').showModal()
+                                        // }
+                                    }}>
+                                All Entries
+                            </button>
+                            <dialog ref={myModal4} id="my_modal_4" className="modal">
                                 <div className="modal-box text-center">
                                     <form method="dialog">
                                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
