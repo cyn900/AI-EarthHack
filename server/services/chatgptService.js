@@ -317,13 +317,13 @@ async function generateName(prompt) {
             max_tokens: 10,
             temperature: 0.0,
         });
-        console.log(completion.choices[0].message.content);
+        // console.log(completion.choices[0].message.content);
         const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){0,3})/;
         const aiResponse = completion.choices[0].message.content;
         const nameMatch = aiResponse.match(nameRegex);
         n = nameMatch ? nameMatch[1].trim() : null;
         attempts++;
-            }
+        }
         if (n === null || n === 'undefined') {
             n = "Default Name"; // Fallback name if none is generated
         }
