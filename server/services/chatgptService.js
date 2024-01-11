@@ -313,17 +313,17 @@ async function generateName(prompt) {
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
             // model: "gpt-4",
-            model: gptModel,
+            model: "gpt-3.5-turbo",
             max_tokens: 10,
             temperature: 0.0,
         });
-        //console.log(completion.choices[0].message.content);
+        console.log(completion.choices[0].message.content);
         const nameRegex = /^(\b\w+\b(?:\s+\b\w+\b){0,3})/;
         const aiResponse = completion.choices[0].message.content;
         const nameMatch = aiResponse.match(nameRegex);
         n = nameMatch ? nameMatch[1].trim() : null;
         attempts++;
-    }
+            }
         if (n === null || n === 'undefined') {
             n = "Default Name"; // Fallback name if none is generated
         }
@@ -337,7 +337,7 @@ async function generateTags(prompt) {
     rolePlay = "Categorize the given problem and solution into ONLY ONE of the following 7 pillars of circular economy (choose the best fit one). If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
-        // model: "gpt-4",
+        // model: "gpt-3.5-turbo",
         model: gptModel,
         max_tokens: 10,
         temperature: 0.0,
