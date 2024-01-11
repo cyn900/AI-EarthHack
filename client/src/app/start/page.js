@@ -60,7 +60,7 @@ export default function Home() {
     };
 
     return (
-        <div className="hero min-h-screen " >
+        <div data-theme="light" className="hero min-h-screen " >
             <div className="hero-content flex-col lg:flex-row" >
                 <div className="text-center lg:text-left bg-middle_green " style={{ padding: '100px', width: "60%"}}>
                     <h1 className="subtitle1" style={{  color: 'white', marginTop: '40px', marginBottom: '20px'}}> How Arbor Works </h1>

@@ -3,6 +3,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Image from "next/image";
+import {useRouter} from "next/router";
 
 export default function Page() {
     const categories = [
@@ -127,7 +128,7 @@ export default function Page() {
 
     if (loading) {
         return (
-            <div className="hero min-h-screen bg-white">
+            <div data-theme="light" className="hero min-h-screen bg-white">
                 <div className="hero-content flex-col max-w-screen-lg">
                     <Image
                         src="/Growing_Tree.gif"
@@ -141,7 +142,7 @@ export default function Page() {
         );
     } else {
         return (
-            <div className="hero min-h-screen">
+            <div data-theme="light" className="hero min-h-screen">
                 <div className="hero-content max-w-screen-xl text-center">
                     <div className="max-w-screen-2xl w-full">
                         <h1 className="text-5xl font-bold text-dark_forest"> Evaluation Personalization </h1>

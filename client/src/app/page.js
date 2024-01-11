@@ -8,8 +8,8 @@ import LargeButtons from "../components/large_buttons"; // Replace this import w
 export default function Home() {
 
     return (
-        <div className= "hero min-h-screen bg-base-200  bg-middle_green text-white">
-        <div className= "hero-content flex-col " style={{paddingTop: '110px'}} >
+        <div data-theme="light" className= "hero min-h-screen bg-base-200 bg-middle_green text-white">
+        <div className= "hero-content flex-col ">
             <img src ="logoround.png" width = "100" height = "100"/>
             <p className="title1" style={{paddingTop: '10px'}}> Welcome to Arbor!</p> 
             <h1 className = "content1_bold" style={{ width:'650px', textAlign: 'center', marginBottom: '10px'}}>Ever wished for an AI genie to make your evaluation process more streamlined, efficient and unbiased? Say hello to Arbor: your co-pilot on the journey to identify the next big idea.</h1>

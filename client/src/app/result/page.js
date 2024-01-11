@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import PieChart from "@/components/PieChart";
 import RadarChart from "@/components/RadarChart";
 import axios from "axios";
+import Link from "next/link";
 
 
 export default function Page() {
@@ -190,7 +191,7 @@ export default function Page() {
     }, [selectedValue]);
 
     return (
-        <div className="flex flex-col justify-center items-center min-h-screen mt-16" style={{ padding: '50px', marginTop: '10px', backgroundColor: '#DFEDE7'}}>
+        <div data-theme="light" className="flex flex-col justify-center items-center min-h-screen mt-16" style={{ padding: '50px', marginTop: '10px', backgroundColor: '#DFEDE7'}}>
             <div className="max-w-screen-2xl">
                 <div className="flex flex-row justify-between" >
                     <h1 className="font-bold text-2xl w-80 subtitle1" style={{ padding: '20px'}}> Evaluation Results </h1>
@@ -206,13 +207,15 @@ export default function Page() {
                             <button
                                 style={{ color: 'white', border: 'none'}}
                                 className="btn btn-primary w-4/5 m-4 text-lg bg-light_forest hover:bg-dark_forest border-none"
-                                onClick={() => window.location.href = '/intent'}
-                            > Modify Metrics </button>
+                            >
+                                <Link href="/intent"> Modify Metrics </Link>
+                            </button>
                             <button
-                            
+
                                 className="btn btn-primary w-4/5 m-4 text-lg bg-white text-dark_forest hover:bg-light_green border-light_forest"
-                                onClick={() => window.location.href = '/'}
-                            > Start New Evaluation </button>
+                            >
+                                <Link href="/"> Start New Evaluation </Link>
+                            </button>
                         </div>
                         <form method="dialog" className="modal-backdrop">
                             <button>close</button>
