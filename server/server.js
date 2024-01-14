@@ -94,6 +94,20 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         // // Now read and process the temporary file
         // fs.createReadStream(tempFilePath)
         //     .pipe(csv({ headers: false }))
+        problemPopularEvalHistory = [];
+        problemGrowingEvalHistory = [];
+        problemUrgentEvalHistory = [];
+        problemExpenseEvalHistory = [];
+        problemFrequentEvalHistory = [];
+
+        solutionCompletenessEvalHistory = [];
+        solutionTargetEvalHistory = [];
+        solutionNoveltyEvalHistory = [];
+        solutionFinImpactEvalHistory = [];
+        solutionImplementabilityEvalHistory = [];
+
+        generateNameHistory = [];
+        
         csv({ headers: false })
             .on('data', async(row) => {
                 if (!headers) {
@@ -119,55 +133,64 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     //console.log(prompt);
                     const spamFilterReply = await spamFilter(prompt);
                     //console.log("reply" + spamFilterReply);
-                    const problemPopularityReply = await problemPopularEval(prob);
-                    const problemGrowingReply = await problemGrowingEval(prob);
-                    const problemUrgentReply = await problemUrgentEval(prob);
-                    const problemExpenseReply = await problemExpenseEval(prob);
-                    const problemFrequentReply = await problemFrequentEval(prob);
-                    const solutionCompletenessReply = await solutionCompletenessEval(prompt);
-                    const solutionTargetReply = await solutionTargetEval(prompt);
-                    const solutionNoveltyReply = await solutionNoveltyEval(prompt);
-                    const solutionFinImpactReply = await solutionFinImpactEval(prompt);
-                    const solutionImplementabilityReply = await solutionImplementabilityEval(prompt);
-                    const generateNameReply = await generateName(prompt);
+                    const problemPopularityReply = await problemPopularEval(prob, problemPopularEvalHistory, evaluationGoal);
+                    const problemGrowingReply = await problemGrowingEval(prob, problemGrowingEvalHistory, evaluationGoal);
+                    const problemUrgentReply = await problemUrgentEval(prob, problemUrgentEvalHistory, evaluationGoal);
+                    const problemExpenseReply = await problemExpenseEval(prob, problemExpenseEvalHistory, evaluationGoal);
+                    const problemFrequentReply = await problemFrequentEval(prob, problemFrequentEvalHistory, evaluationGoal);
+                    const solutionCompletenessReply = await solutionCompletenessEval(prompt, solutionCompletenessEvalHistory, evaluationGoal);
+                    const solutionTargetReply = await solutionTargetEval(prompt, solutionTargetEvalHistory, evaluationGoal);
+                    const solutionNoveltyReply = await solutionNoveltyEval(prompt, solutionNoveltyEvalHistory, evaluationGoal);
+                    const solutionFinImpactReply = await solutionFinImpactEval(prompt, solutionFinImpactEvalHistory, evaluationGoal);
+                    const solutionImplementabilityReply = await solutionImplementabilityEval(prompt, solutionImplementabilityEvalHistory, evaluationGoal);
+                    const generateNameReply = await generateName(prompt, generateNameHistory);
                     const generateTagsReply = await generateTags(prompt);
                     const generateSummaryReply = await generateSummary(prompt);
                     rowData.relevance = spamFilterReply; // "valid" or "invalid" where "valid means it is relevant, "invalid means it is a spam
                     //console.log(spamFilterReply);
                     rowData.problemPopularityScore = problemPopularityReply[0];
-                    
-                    //console.log("pop score: " + rowData['problemPopularityScore']);
                     rowData.problemPopularityExplaination = problemPopularityReply[1];
+                    problemPopularEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: problemPopularityReply[0] + 'Explaination: ' + problemPopularityReply[1]}]);
 
                     rowData.problemGrowingScore = problemGrowingReply[0];
                     rowData.problemGrowingExplaination = problemGrowingReply[1];
+                    problemGrowingEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: problemGrowingReply[0] + 'Explaination: ' + problemGrowingReply[1]}]);
 
                     rowData.problemUrgentScore = problemUrgentReply[0];
                     rowData.problemUrgentExplaination = problemUrgentReply[1];
+                    problemUrgentEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: problemUrgentReply[0] + 'Explaination: ' + problemUrgentReply[1]}]);
 
                     rowData.problemExpenseScore = problemExpenseReply[0];
                     rowData.problemExpenseExplaination = problemExpenseReply[1];
+                    problemExpenseEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: problemExpenseReply[0] + 'Explaination: ' + problemExpenseReply[1]}]);
 
                     rowData.problemFrequentScore = problemFrequentReply[0];
                     rowData.problemFrequentExplaination = problemFrequentReply[1];
+                    problemFrequentEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: problemFrequentReply[0] + 'Explaination: ' + problemFrequentReply[1]}]);
 
                     rowData.solutionCompletenessScore = solutionCompletenessReply[0];
                     rowData.solutionCompletenessExplaination = solutionCompletenessReply[1];
+                    solutionCompletenessEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: solutionCompletenessReply[0] + 'Explaination: ' + solutionCompletenessReply[1]}]);
 
                     rowData.solutionTargetScore = solutionTargetReply[0];
                     rowData.solutionTargetExplaination = solutionTargetReply[1];
+                    solutionTargetEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: solutionTargetReply[0] + 'Explaination: ' + solutionTargetReply[1]}]);
 
                     rowData.solutionNoveltyScore = solutionNoveltyReply[0];
                     rowData.solutionNoveltyExplaination = solutionNoveltyReply[1];
+                    solutionNoveltyEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: solutionNoveltyReply[0] + 'Explaination: ' + solutionNoveltyReply[1]}]);
 
                     rowData.solutionFinImpactScore = solutionFinImpactReply[0];
                     rowData.solutionFinImpactExplaination = solutionFinImpactReply[1];
+                    solutionFinImpactEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: solutionFinImpactReply[0] + 'Explaination: ' + solutionFinImpactReply[1]}]);
 
                     rowData.solutionImplementabilityScore = solutionImplementabilityReply[0];
                     rowData.solutionImplementabilityExplaination = solutionImplementabilityReply[1];
-                    //console.log(solutionCompletenessExplaination)
+                    solutionImplementabilityEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: solutionImplementabilityReply[0] + 'Explaination: ' + solutionImplementabilityReply[1]}]);
 
                     rowData.newName = generateNameReply;
+                    generateNameHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: generateNameReply}]);
+
                     rowData.tags = generateTagsReply; // a list of tags ex: ['Water', 'Value'] 0<len(list)<=2
                     rowData.summary = generateSummaryReply;
                     // rows.push(rowData);
