@@ -6,6 +6,7 @@ const openai = new OpenAI();
 // if API key is not set up in the project
 // const openai = new OpenAI("YOUR_API_KEY");
 gptModel = "gpt-3.5-turbo";
+// gptModel = "gpt-4";
 const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
 const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
 const explanationRegex = /Explanation:\s*([^\.]+\.)/;
@@ -422,7 +423,7 @@ p = "Problem: The majority of the materials used in producing electronic goods a
 p1 = 'The majority of the materials used in producing electronic goods are not being utilized optimally'
 r = [3.2, "This problem is a popular issue yet lack of detailed explaination and evidence to support on the population that is impacted."];
 pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'system', content: 'Score: ' + r[0] + '\n Explaination: ' + r[1]}];
-problemPopularEval(p1,pastMessage);
+// problemPopularEval(p1,pastMessage);
 // problemGrowingEval(p1,[])
 // problemUrgentEval(p1, [])
 // problemExpenseEval(p1,[])
