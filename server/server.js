@@ -9,9 +9,10 @@ const { spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, p
 const app = express();
 const port = process.env.PORT || 4000;
 
-let evaluationGoal = "Evaluate real-life use cases on how companies can implement the circular economy in their businesses. New ideas are also welcome, even if they are 'moonshots'.";
+let evaluationGoal = null;
 let storedRows = null;
 let userRatings = null;
+let apiStatus = 'ok';
 const storage = multer.memoryStorage(); // Store the file in memory
 const upload = multer({ storage: storage });
 
@@ -55,6 +56,10 @@ app.get('/healthcheck', (req, res) => {
     res.status(200).json({ status: 'OK' });
 });
 
+app.get('/get-api-status', (req, res) => {
+    res.status(200).json({ apiStatus: apiStatus });
+});
+
 app.post('/load-csv', upload.single('csvFile'), (req, res) => {
     const rows = [];
     let headers = null;
@@ -68,6 +73,8 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
             return res.status(400).json({ error: 'No evaluation goal provided' });
         }
 
+        apiStatus = 'processing file';
+
         evaluationGoal = req.body.evaluationGoal;  // do something with evaluation goal
         const fileBuffer = req.file.buffer;
         const fileContent = fileBuffer.toString('utf-8');
@@ -75,10 +82,10 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         const outputCsvPath = path.join(__dirname, 'output.csv');
         const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
 
-         const newHeader = 'problem;solution;relevance;problemPopularityScore;problemPopularityExplaination;problemGrowingScore;problemGrowingExplaination;problemUrgentScore;problemUrgentExplaination;problemExpenseScore;problemExpenseExplaination;problemFrequentScore;problemFrequentExplaination;solutionCompletenessScore;solutionCompletenessExplaination;solutionTargetScore;solutionTargetExplaination;solutionNoveltyScore;solutionNoveltyExplaination;solutionFinImpactScore;solutionFinImpactExplaination;solutionImplementabilityScore;solutionImplementabilityExplaination;newName;tags;summary\n';
-         writableStream.write(newHeader);
+        const newHeader = 'problem;solution;relevance;problemPopularityScore;problemPopularityExplaination;problemGrowingScore;problemGrowingExplaination;problemUrgentScore;problemUrgentExplaination;problemExpenseScore;problemExpenseExplaination;problemFrequentScore;problemFrequentExplaination;solutionCompletenessScore;solutionCompletenessExplaination;solutionTargetScore;solutionTargetExplaination;solutionNoveltyScore;solutionNoveltyExplaination;solutionFinImpactScore;solutionFinImpactExplaination;solutionImplementabilityScore;solutionImplementabilityExplaination;newName;tags;summary\n';
+        writableStream.write(newHeader);
 
-         // Example function to write a row
+        // Example function to write a row
 
         function writeRow(rowData) {
             const rowString = `${rowData.problem};${rowData.solution};${rowData.relevance};${rowData.problemPopularityScore};${rowData.problemPopularityExplaination};${rowData.problemGrowingScore};${rowData.problemGrowingExplaination};${rowData.problemUrgentScore};${rowData.problemUrgentExplaination};${rowData.problemExpenseScore};${rowData.problemExpenseExplaination};${rowData.problemFrequentScore};${rowData.problemFrequentExplaination};${rowData.solutionCompletenessScore};${rowData.solutionCompletenessExplaination};${rowData.solutionTargetScore};${rowData.solutionTargetExplaination};${rowData.solutionNoveltyScore};${rowData.solutionNoveltyExplaination};${rowData.solutionFinImpactScore};${rowData.solutionFinImpactExplaination};${rowData.solutionImplementabilityScore};${rowData.solutionImplementabilityExplaination};${rowData.newName};${rowData.tags};${rowData.summary}\n`;
@@ -119,7 +126,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     headers.forEach((header, index) => {
                         rowData[header] = row[index];
                     });
-                    const prob = rowData['problem'];
+                    let prob = rowData['problem'];
                     // const solu = rowData['solution']
                     const prompt = 'Problem: ' + rowData['problem'] + 'Solution:' + rowData['solution'];
                     if (prob == null) {
@@ -208,13 +215,11 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         storedRows = rows;
         // res.json({ csvData: rows });
         res.status(200).json({ status: 'OK' });
-
-        console.log("Done " + storedRows);
-
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        apiStatus = 'done';
     }
 });
 
