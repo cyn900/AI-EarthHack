@@ -11,7 +11,7 @@ const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
 const explanationRegex = /Explanation:\s*([^\.]+\.)/;
 const background = 'You are a very strict critic who knows a lot about circular economy and sustainability. Your mark things very harsh. You rarely give marks that is above 80.'
 const inputFormat = 'When evaluating user submissions, focus on the text immediately following "Problem:" and before "Solution:" for the problem statement. For the solution assessment, concentrate on the text that comes after "Solution:".'
-const replyFormat = 'To evaluate the ideas presented, a score will be provided alongside a brief explanation. The score will reflect the quality and potential impact of the idea, ranging from 0.0 for ideas with little to no potential, up to 10.0 for groundbreaking ideas. The explanation will comment concisely on the strengths and weaknesses of the users presentation without reiterating their content. For example: Score: 7.5 (A score here reflects the idea creativity, potential impact, and how well it is explained. Marks are deducted for lack of detail.) Explanation: The idea scope is promising, but the explanation lacks the specificity needed to fully grasp its potential impact and feasibility. (This is a concise sentence that highlights what was done well and what was lacking.)';
+const replyFormat = 'To evaluate the ideas presented, a score will be provided alongside a one sentence explanation. The score will reflect the quality and potential impact of the idea, ranging from 0.0 for ideas with little to no potential, up to 10.0 for groundbreaking ideas. The one sentence explanation will comment concisely on the strengths and weaknesses of the users presentation without reiterating their content. For example: Score: 7.5 (A score here reflects the idea creativity, potential impact, and how well it is explained. Marks are deducted for lack of detail.) Explanation: The idea scope is promising, but the explanation lacks the specificity needed to fully grasp its potential impact and feasibility. (This is a concise one sentence that highlights what was done well and what was lacking.)';
 
 // spam Filter
 async function spamFilter(prompt) { 
@@ -48,7 +48,7 @@ async function problemPopularEval(prompt, pastMessage, evaluationGoal) {
             max_tokens: 50,
             temperature: 0.0,
         });
-        // console.log(completion.choices[0].message.content);
+        console.log(completion.choices[0].message.content);
         aiResponse = completion.choices[0].message.content;
         scoreMatch = aiResponse.match(scoreRegex);
         score = scoreMatch ? scoreMatch[1] : null;
@@ -58,6 +58,7 @@ async function problemPopularEval(prompt, pastMessage, evaluationGoal) {
     explanationMatch = aiResponse.match(explanationRegex);
     explanation = explanationMatch ? explanationMatch[1].trim() : null;
     // console.log([score, explanation]);
+    // console.log(completion.choices[0].message.content);
     console.log([score,explanation]);
     return [score, explanation];
     // return completion.choices[0].message.content;
@@ -421,7 +422,7 @@ p = "Problem: The majority of the materials used in producing electronic goods a
 p1 = 'The majority of the materials used in producing electronic goods are not being utilized optimally'
 r = [2.2, "This problem is a popular issue yet lack of detailed explaination."];
 pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'system', content: r[0] + 'Explaination: ' + r[1]}];
-// problemPopularEval(p1,pastMessage)
+problemPopularEval(p1,[])
 // problemGrowingEval(p1,[])
 // problemUrgentEval(p1, [])
 // problemExpenseEval(p1,[])
