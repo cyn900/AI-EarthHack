@@ -1,5 +1,5 @@
 // // chatgptService.js
-const { response } = require("express");
+// const { response } = require("express");
 const OpenAI = require("openai");
 
 const openai = new OpenAI();
@@ -386,7 +386,7 @@ async function generateName(prompt, pastMessage) {
 
 // generate tags
 async function generateTags(prompt) { 
-    rolePlay = "Categorize the given problem and solution into ONLY ONE of the following 7 pillars of circular economy (choose the best fit one). If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value."    
+    rolePlay = "Categorize the given problem and solution into one or two of the following 7 pillars of circular economy (choose the best fit ones). If they do not clearly fit into any of these categories, categorize them as 'Other'. The categories are: 1. Materials; 2.Energy; 3.Water; 4.Biodiversity; 5.Society and Culture; 6.Health and Wellbeing; 7. Value. No explaination is needed. Just give the categories."    
     const completion = await openai.chat.completions.create({
         messages: [{ role: 'system', content: rolePlay }, { role: 'user', content: prompt}],
         // model: "gpt-3.5-turbo",
@@ -394,12 +394,12 @@ async function generateTags(prompt) {
         max_tokens: 10,
         temperature: 0.0,
     });
-    // console.log(completion.choices[0].message.content);
+    console.log(completion.choices[0].message.content);
     const aiResponse = completion.choices[0].message.content;
     tags = categorize(aiResponse)
     
     // console.log(categorize('Design for Longevity and Durability, Recycle and Recover'));
-    console.log(tags);
+    // console.log(tags);
     return tags;
     // return completion.choices[0].message.content;
 }
@@ -414,11 +414,11 @@ function categorize(input) {
         { name: "Health & Wellbeing", regex: /Health and Wellbeing/i },
         { name: "Value", regex: /Value/i }
     ];
-    cat = [];
 
+    cat = [];
     for (const category of categories) {
         if (category.regex.test(input)) {
-            cat.concat(category.name);
+            cat.push(category.name);
             if (cat.length == 2){
                 return cat;
             }
@@ -472,7 +472,7 @@ pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'syst
 // solutionFinImpactEval(p,[])
 // solutionImplementabilityEval(p, [])
 // generateName(p, [])
-// generateTags(p)
+// generateTags(p);
 // async function test(){
 //     cate = await generateTags(p);
 //     await solutionTargetEval(p1,pastMessage,cate);
@@ -485,5 +485,5 @@ pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'syst
 // k = 'Other';
 // console.log(knowledgeBase.k);
 
-module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
+// module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
