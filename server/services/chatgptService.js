@@ -1,5 +1,5 @@
 // // chatgptService.js
-const { response } = require("express");
+// const { response } = require("express");
 const OpenAI = require("openai");
 
 const openai = new OpenAI();
@@ -9,10 +9,31 @@ gptModel = "gpt-3.5-turbo";
 // gptModel = "gpt-4";
 const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
 const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
-const explanationRegex = /Explanation:\s*([^\.]+\.)/;
-const background = 'You are a very strict critic who knows a lot about circular economy and sustainability. Your mark things very harsh. You rarely give marks that is above 8.0'
-const inputFormat = 'When evaluating user submissions, focus on the text immediately following "Problem:" and before "Solution:" for the problem statement. For the solution assessment, concentrate on the text that comes after "Solution:".'
-const replyFormat = 'To evaluate the ideas presented, a score will be provided alongside a one sentence explanation. The score will reflect the quality and potential impact of the idea, ranging from 0.0 for ideas with little to no potential, up to 10.0 for groundbreaking ideas. The one sentence explanation will comment concisely on the strengths and weaknesses of the users presentation without reiterating their content. For example: Score: 7.5 (A score here reflects the idea creativity, potential impact, and how well it is explained. Marks are deducted for lack of detail.) Explanation: The idea scope is promising, but the explanation lacks the specificity needed to fully grasp its potential impact and feasibility. (This is a concise one sentence that highlights what was done well and what was lacking.)';
+const explanationRegex = /Explanation:\s*([^\.]+\.(\s+[^\.]+\.){0,1})/;
+const background = 'You are a very strict critic who knows a lot about circular economy and sustainability. Your mark things very harsh. You rarely give marks that is above 8.0 \n'
+const inputFormat = 'When evaluating user submissions, focus on the text immediately following "Problem:" and before "Solution:" for the problem statement. For the solution assessment, concentrate on the text that comes after "Solution:".\n'
+const replyFormat = 'To evaluate the ideas presented, a score will be provided alongside a one sentence explanation. The score will reflect the quality and potential impact of the idea, ranging from 0.0 for ideas with little to no potential, up to 10.0 for groundbreaking ideas. The one sentence explanation will comment concisely on the strengths and weaknesses of the users presentation without reiterating their content. Avoid saying lacks deatils for ideas that has score higher than 5. Format: Score: [X]\n Explanation: [Your Explanation] \n';
+
+// load knowledge database
+const fs = require('fs');
+sevenPillars = ['Materials', 'Energy', 'Water', 'Biodiversity', 'Society & Culture', 'Health & Wellbeing', 'Value', 'Other'];
+knowledgeBase = {'Materials': null, 'Energy': null, 'Water': null, 'Biodiversity': null, 'Society & Culture': null, 'Health & Wellbeing': null, 'Value': null, 'Other': null};
+sevenPillars.forEach(function(pillar) {
+    const filePath = 'knowledge/' + pillar + '.txt';
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+        console.error(`Error reading file: ${err}`);
+        return;
+    }
+        n = pillar;
+        // Use the file contents as needed
+        knowledgeBase[pillar] = `${data}`;
+        // console.log(pillar, knowledgeBase[pillar].slice(0, 10));
+    });
+});
+
+
 
 // spam Filter
 async function spamFilter(prompt) { 
@@ -34,6 +55,7 @@ async function spamFilter(prompt) {
 
 // problem popularity evaluation
 async function problemPopularEval(prompt, pastMessage, evaluationGoal) { 
+    // c = "material";
     rolePlay =  background + evaluationGoal + 'You are evaluating a problem. You do not care about solution at all. You only care about popularity (how many people are/will be impacted). You will rate on the popularity of the given information out of 10. Assign up to half of the points based on the sheer scale of the impact, considering factors such as the number of affected individuals, organizations, or communities. The remaining points should be awarded based on the depth and specificity of the users explanation about its popularity. General or vague explanations should receive minimal points. When scoring, provide a number between 0-10, taking into account both the quantitative reach and the quality of the explanation provided. Your assessment should be grounded in measurable metrics like the quantitative count of impacted stakeholders. Ensure the explanation is only one sentence, and it is specific and constructive, highlighting popularity. You DO NOT need to restate the any thing in the problem. Just give an one sentence contructive feedback that focused on the lack of the problem discription. For similar ideas in the conversation, assign a similar score to maintain consistency.' + replyFormat
     // const problemMactch = prompt.match(problemRegex);
     // const problemDescription = problemMactch ? problemMactch[1].trim() : null;
@@ -46,7 +68,7 @@ async function problemPopularEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 50,
+            max_tokens: 100,
             temperature: 0.0,
         });
         console.log(completion.choices[0].message.content);
@@ -79,7 +101,7 @@ async function problemGrowingEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
     
@@ -109,7 +131,7 @@ async function problemUrgentEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
         // console.log(completion.choices[0].message.content);
@@ -139,7 +161,7 @@ async function problemExpenseEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
         // console.log(completion.choices[0].message.content);
@@ -169,7 +191,7 @@ async function problemFrequentEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
         // console.log(completion.choices[0].message.content);
@@ -197,7 +219,7 @@ async function solutionCompletenessEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
         // console.log(completion.choices[0].message.content);
@@ -214,8 +236,15 @@ async function solutionCompletenessEval(prompt, pastMessage, evaluationGoal) {
 }
 
 //solution target evaluation
-async function solutionTargetEval(prompt, pastMessage, evaluationGoal) { 
-    rolePlay = background + evaluationGoal + inputFormat + 'Your role is to evaluate a given concepts alignment with the seven pillars of the circular economy, as depicted in the provided framework. Analyze whether the idea adheres to the principles of maintaining continuous high-value material cycles, utilizing renewable energy sources, ensuring sustainable water extraction and resource maximization, supporting biodiversity, preserving society and culture through social governance, contributing to human and species health and well-being, and creating diverse values beyond financial metrics. You will provide a score from 0 to 10, where 0 indicates no alignment and 10 signifies complete alignment with the circular economys principles. Your assessment should consider the life cycles of materials used, energy sustainability, impacts on biodiversity, cultural preservation, health implications, value generation, and overall system resilience. A thorough explanation of the score should reflect the extent to which the proposed concept integrates these seven foundational elements of the circular economy. Ensure the one sentence explanation is specific to the solution and mention the circular economy target. For similar ideas in the conversation, assign a similar score to maintain consistency.' + replyFormat;
+async function solutionTargetEval(prompt, pastMessage, evaluationGoal, cate) {
+    task =  "Your task is to assess the alignment of a given concept with the knowledge. Assign a score on a scale from 0 to 10, where 0 indicates no alignment and 10 signifies complete adherence to the circular economy's principles. Provide a concise one-sentence explanation of your score, specifically addressing the solution and mentioning its alignment with the circular economy goals. How does this idea compare with other ideas existed in the world? Maintain consistency by assigning similar scores to similar concepts in the conversation. \n";
+    if (cate in sevenPillars){
+        knowledge = knowledgeBase[cate];
+    }
+    else{
+        knowledge = knowledgeBase['Other'];
+    }
+    rolePlay = background + 'Knowledge: '+ knowledge + evaluationGoal + inputFormat + task + replyFormat;
     score = -1;
     newMessage = pastMessage.concat([{ role: 'user', content: prompt}]);
 
@@ -224,10 +253,10 @@ async function solutionTargetEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
-        // console.log(completion.choices[0].message.content);
+        console.log(completion.choices[0].message.content);
         aiResponse = completion.choices[0].message.content;
         scoreMatch = aiResponse.match(scoreRegex);
         
@@ -252,7 +281,7 @@ async function solutionNoveltyEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
         // console.log(completion.choices[0].message.content);
@@ -278,7 +307,7 @@ async function solutionFinImpactEval(prompt, pastMessage, evaluationGoal) {
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
         // console.log(completion.choices[0].message.content);
@@ -305,7 +334,7 @@ async function solutionImplementabilityEval(prompt, pastMessage, evaluationGoal)
             messages: [{ role: 'system', content: rolePlay }].concat(newMessage),
             // model: "gpt-4",
             model: gptModel,
-            max_tokens: 60,
+            max_tokens: 100,
             temperature: 0.0,
         });
         // console.log(completion.choices[0].message.content);
@@ -369,9 +398,8 @@ async function generateTags(prompt) {
     tags = categorize(aiResponse)
     
     // console.log(categorize('Design for Longevity and Durability, Recycle and Recover'));
-    // console.log(aiResponse);
-    //console.log(categorize(aiResponse));
-    return categorize(aiResponse);
+    console.log(tags);
+    return tags;
     // return completion.choices[0].message.content;
 }
 
@@ -435,8 +463,16 @@ pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'syst
 // solutionImplementabilityEval(p, [])
 // generateName(p, [])
 // generateTags(p)
+// async function test(){
+//     cate = await generateTags(p);
+//     await solutionTargetEval(p1,pastMessage,cate);
+// }
+// test();
+solutionTargetEval(p1,pastMessage,'matada');
 // generateSummary(p);
 // spamFilter(p)
+// k = 'Other';
+// console.log(knowledgeBase.k);
 
 module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
