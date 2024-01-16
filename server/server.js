@@ -296,8 +296,6 @@ app.get('/get-average-idea-score', (req, res) => {
     const relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
     const sum = relevantRows.reduce((acc, row) => acc + parseFloat(row.score), 0);
     const average = sum / relevantRows.length;
-
-    console.log(sum, relevantRows.length, average)
     res.json({ averageIdeaScore: average.toFixed(2) });
 });
 
@@ -347,6 +345,26 @@ app.get('/get-tag-frequency', (req, res) => {
     }
 
     res.json({ tagFreq: tagFreq });
+});
+
+app.get('/get-idea-by-pagination', (req, res) => {
+    if (!storedRows) {
+        return res.status(400).json({ error: 'No CSV file loaded' });
+    }
+
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+
+    const relevantRows = storedRows.filter((row) => row.relevance === 'Valid');
+    relevantRows.sort((a, b) => b.score - a.score);
+
+    const total = relevantRows.length;
+    const totalPages = Math.ceil(total / pageSize);
+    const start = (page - 1) * pageSize;
+    const end = page * pageSize;
+    const rows = relevantRows.slice(start, end);
+
+    res.json({ ideas: rows, totalPages: totalPages });
 });
 
 app.listen(port, () => {
