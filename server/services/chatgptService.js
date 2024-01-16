@@ -466,7 +466,7 @@ pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'syst
 //     await solutionTargetEval(p1,pastMessage,cate);
 // }
 // test();
-solutionTargetEval(p1,pastMessage,'matada');
+// solutionTargetEval(p1,pastMessage,'matada');
 // generateSummary(p);
 // spamFilter(p)
 // k = 'Other';
