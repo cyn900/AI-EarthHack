@@ -1,5 +1,5 @@
 // // chatgptService.js
-// const { response } = require("express");
+const { response } = require("express");
 const OpenAI = require("openai");
 
 const openai = new OpenAI();
@@ -32,8 +32,6 @@ sevenPillars.forEach(function(pillar) {
         // console.log(pillar, knowledgeBase[pillar].slice(0, 10));
     });
 });
-
-
 
 // spam Filter
 async function spamFilter(prompt) { 
