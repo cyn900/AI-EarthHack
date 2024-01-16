@@ -141,18 +141,18 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                     //console.log(prompt);
                     const spamFilterReply = await spamFilter(prompt);
                     //console.log("reply" + spamFilterReply);
+                    const generateTagsReply = await generateTags(prompt);
                     const problemPopularityReply = await problemPopularEval(prob, problemPopularEvalHistory, evaluationGoal);
                     const problemGrowingReply = await problemGrowingEval(prob, problemGrowingEvalHistory, evaluationGoal);
                     const problemUrgentReply = await problemUrgentEval(prob, problemUrgentEvalHistory, evaluationGoal);
                     const problemExpenseReply = await problemExpenseEval(prob, problemExpenseEvalHistory, evaluationGoal);
                     const problemFrequentReply = await problemFrequentEval(prob, problemFrequentEvalHistory, evaluationGoal);
                     const solutionCompletenessReply = await solutionCompletenessEval(prompt, solutionCompletenessEvalHistory, evaluationGoal);
-                    const solutionTargetReply = await solutionTargetEval(prompt, solutionTargetEvalHistory, evaluationGoal);
+                    const solutionTargetReply = await solutionTargetEval(prompt, solutionTargetEvalHistory, evaluationGoal, generateTagsReply);
                     const solutionNoveltyReply = await solutionNoveltyEval(prompt, solutionNoveltyEvalHistory, evaluationGoal);
                     const solutionFinImpactReply = await solutionFinImpactEval(prompt, solutionFinImpactEvalHistory, evaluationGoal);
                     const solutionImplementabilityReply = await solutionImplementabilityEval(prompt, solutionImplementabilityEvalHistory, evaluationGoal);
                     const generateNameReply = await generateName(prompt, generateNameHistory);
-                    const generateTagsReply = await generateTags(prompt);
                     const generateSummaryReply = await generateSummary(prompt);
                     rowData.relevance = spamFilterReply; // "valid" or "invalid" where "valid means it is relevant, "invalid means it is a spam
                     //console.log(spamFilterReply);
