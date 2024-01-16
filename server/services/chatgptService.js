@@ -1,5 +1,5 @@
 // // chatgptService.js
-// const { response } = require("express");
+const { response } = require("express");
 const OpenAI = require("openai");
 
 const openai = new OpenAI();
@@ -478,12 +478,12 @@ pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'syst
 //     await solutionTargetEval(p1,pastMessage,cate);
 // }
 // test();
-a = ["Materials", "Water"];
-solutionTargetEval(p1,[],a);
+// a = ["Materials", "Water"];
+// solutionTargetEval(p1,[],a);
 // generateSummary(p);
 // spamFilter(p)
 // k = 'Other';
 // console.log(knowledgeBase.k);
 
-// module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
+module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
