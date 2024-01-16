@@ -1,5 +1,5 @@
 // // chatgptService.js
-// const { response } = require("express");
+const { response } = require("express");
 const OpenAI = require("openai");
 
 const openai = new OpenAI();
@@ -485,5 +485,5 @@ pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'syst
 // k = 'Other';
 // console.log(knowledgeBase.k);
 
-// module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
+module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
