@@ -1,5 +1,5 @@
 // // chatgptService.js
-const { response } = require("express");
+// const { response } = require("express");
 const OpenAI = require("openai");
 
 const openai = new OpenAI();
@@ -12,7 +12,7 @@ const scoreRegex = /Score:\s*(\d+(?:\.\d+)?)/;
 const explanationRegex = /Explanation:\s*([^\.]+\.(\s+[^\.]+\.){0,1})/;
 const background = 'You are a very strict critic who knows a lot about circular economy and sustainability. Your mark things very harsh. You rarely give marks that is above 8.0 \n'
 const inputFormat = 'When evaluating user submissions, focus on the text immediately following "Problem:" and before "Solution:" for the problem statement. For the solution assessment, concentrate on the text that comes after "Solution:".\n'
-const replyFormat = 'To evaluate the ideas presented, a score will be provided alongside a one sentence explanation. The score will reflect the quality and potential impact of the idea, ranging from 0.0 for ideas with little to no potential, up to 10.0 for groundbreaking ideas. The one sentence explanation will comment concisely on the strengths and weaknesses of the users presentation without reiterating their content. Avoid saying lacks deatils for ideas that has score higher than 5. Format: Score: [X]\n Explanation: [Your Explanation] \n';
+const replyFormat = 'To evaluate the ideas presented, a score will be provided alongside a one sentence explanation. The score will reflect the quality and potential impact of the idea, ranging from 0.0 for ideas with little to no potential, up to 10.0 for groundbreaking ideas. The one sentence explanation will comment concisely on the strengths and weaknesses of the users presentation without reiterating their content. Avoid saying lacks deatils in explaination, focus on the idea itself compare with others. Format: Score: [X]\n Explanation: [Your Explanation] \n';
 
 // load knowledge database
 const fs = require('fs');
@@ -234,14 +234,17 @@ async function solutionCompletenessEval(prompt, pastMessage, evaluationGoal) {
 }
 
 //solution target evaluation
-async function solutionTargetEval(prompt, pastMessage, evaluationGoal, cate) {
+async function solutionTargetEval(prompt, pastMessage, evaluationGoal, categ) {
     task =  "Your task is to assess the alignment of a given concept with the knowledge. Assign a score on a scale from 0 to 10, where 0 indicates no alignment and 10 signifies complete adherence to the circular economy's principles. Provide a concise one-sentence explanation of your score, specifically addressing the solution and mentioning its alignment with the circular economy goals. How does this idea compare with other ideas existed in the world? Maintain consistency by assigning similar scores to similar concepts in the conversation. \n";
-    if (cate in sevenPillars){
-        knowledge = knowledgeBase[cate];
+    knowledge = '';
+    if (Array.isArray(categ) && categ.length > 0) {
+        categ.forEach(function(c) {
+            if (c in sevenPillars){
+            knowledge += knowledgeBase[c];
+            }
+        });
     }
-    else{
-        knowledge = knowledgeBase['Other'];
-    }
+
     rolePlay = background + 'Knowledge: '+ knowledge + evaluationGoal + inputFormat + task + replyFormat;
     score = -1;
     newMessage = pastMessage.concat([{ role: 'user', content: prompt}]);
@@ -411,14 +414,23 @@ function categorize(input) {
         { name: "Health & Wellbeing", regex: /Health and Wellbeing/i },
         { name: "Value", regex: /Value/i }
     ];
-    cate = [];
+    cat = [];
 
     for (const category of categories) {
         if (category.regex.test(input)) {
-            return category.name;
+            cat.concat(category.name);
+            if (cat.length == 2){
+                return cat;
+            }
         }
     }
-    return 'Other';
+    if (cat.length === 0){
+        return ['Other'];
+    }
+    else{
+        return cat;
+    }
+    
     
 }
 
@@ -466,11 +478,12 @@ pastMessage = [{ role: 'user', content: 'material being resued' }, { role: 'syst
 //     await solutionTargetEval(p1,pastMessage,cate);
 // }
 // test();
-// solutionTargetEval(p1,pastMessage,'matada');
+a = ["Materials", "Water"];
+solutionTargetEval(p1,[],a);
 // generateSummary(p);
 // spamFilter(p)
 // k = 'Other';
 // console.log(knowledgeBase.k);
 
-module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
+// module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
 
