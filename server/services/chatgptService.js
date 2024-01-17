@@ -44,6 +44,10 @@ async function spamFilter(prompt) {
 }
 
 async function gptEval(prompt, pastMessage, evaluationGoal, rolePlay) {
+    if (prompt === null) {
+        console.log("JANCUK NULL", rolePlay)
+    }
+
     let score = null;
     let explanation = null;
     let newMessage = pastMessage.concat([{ role: 'user', content: prompt}]);
@@ -210,5 +214,15 @@ async function generateSummary(prompt) {
 
     return sentence;
 }
+
+// function main() {
+//     const p1 = 'Problem: Plastic bottle. Solution: Encourage save energy';
+//     const result = problemPopularEval(p1, [], '');
+//     result.then((value) => {
+//         console.log(value);
+//     });
+// }
+//
+// main();
 
 module.exports = {spamFilter, problemPopularEval, problemGrowingEval, problemUrgentEval, problemExpenseEval, problemFrequentEval, solutionCompletenessEval, solutionTargetEval, solutionNoveltyEval, solutionFinImpactEval, solutionImplementabilityEval, generateName, generateTags, generateSummary};
