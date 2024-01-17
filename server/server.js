@@ -38,8 +38,6 @@ app.get('/get-api-status', (req, res) => {
 
 app.post('/load-csv', upload.single('csvFile'), (req, res) => {
     const rows = [];
-    let headers = null;
-
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
@@ -52,28 +50,6 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         EVALUATION_GOAL = req.body.evaluationGoal;  // do something with evaluation goal
         const csvData = req.file.buffer.toString();
 
-        const outputCsvPath = path.join(__dirname, 'output.csv');
-        const writableStream = fs.createWriteStream(outputCsvPath, { flags: 'w' });
-
-        const newHeader = 'problem;solution;relevance;problemPopularityScore;problemPopularityExplanation;problemGrowingScore;problemGrowingExplanation;problemUrgentScore;problemUrgentExplanation;problemExpenseScore;problemExpenseExplanation;problemFrequentScore;problemFrequentExplanation;solutionCompletenessScore;solutionCompletenessExplanation;solutionTargetScore;solutionTargetExplanation;solutionNoveltyScore;solutionNoveltyExplanation;solutionFinImpactScore;solutionFinImpactExplanation;solutionImplementabilityScore;solutionImplementabilityExplanation;newName;tags;summary\n';
-        writableStream.write(newHeader);
-
-        // Example function to write a row
-
-        function writeRow(rowData) {
-            const rowString = `${rowData.problem};${rowData.solution};${rowData.relevance};${rowData.problemPopularityScore};${rowData.problemPopularityExplanation};${rowData.problemGrowingScore};${rowData.problemGrowingExplanation};${rowData.problemUrgentScore};${rowData.problemUrgentExplanation};${rowData.problemExpenseScore};${rowData.problemExpenseExplanation};${rowData.problemFrequentScore};${rowData.problemFrequentExplanation};${rowData.solutionCompletenessScore};${rowData.solutionCompletenessExplanation};${rowData.solutionTargetScore};${rowData.solutionTargetExplanation};${rowData.solutionNoveltyScore};${rowData.solutionNoveltyExplanation};${rowData.solutionFinImpactScore};${rowData.solutionFinImpactExplanation};${rowData.solutionImplementabilityScore};${rowData.solutionImplementabilityExplanation};${rowData.newName};${rowData.tags};${rowData.summary}\n`;
-            writableStream.write(rowString);
-        }
-        // Parse CSV content (using csv-parser as an example)
-        // const tempFilePath = path.join(__dirname, 'tempFile.csv');
-        
-        // // Write the uploaded content to the temporary file
-        // fs.writeFileSync(tempFilePath, fileContent);
-        // // Append an empty line to the temporary file
-        // fs.appendFileSync(tempFilePath, '\n');
-        // // Now read and process the temporary file
-        // fs.createReadStream(tempFilePath)
-        //     .pipe(csv({ headers: false }))
         let problemPopularEvalHistory = [];
         let problemGrowingEvalHistory = [];
         let problemUrgentEvalHistory = [];
@@ -92,7 +68,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         TOTAL_CALLS = rows.length * 14;
         API_STATUS = API_PROCESSING;
 
-        const allPromises = []
+        const allPromises = [];
         Papa.parse(csvData, {
             header: true, // Assumes the first row is the header
             dynamicTyping: true,
@@ -253,7 +229,6 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                 allPromises.push(promises);
                 Promise.all(promises).then(() => {
                     rows.push(rowData);
-                    writeRow(rowData);
                 });
             },
             complete: () => {
@@ -261,6 +236,11 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
                 Promise.all(flattenedPromises)
                     .then(() => {
                         PROCESSED_ROWS = rows;
+
+                        const outputCsvPath = path.join(__dirname, 'output.csv');
+                        const outputCsvData = Papa.unparse(rows, { delimiter: ';' });
+                        fs.writeFileSync(outputCsvPath, outputCsvData);
+
                         res.status(200).json({ status: 'OK' });
                     })
                     .catch((error) => {
