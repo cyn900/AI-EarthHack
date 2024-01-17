@@ -19,7 +19,7 @@ const fs = require('fs');
 sevenPillars = ['Materials', 'Energy', 'Water', 'Biodiversity', 'Society & Culture', 'Health & Wellbeing', 'Value', 'Other'];
 knowledgeBase = {'Materials': null, 'Energy': null, 'Water': null, 'Biodiversity': null, 'Society & Culture': null, 'Health & Wellbeing': null, 'Value': null, 'Other': null};
 sevenPillars.forEach(function(pillar) {
-    const filePath = 'knowledge/' + pillar + '.txt';
+    const filePath = 'services/knowledge/' + pillar + '.txt';
 
     fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
