@@ -136,55 +136,89 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
             const solutionImplementabilityReply = solutionImplementabilityEval(prompt, solutionImplementabilityEvalHistory, EVALUATION_GOAL);
             const generateNameReply = generateName(prompt, generateNameHistory);
             const generateSummaryReply = generateSummary(prompt);
-            rowData.relevance = spamFilterReply; // "valid" or "invalid" where "valid means it is relevant, "invalid means it is a spam
 
-            rowData.problemPopularityScore = problemPopularityReply[0];
-            rowData.problemPopularityExplanation = problemPopularityReply[1];
-            problemPopularEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + problemPopularityReply[0] + '\n Explanation: ' + problemPopularityReply[1]}]);
+            const promises = []
+            promises.push(spamFilterReply.then((reply) => {
+                rowData.relevance = reply;
+            }));
 
-            rowData.problemGrowingScore = problemGrowingReply[0];
-            rowData.problemGrowingExplanation = problemGrowingReply[1];
-            problemGrowingEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + problemGrowingReply[0] + '\n Explanation: ' + problemGrowingReply[1]}]);
+            promises.push(problemPopularityReply.then((reply) => {
+                rowData.problemPopularityScore = reply[0];
+                rowData.problemPopularityExplanation = reply[1];
+                problemPopularEvalHistory = problemPopularEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1]}]);
+            }));
 
-            rowData.problemUrgentScore = problemUrgentReply[0];
-            rowData.problemUrgentExplanation = problemUrgentReply[1];
-            problemUrgentEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + problemUrgentReply[0] + '\n Explanation: ' + problemUrgentReply[1]}]);
+            promises.push(problemGrowingReply.then((reply) => {
+                rowData.problemGrowingScore = reply[0];
+                rowData.problemGrowingExplanation = reply[1];
+                problemGrowingEvalHistory = problemGrowingEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1]}]);
+            }));
 
-            rowData.problemExpenseScore = problemExpenseReply[0];
-            rowData.problemExpenseExplanation = problemExpenseReply[1];
-            problemExpenseEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + problemExpenseReply[0] + '\n Explanation: ' + problemExpenseReply[1]}]);
+            promises.push(problemUrgentReply.then((reply) => {
+                rowData.problemUrgentScore = reply[0];
+                rowData.problemUrgentExplanation = reply[1];
+                problemUrgentEvalHistory = problemUrgentEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+            }));
 
-            rowData.problemFrequentScore = problemFrequentReply[0];
-            rowData.problemFrequentExplanation = problemFrequentReply[1];
-            problemFrequentEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + problemFrequentReply[0] + '\n Explanation: ' + problemFrequentReply[1]}]);
+            promises.push(problemExpenseReply.then((reply) => {
+                rowData.problemExpenseScore = reply[0];
+                rowData.problemExpenseExplanation = reply[1];
+                problemExpenseEvalHistory = problemExpenseEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+            }));
 
-            rowData.solutionCompletenessScore = solutionCompletenessReply[0];
-            rowData.solutionCompletenessExplanation = solutionCompletenessReply[1];
-            solutionCompletenessEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: 'Score: ' + solutionCompletenessReply[0] + '\n Explanation: ' + solutionCompletenessReply[1]}]);
+            promises.push(problemFrequentReply.then((reply) => {
+                rowData.problemFrequentScore = reply[0];
+                rowData.problemFrequentExplanation = reply[1];
+                problemFrequentEvalHistory = problemFrequentEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+            }));
 
-            rowData.solutionTargetScore = solutionTargetReply[0];
-            rowData.solutionTargetExplanation = solutionTargetReply[1];
-            solutionTargetEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: 'Score: ' + solutionTargetReply[0] + '\n Explanation: ' + solutionTargetReply[1]}]);
+            promises.push(solutionCompletenessReply.then((reply) => {
+                rowData.solutionCompletenessScore = reply[0];
+                rowData.solutionCompletenessExplanation = reply[1];
+                solutionCompletenessEvalHistory = solutionCompletenessEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+            }));
 
-            rowData.solutionNoveltyScore = solutionNoveltyReply[0];
-            rowData.solutionNoveltyExplanation = solutionNoveltyReply[1];
-            solutionNoveltyEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: 'Score: ' + solutionNoveltyReply[0] + '\n Explanation: ' + solutionNoveltyReply[1]}]);
+            promises.push(solutionTargetReply.then((reply) => {
+                rowData.solutionTargetScore = reply[0];
+                rowData.solutionTargetExplanation = reply[1];
+                solutionTargetEvalHistory = solutionTargetEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+            }));
 
-            rowData.solutionFinImpactScore = solutionFinImpactReply[0];
-            rowData.solutionFinImpactExplanation = solutionFinImpactReply[1];
-            solutionFinImpactEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: 'Score: ' + solutionFinImpactReply[0] + '\n Explanation: ' + solutionFinImpactReply[1]}]);
+            promises.push(solutionNoveltyReply.then((reply) => {
+                rowData.solutionNoveltyScore = reply[0];
+                rowData.solutionNoveltyExplanation = reply[1];
+                solutionNoveltyEvalHistory = solutionNoveltyEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+            }));
 
-            rowData.solutionImplementabilityScore = solutionImplementabilityReply[0];
-            rowData.solutionImplementabilityExplanation = solutionImplementabilityReply[1];
-            solutionImplementabilityEvalHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: 'Score: ' + solutionImplementabilityReply[0] + '\n Explanation: ' + solutionImplementabilityReply[1]}]);
+            promises.push(solutionFinImpactReply.then((reply) => {
+                rowData.solutionFinImpactScore = reply[0];
+                rowData.solutionFinImpactExplanation = reply[1];
+                solutionFinImpactEvalHistory = solutionFinImpactEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+            }));
 
-            rowData.newName = generateNameReply;
-            generateNameHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: generateNameReply}]);
+            promises.push(solutionImplementabilityReply.then((reply) => {
+                rowData.solutionImplementabilityScore = reply[0];
+                rowData.solutionImplementabilityExplanation = reply[1];
+                solutionImplementabilityEvalHistory = solutionImplementabilityEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+            }));
 
-            rowData.tags = generateTagsReply; // a list of tags ex: ['Water', 'Value'] 0<len(list)<=2
-            rowData.summary = generateSummaryReply;
-            rows.push(rowData);
-            writeRow(rowData);
+            promises.push(generateNameReply.then((reply) => {
+                rowData.newName = reply;
+                generateNameHistory = generateNameHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: reply}]);
+            }));
+
+            promises.push(generateTagsReply.then((reply) => {
+                rowData.tags = reply;
+            }));
+
+            promises.push(generateSummaryReply.then((reply) => {
+                rowData.summary = reply;
+            }));
+
+            Promise.all(promises).then(() => {
+                rows.push(rowData);
+                writeRow(rowData);
+            });
         });
 
         PROCESSED_ROWS = rows;
