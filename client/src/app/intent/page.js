@@ -72,8 +72,7 @@ export default function Page() {
 
             setLoading(true)
             for (let i = 0; i < 100; i++) {
-                // const relevantIdeasResponse = await axios.get(API_URL + '/get-relevant-ideas-number');
-                const relevantIdeasResponse = await axios.get('https://ai-earthhack.onrender.com/get-relevant-ideas-number');
+                const relevantIdeasResponse = await axios.get(API_URL + '/get-relevant-ideas-number');
                 const relevantIdeasJson = relevantIdeasResponse.data;
 
                 if (relevantIdeasJson.relevantIdeasNumber > 0) {

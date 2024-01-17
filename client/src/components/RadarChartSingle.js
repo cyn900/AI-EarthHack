@@ -2,10 +2,10 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-const RadarChart = ({ chartData }) => {
+const RadarChartSingle = ({ chartData }) => {
     const chartOptions = {
         chart: {
-            height: 350,
+            height: 200,
             type: 'radar',
             dropShadow: {
                 enabled: true,
@@ -15,10 +15,11 @@ const RadarChart = ({ chartData }) => {
             },
             toolbar: {
                 show: false
-            }
+            },
+
         },
         title: {
-            text: 'Radar Chart - ' + chartData.pillarName,
+            text: chartData.name,
         },
         fill: {
             opacity: 0.1,
@@ -33,7 +34,8 @@ const RadarChart = ({ chartData }) => {
             lines: {
                 show: true,
             }
-        }
+        },
+        colors: ['#AECE8D'],
     };
 
     return (
@@ -42,11 +44,11 @@ const RadarChart = ({ chartData }) => {
                 options={chartOptions}
                 series={chartData.series}
                 type="radar"
-                height="380"
-                width="380"
+                height="250"
+                width="250"
             />
         </div>
     );
 };
 
-export default RadarChart;
+export default RadarChartSingle;
