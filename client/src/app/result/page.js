@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from "react";
 import PieChart from "@/components/PieChart";
-import RadarChart from "@/components/RadarChart";
+import RadarChartSeries from "@/components/RadarChartSeries";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -319,13 +319,13 @@ export default function Page() {
                                         ?
                                         <div className="carousel w-full">
                                             <div id="slide1" className="carousel-item relative w-full justify-center">
-                                                <RadarChart chartData={topIdeasByPillarProblem} />
+                                                <RadarChartSeries chartData={topIdeasByPillarProblem} />
                                                 <div className="absolute flex flex-row-reverse justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                                                     <a href="#slide2" className="btn btn-circle">❯</a>
                                                 </div>
                                             </div>
                                             <div id="slide2" className="carousel-item relative w-full justify-center">
-                                                <RadarChart chartData={topIdeasByPillarSolution} />
+                                                <RadarChartSeries chartData={topIdeasByPillarSolution} />
                                                 <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                                                     <a href="#slide1" className="btn btn-circle">❮</a>
                                                 </div>
@@ -341,29 +341,10 @@ export default function Page() {
                     <div className=" p-6 rounded-lg subtitle2 card" style={{ padding: '30px', backgroundColor: '#EFEFEF'}}>
                         <div className="flex">
                             <h1 className="text-3xl font-bold"> Idea Leaderboard </h1>
-                            <button className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4 bg-light_forest hover:bg-dark_forest border-light_forest"
-                                    style={{ color: 'white', border: 'none'}}
-                                    onClick={() => {
-                                        myModal4?.current.showModal()
-                                        // if (document) {
-                                        //     document.getElementById('my_modal_4').showModal()
-                                        // }
-                                    }}>
-                                All Entries
-                            </button>
-                            <dialog ref={myModal4} id="my_modal_4" className="modal">
-                                <div className="modal-box text-center">
-                                    <form method="dialog">
-                                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                                    </form>
-                                    <h3 className="font-bold text-lg"> Feature is under construction!! </h3>
-                                    <p> Check Figma to see the result </p>
-                                </div>
-                                <form method="dialog" className="modal-backdrop">
-                                    <button>close</button>
-                                </form>
-                            </dialog>
-
+                            <Link href="/leaderboard"
+                                  className="btn min-h-0 max-h-6 rounded-md btn-primary ml-4 bg-light_forest hover:bg-dark_forest border-light_forest"
+                                  style={{ color: 'white', border: 'none'}}
+                            > All Entries </Link>
                         </div>
                         {topIdeas.map((idea, index) => (
                             <div className="card m-4 bg-base-100 shadow-xl" key={index}>
