@@ -108,127 +108,146 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
         TOTAL_ROWS = rows.length;
         API_STATUS = API_PROCESSING;
 
-        rows.forEach(rowData => {
-            let prob = rowData['problem'], sol = rowData['solution'];
-            if (prob === null) {
-                prob = 'Failed to read problem.';
-            }
-            if (sol === null) {
-                sol = 'Failed to read solution.';
-            }
+        const allPromises = []
+        csv({ headers: false })
+            .on('data', (row) => {
+                if (!headers) {
+                    headers = Object.values(row);
+                } else {
+                    const rowData = {};
+                    headers.forEach((header, index) => {
+                        rowData[header] = row[index];
+                    });
 
-            const prompt = 'Problem: ' + prob + 'Solution:' + sol;
-            // const problemRegex = /Problem:\s*([^]+?)\.\s*Solution:/;
-            // const problemMatch = prompt.match(problemRegex);
-            // const problemDescription = problemMatch ? problemMatch[1].trim() : null;
+                    let prob = rowData['problem'], sol = rowData['solution'];
+                    if (prob === null) {
+                        prob = 'Failed to read problem.';
+                    }
+                    if (sol === null) {
+                        sol = 'Failed to read solution.';
+                    }
 
-            const spamFilterReply = spamFilter(prompt);
-            const generateTagsReply = generateTags(prompt);
-            const problemPopularityReply = problemPopularEval(prob, problemPopularEvalHistory, EVALUATION_GOAL);
-            const problemGrowingReply = problemGrowingEval(prob, problemGrowingEvalHistory, EVALUATION_GOAL);
-            const problemUrgentReply = problemUrgentEval(prob, problemUrgentEvalHistory, EVALUATION_GOAL);
-            const problemExpenseReply = problemExpenseEval(prob, problemExpenseEvalHistory, EVALUATION_GOAL);
-            const problemFrequentReply = problemFrequentEval(prob, problemFrequentEvalHistory, EVALUATION_GOAL);
-            const solutionCompletenessReply = solutionCompletenessEval(prompt, solutionCompletenessEvalHistory, EVALUATION_GOAL);
-            const solutionTargetReply = solutionTargetEval(prompt, solutionTargetEvalHistory, EVALUATION_GOAL, generateTagsReply);
-            const solutionNoveltyReply = solutionNoveltyEval(prompt, solutionNoveltyEvalHistory, EVALUATION_GOAL);
-            const solutionFinImpactReply = solutionFinImpactEval(prompt, solutionFinImpactEvalHistory, EVALUATION_GOAL);
-            const solutionImplementabilityReply = solutionImplementabilityEval(prompt, solutionImplementabilityEvalHistory, EVALUATION_GOAL);
-            const generateNameReply = generateName(prompt, generateNameHistory);
-            const generateSummaryReply = generateSummary(prompt);
+                    const prompt = 'Problem: ' + prob + 'Solution:' + sol;
+                    const spamFilterReply = spamFilter(prompt);
+                    const generateTagsReply = generateTags(prompt);
+                    const problemPopularityReply = problemPopularEval(prob, problemPopularEvalHistory, EVALUATION_GOAL);
+                    const problemGrowingReply = problemGrowingEval(prob, problemGrowingEvalHistory, EVALUATION_GOAL);
+                    const problemUrgentReply = problemUrgentEval(prob, problemUrgentEvalHistory, EVALUATION_GOAL);
+                    const problemExpenseReply = problemExpenseEval(prob, problemExpenseEvalHistory, EVALUATION_GOAL);
+                    const problemFrequentReply = problemFrequentEval(prob, problemFrequentEvalHistory, EVALUATION_GOAL);
+                    const solutionCompletenessReply = solutionCompletenessEval(prompt, solutionCompletenessEvalHistory, EVALUATION_GOAL);
+                    const solutionTargetReply = solutionTargetEval(prompt, solutionTargetEvalHistory, EVALUATION_GOAL, generateTagsReply);
+                    const solutionNoveltyReply = solutionNoveltyEval(prompt, solutionNoveltyEvalHistory, EVALUATION_GOAL);
+                    const solutionFinImpactReply = solutionFinImpactEval(prompt, solutionFinImpactEvalHistory, EVALUATION_GOAL);
+                    const solutionImplementabilityReply = solutionImplementabilityEval(prompt, solutionImplementabilityEvalHistory, EVALUATION_GOAL);
+                    const generateNameReply = generateName(prompt, generateNameHistory);
+                    const generateSummaryReply = generateSummary(prompt);
 
-            const promises = []
-            promises.push(spamFilterReply.then((reply) => {
-                rowData.relevance = reply;
-            }));
+                    const promises = [];
+                    promises.push(spamFilterReply.then((reply) => {
+                        rowData.relevance = reply;
+                    }));
 
-            promises.push(problemPopularityReply.then((reply) => {
-                rowData.problemPopularityScore = reply[0];
-                rowData.problemPopularityExplanation = reply[1];
-                problemPopularEvalHistory = problemPopularEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1]}]);
-            }));
+                    promises.push(problemPopularityReply.then((reply) => {
+                        rowData.problemPopularityScore = reply[0];
+                        rowData.problemPopularityExplanation = reply[1];
+                        problemPopularEvalHistory = problemPopularEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1]}]);
+                    }));
 
-            promises.push(problemGrowingReply.then((reply) => {
-                rowData.problemGrowingScore = reply[0];
-                rowData.problemGrowingExplanation = reply[1];
-                problemGrowingEvalHistory = problemGrowingEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1]}]);
-            }));
+                    promises.push(problemGrowingReply.then((reply) => {
+                        rowData.problemGrowingScore = reply[0];
+                        rowData.problemGrowingExplanation = reply[1];
+                        problemGrowingEvalHistory = problemGrowingEvalHistory.concat([{ role: 'user', content: prob},{ role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1]}]);
+                    }));
 
-            promises.push(problemUrgentReply.then((reply) => {
-                rowData.problemUrgentScore = reply[0];
-                rowData.problemUrgentExplanation = reply[1];
-                problemUrgentEvalHistory = problemUrgentEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
-            }));
+                    promises.push(problemUrgentReply.then((reply) => {
+                        rowData.problemUrgentScore = reply[0];
+                        rowData.problemUrgentExplanation = reply[1];
+                        problemUrgentEvalHistory = problemUrgentEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+                    }));
 
-            promises.push(problemExpenseReply.then((reply) => {
-                rowData.problemExpenseScore = reply[0];
-                rowData.problemExpenseExplanation = reply[1];
-                problemExpenseEvalHistory = problemExpenseEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
-            }));
+                    promises.push(problemExpenseReply.then((reply) => {
+                        rowData.problemExpenseScore = reply[0];
+                        rowData.problemExpenseExplanation = reply[1];
+                        problemExpenseEvalHistory = problemExpenseEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+                    }));
 
-            promises.push(problemFrequentReply.then((reply) => {
-                rowData.problemFrequentScore = reply[0];
-                rowData.problemFrequentExplanation = reply[1];
-                problemFrequentEvalHistory = problemFrequentEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
-            }));
+                    promises.push(problemFrequentReply.then((reply) => {
+                        rowData.problemFrequentScore = reply[0];
+                        rowData.problemFrequentExplanation = reply[1];
+                        problemFrequentEvalHistory = problemFrequentEvalHistory.concat([{ role: 'user', content: prob }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+                    }));
 
-            promises.push(solutionCompletenessReply.then((reply) => {
-                rowData.solutionCompletenessScore = reply[0];
-                rowData.solutionCompletenessExplanation = reply[1];
-                solutionCompletenessEvalHistory = solutionCompletenessEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
-            }));
+                    promises.push(solutionCompletenessReply.then((reply) => {
+                        rowData.solutionCompletenessScore = reply[0];
+                        rowData.solutionCompletenessExplanation = reply[1];
+                        solutionCompletenessEvalHistory = solutionCompletenessEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+                    }));
 
-            promises.push(solutionTargetReply.then((reply) => {
-                rowData.solutionTargetScore = reply[0];
-                rowData.solutionTargetExplanation = reply[1];
-                solutionTargetEvalHistory = solutionTargetEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
-            }));
+                    promises.push(solutionTargetReply.then((reply) => {
+                        rowData.solutionTargetScore = reply[0];
+                        rowData.solutionTargetExplanation = reply[1];
+                        solutionTargetEvalHistory = solutionTargetEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+                    }));
 
-            promises.push(solutionNoveltyReply.then((reply) => {
-                rowData.solutionNoveltyScore = reply[0];
-                rowData.solutionNoveltyExplanation = reply[1];
-                solutionNoveltyEvalHistory = solutionNoveltyEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
-            }));
+                    promises.push(solutionNoveltyReply.then((reply) => {
+                        rowData.solutionNoveltyScore = reply[0];
+                        rowData.solutionNoveltyExplanation = reply[1];
+                        solutionNoveltyEvalHistory = solutionNoveltyEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+                    }));
 
-            promises.push(solutionFinImpactReply.then((reply) => {
-                rowData.solutionFinImpactScore = reply[0];
-                rowData.solutionFinImpactExplanation = reply[1];
-                solutionFinImpactEvalHistory = solutionFinImpactEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
-            }));
+                    promises.push(solutionFinImpactReply.then((reply) => {
+                        rowData.solutionFinImpactScore = reply[0];
+                        rowData.solutionFinImpactExplanation = reply[1];
+                        solutionFinImpactEvalHistory = solutionFinImpactEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+                    }));
 
-            promises.push(solutionImplementabilityReply.then((reply) => {
-                rowData.solutionImplementabilityScore = reply[0];
-                rowData.solutionImplementabilityExplanation = reply[1];
-                solutionImplementabilityEvalHistory = solutionImplementabilityEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
-            }));
+                    promises.push(solutionImplementabilityReply.then((reply) => {
+                        rowData.solutionImplementabilityScore = reply[0];
+                        rowData.solutionImplementabilityExplanation = reply[1];
+                        solutionImplementabilityEvalHistory = solutionImplementabilityEvalHistory.concat([{ role: 'user', content: prompt }, { role: 'system', content: 'Score: ' + reply[0] + '\n Explanation: ' + reply[1] }]);
+                    }));
 
-            promises.push(generateNameReply.then((reply) => {
-                rowData.newName = reply;
-                generateNameHistory = generateNameHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: reply}]);
-            }));
+                    promises.push(generateNameReply.then((reply) => {
+                        rowData.newName = reply;
+                        generateNameHistory = generateNameHistory.concat([{ role: 'user', content: prompt},{ role: 'system', content: reply}]);
+                    }));
 
-            promises.push(generateTagsReply.then((reply) => {
-                rowData.tags = reply;
-            }));
+                    promises.push(generateTagsReply.then((reply) => {
+                        rowData.tags = reply;
+                    }));
 
-            promises.push(generateSummaryReply.then((reply) => {
-                rowData.summary = reply;
-            }));
+                    promises.push(generateSummaryReply.then((reply) => {
+                        rowData.summary = reply;
+                    }));
 
-            Promise.all(promises).then(() => {
-                rows.push(rowData);
-                writeRow(rowData);
+                    allPromises.push(promises);
+
+                    Promise.all(promises).then(() => {
+                        rows.push(rowData);
+                        writeRow(rowData);
+                    });
+                }
+            })
+            .on('end', () => {
+                const flattenedPromises = allPromises.flat();
+                Promise.all(flattenedPromises)
+                    .then(() => {
+                        PROCESSED_ROWS = rows;
+                        res.status(200).json({ status: 'OK' });
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).json({ error: 'Internal Server Error' });
+                    })
+                    .finally(() => {
+                        API_STATUS = API_READY;
+                    });
             });
-        });
 
-        PROCESSED_ROWS = rows;
-        // res.json({ csvData: rows });
-        res.status(200).json({ status: 'OK' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        API_STATUS = API_READY;
     }
 });
 
