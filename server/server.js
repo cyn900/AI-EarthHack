@@ -19,10 +19,11 @@ const API_CALCULATING = 'calculating';
 
 let EVALUATION_GOAL = null;
 let PROCESSED_ROWS = null;
-
 let RESOLVED_CALLS = null;
 let TOTAL_CALLS = null;
 let USER_RATINGS = null;
+let USER_PROBLEM_SIGNIFICANCE = null;
+let USER_SOLUTION_SIGNIFICANCE = null;
 let API_STATUS = API_READY;
 
 app.use(cors());
@@ -275,11 +276,17 @@ app.post('/load-user-rating', (req, res) => {
     API_STATUS = API_CALCULATING;
 
     USER_RATINGS = req.body.rating;
+    USER_PROBLEM_SIGNIFICANCE = req.body.problemSignificance;
+    USER_SOLUTION_SIGNIFICANCE = req.body.solutionSignificance;
+
+    if (!(USER_PROBLEM_SIGNIFICANCE >= 0 && USER_SOLUTION_SIGNIFICANCE >= 0 && USER_PROBLEM_SIGNIFICANCE + USER_SOLUTION_SIGNIFICANCE === 100)) {
+        return res.status(400).json({ error: 'Invalid problem and solution significance' });
+    }
+
     PROCESSED_ROWS.forEach((row) => {
         if (row.relevance === 'Valid') {
             const problemSum = USER_RATINGS['Popularity'] + USER_RATINGS['Growing'] + USER_RATINGS['Urgent'] + USER_RATINGS['Expensive'] + USER_RATINGS['Frequent'];
             const solutionSum = USER_RATINGS['Completeness'] + USER_RATINGS['Targeted'] + USER_RATINGS['Novelty'] + USER_RATINGS['Financial Impact'] + USER_RATINGS['Implementability'];
-            const totalSum = problemSum + solutionSum;
 
             const problemScore =
                 parseFloat(row.problemPopularityScore) * USER_RATINGS['Popularity'] +
@@ -295,7 +302,8 @@ app.post('/load-user-rating', (req, res) => {
                 parseFloat(row.solutionFinImpactScore) * USER_RATINGS['Financial Impact'] +
                 parseFloat(row.solutionImplementabilityScore) * USER_RATINGS['Implementability'];
 
-            const score = (problemScore + solutionScore) / totalSum * 10;
+            const score = problemScore / (10 * problemSum) * USER_PROBLEM_SIGNIFICANCE
+                + solutionScore / (10 * solutionSum) * USER_SOLUTION_SIGNIFICANCE
             row.score = score.toFixed(2);
         } else {
             row.score = 0;

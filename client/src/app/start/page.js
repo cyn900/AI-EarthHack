@@ -1,7 +1,7 @@
 'use client'
 
 // ./src/app/page.js
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
 import Image from 'next/image'
 import Link from "next/link";
@@ -14,6 +14,21 @@ export default function Home() {
     const [evaluationGoal, setEvaluationGoal] = useState('');
     const [loading, setLoading] = useState(false); // Track the loading state
     const [response, setResponse] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(API_URL + '/get-api-status');
+                if (response.apiStatus !== "ready") {
+                    setLoading(true);
+                }
+            } catch (error) {
+                console.error('Error getting status:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
     const handleChangeForm = (e) => {
         e.preventDefault()
         if (e.target.name === 'csv-form') {
@@ -50,12 +65,14 @@ export default function Home() {
 
                 setResponse("File uploaded successfully. Upload status: " + response.data.status);
                 if (response.status === 200) {
-                    router.push('/intent');
-                    // window.location.href = "/intent";
+                    if (router.pathname === '/start') {
+                        router.push('/intent');
+                    }
                 }
             } catch (error) {
                 console.error('Error sending form:', error);
-                alert('Error sending form');
+                alert('Error sending csv form');
+                router.push('/start');
             } finally {
                 setLoading(false);
             }
@@ -98,9 +115,14 @@ export default function Home() {
                         <form style={{  marginLeft:'90px', marginTop:'10px', width: "74%"}} onSubmit={handleSubmitForm} encType="multipart/form-data" className="card-actions justify-end">
                             <input id='file-input' type="file" onChange={handleChangeForm} name="csv-form" className="file-input file-input-primary w-full bg-gray-100" />
                             {
-                                loading ? <span className="btn loading loading-spinner text-primary"></span> :
+                                loading ?
+                                <div className="flex">
+                                    <span className="btn loading loading-spinner text-primary mx-4"></span>
+                                    <div className="tooltip" data-tip="let loading run in background">
+                                        <Link className="btn bg-light_forest" href="/intent"> Next </Link>
+                                    </div>
+                                </div> :
                                     <button className='buttong' type='submit' style={{marginTop:'20px'}}> Next </button>
-                                    
                             }
                         </form>
                     </div>
