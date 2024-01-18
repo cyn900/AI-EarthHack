@@ -50,7 +50,7 @@ export default function Page() {
     }
 
     return (
-        <div className="min-h-screen flex justify-center items-center bg-light_green">
+        <div data-theme="light" className="min-h-screen flex justify-center items-center bg-light_green">
             <div className="max-w-screen-2xl m-12">
                 <div className="relative flex items-center mb-4">
                     <h1 className="font-bold text-2xl"> Idea Leaderboard </h1>
