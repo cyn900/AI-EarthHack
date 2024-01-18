@@ -27,7 +27,7 @@ export default function Report({ idea }) {
     }
 
     return (
-        <div className="bg-white rounded-lg max-h-[80%] p-8 max-w-xl overflow-y-auto">
+        <div className="bg-white rounded-lg max-h-[80%] p-8 max-w-lg overflow-y-auto">
             <h1 className="font-bold">{idea.newName}</h1>
 
             <label className="form-control mt-2">

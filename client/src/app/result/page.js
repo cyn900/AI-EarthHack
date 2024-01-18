@@ -290,17 +290,17 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6 mt-4 ">
-                    <div className="mt-6 bg-white card" style={{ marginLeft: '15px'}}>
-                        <h1 className="text-3xl font-bold subtitle2" style={{ padding: '25px'}}> Idea Comparisons </h1>
+                <div className="grid grid-cols-2 gap-6 mt-4 " >
+                    <div className="mt-6 bg-white card" style={{ marginLeft: '15px', marginTop: '-3px'}}>
+                        <h1 className="text-3xl font-bold subtitle2" style={{ padding: '-10px', marginTop: '-15px'}}>  </h1>
 
-                        <div className="flex justify-center items-center mt-8 rounded-md ">
+                        <div className="flex justify-center items-center mt-6 rounded-md " style={{ padding: '10px'}}>
                             <div className="flex flex-col justify-between items-center p-4">
                                 <div className="flex flex-row items-end">
                                     <h1 className="text-3xl font-bold mx-4 subtitle2"> Top Ideas Comparisons </h1>
 
                                     <div className="relative z-10">
-                                        <button onClick={handleToggleDropdown} className="btn w-56 flex justify-between">
+                                        <button onClick={handleToggleDropdown} className="btn w-56 flex justify-between ">
                                             <span>{selectedValue}</span>
                                             <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"  viewBox="0 0 24 24" className="w-4 h-4">
                                                 <path d="M19 9l-7 7-7-7"></path>
@@ -313,7 +313,7 @@ export default function Page() {
                                                     <button
                                                         key={index}
                                                         onClick={() => handleOptionClick(key)}
-                                                        className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 w-full"
+                                                        className="block px-4 py-2 text-sm text-gray-800 hover:bg-none focus:outline-none focus:bg-gray-100 w-full"
                                                     >
                                                         {key}
                                                     </button>
@@ -322,20 +322,20 @@ export default function Page() {
                                         )}
                                     </div>
                                 </div>
-                                <div className="mt-8">
+                                <div className="mt-8" style={{ width: "95%"}}>
                                     { genRadarChart
                                         ?
-                                        <div className="carousel w-full">
+                                        <div className="carousel" >
                                             <div id="slide1" className="carousel-item relative w-full justify-center">
                                                 <RadarChartSeries chartData={topIdeasByPillarProblem} />
                                                 <div className="absolute flex flex-row-reverse justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                                                    <a href="#slide2" className="btn btn-circle">❯</a>
+                                                    <a href="#slide2" className="btn btn-circle" style={{ background: 'none', border: "none", marginRight: "40px"}}>❯</a>
                                                 </div>
                                             </div>
                                             <div id="slide2" className="carousel-item relative w-full justify-center">
                                                 <RadarChartSeries chartData={topIdeasByPillarSolution} />
-                                                <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                                                    <a href="#slide1" className="btn btn-circle">❮</a>
+                                                <div className=" absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                                                    <a href="#slide1" className="btn btn-circle" style={{ background: 'none', border: "none"}}>❮</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -356,7 +356,7 @@ export default function Page() {
                         </div>
                         {topIdeas.map((idea, index) => (
                             <div className="card m-4 bg-base-100 shadow-xl" key={index}>
-                                <div className="card-body p-2 flex flex-row justify-between items-center">
+                                <div className="card-body p-2 flex flex-row justify-between items-center content2" style={{ height:"70px",  paddingLeft:"20px", paddingRight:"20px"}}>
                                     <div className="flex flex-row items-center">
                                         <h2 className="mr-6 text-xl font-bold"> {index + 1} </h2>
                                         <div>

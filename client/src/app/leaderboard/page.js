@@ -74,8 +74,8 @@ export default function Page() {
                             {ideas.map((idea, index) => (
                                 <tr key={index} onClick={() => handleSelectedIdeas(index) } className={`h-16 border-t-8 border-light_green hover:cursor-pointer ${index === selectedIndex ? "bg-middle_green" : "bg-white"}`}>
                                     <th className="font-bold">{(page-1) * pageSize + index + 1}</th>
-                                    <td className="min-w-80 font-bold">{idea.newName}</td>
-                                    <td className="min-w-80 flex flex-row">
+                                    <td className="min-w-72 font-bold">{idea.newName}</td>
+                                    <td className="min-w-72 flex flex-row">
                                         {
                                             idea.tags.split(',').map((tag, index) => (
                                                 <div key={index}
@@ -85,7 +85,7 @@ export default function Page() {
                                             ))
                                         }
                                     </td>
-                                    <td className="font-bold min-w-28">{idea.score} pt</td>
+                                    <td className="font-bold">{idea.score} pt</td>
                                     <td>&#8250;</td>
                                 </tr>
                             ))}
