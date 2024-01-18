@@ -19,7 +19,7 @@ export default function Home() {
         const fetchData = async () => {
             try {
                 const response = await axios.get(API_URL + '/get-api-status');
-                if (response.apiStatus !== "ready") {
+                if (response.data.apiStatus !== "ready") {
                     setLoading(true);
                 }
             } catch (error) {
