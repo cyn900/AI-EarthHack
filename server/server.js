@@ -19,6 +19,7 @@ const API_CALCULATING = 'calculating';
 
 let EVALUATION_GOAL = null;
 let PROCESSED_ROWS = null;
+let FILTERED_ROWS = null;
 let RESOLVED_CALLS = null;
 let TOTAL_CALLS = null;
 let USER_RATINGS = null;
@@ -431,19 +432,38 @@ app.get('/get-idea-by-pagination', (req, res) => {
         return res.status(400).json({ error: 'No CSV file loaded' });
     }
 
+    if (!FILTERED_ROWS) {
+        FILTERED_ROWS = PROCESSED_ROWS.filter((row) => row.relevance === 'Valid');
+        FILTERED_ROWS.sort((a, b) => b.score - a.score);
+    }
+
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
 
-    const relevantRows = PROCESSED_ROWS.filter((row) => row.relevance === 'Valid');
-    relevantRows.sort((a, b) => b.score - a.score);
-
-    const total = relevantRows.length;
+    const total = FILTERED_ROWS.length;
     const totalPages = Math.ceil(total / pageSize);
     const start = (page - 1) * pageSize;
     const end = page * pageSize;
-    const rows = relevantRows.slice(start, end);
+    const rows = FILTERED_ROWS.slice(start, end);
 
     res.json({ ideas: rows, totalPages: totalPages });
+});
+
+app.get('/filter-idea-by-keyword', (req, res) => {
+    if (!PROCESSED_ROWS) {
+        return res.status(400).json({ error: 'No CSV file loaded' });
+    }
+
+    const keyword = req.query.keyword;
+    const lowerCaseKeyword = keyword.toLowerCase();
+    const relevantRows = PROCESSED_ROWS.filter((row) => row.relevance === 'Valid');
+
+    FILTERED_ROWS = relevantRows.filter((row) =>
+        row.tags.toLowerCase().includes(lowerCaseKeyword) ||
+        row.summary.toLowerCase().includes(lowerCaseKeyword) ||
+        row.newName.toLowerCase().includes(lowerCaseKeyword)
+    );
+    FILTERED_ROWS.sort((a, b) => b.score - a.score);
 });
 
 app.listen(port, () => {
