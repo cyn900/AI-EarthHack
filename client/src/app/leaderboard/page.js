@@ -52,17 +52,17 @@ export default function Page() {
     return (
         <div className="min-h-screen flex justify-center items-center bg-light_green">
             <div className="max-w-screen-2xl m-12">
-                <div className="relative flex items-center">
+                <div className="relative flex items-center mb-4">
                     <h1 className="font-bold text-2xl"> Idea Leaderboard </h1>
                     <Link href="/result" className="absolute left-[-30px] top-0 h-full text-2xl text-dark_green"> &#8592; </Link>
                 </div>
 
-                <div className="flex flex-row">
+                <div className="flex flex-row w-full h-full">
                     <div className="overflow-x-auto flex flex-col items-center">
                         <table className="table">
                             {/* head */}
                             <thead>
-                                <tr className="bg-middle_gray text-white rounded-3xl">
+                                <tr className="bg-middle_gray text-white h-16 align-text-bottom">
                                     <th>Rank</th>
                                     <th>Idea Name</th>
                                     <th>Category</th>
@@ -72,30 +72,45 @@ export default function Page() {
                             </thead>
                             <tbody>
                             {ideas.map((idea, index) => (
-                                <tr key={index} onClick={() => handleSelectedIdeas(index) } className={`hover:cursor-pointer ${index === selectedIndex ? "bg-middle_green" : "bg-white"}`}>
+                                <tr key={index} onClick={() => handleSelectedIdeas(index) } className={`h-16 border-t-8 border-light_green hover:cursor-pointer ${index === selectedIndex ? "bg-middle_green" : "bg-white"}`}>
                                     <th className="font-bold">{(page-1) * pageSize + index + 1}</th>
-                                    <td className="min-w-48 font-bold">{idea.newName}</td>
-                                    <td className="min-w-40 flex flex-row">
+                                    <td className="min-w-80 font-bold">{idea.newName}</td>
+                                    <td className="min-w-80 flex flex-row">
                                         {
                                             idea.tags.split(',').map((tag, index) => (
-                                                <div key={index} className="text-dark_green text-xs bg-card_color w-fit py-1 px-5 rounded-3xl m-1"> {tag.trim()} </div>
+                                                <div key={index}
+                                                     className="text-dark_green text-xs bg-card_color w-fit py-1 px-5 rounded-3xl m-1"
+                                                     style={{ transform: 'translateX(-15px)' }}
+                                                > {tag.trim()} </div>
                                             ))
                                         }
                                     </td>
-                                    <td className="font-bold">{idea.score} pt</td>
+                                    <td className="font-bold min-w-28">{idea.score} pt</td>
                                     <td>&#8250;</td>
                                 </tr>
                             ))}
+                            {
+                                Array.from({ length: pageSize - ideas.length }, (_, i) => (
+                                    <tr key={i} className="h-16 bg-white border-t-8 border-light_green">
+                                        <th className="font-bold"></th>
+                                        <td className="min-w-48 font-bold"></td>
+                                        <td className="min-w-40 flex flex-row">
+                                        </td>
+                                        <td className="font-bold"></td>
+                                        <td></td>
+                                    </tr>
+                                ))
+                            }
                             </tbody>
                         </table>
-                        <div className="join">
-                            <button className={`join-item btn ${page === 1 ? "btn-disabled" : ""}`} onClick={handlePrevPage}> &#8249; </button>
-                            <button className="join-item btn">{page} / {totalPages}</button>
-                            <button className={`join-item btn ${page === totalPages ? "btn-disabled" : ""}`} onClick={handleNextPage}> &#8250; </button>
+                        <div className="join mt-8">
+                            <button className={`join-item btn btn-ghost hover:bg-light_green ${page === 1 ? "opacity-0 btn-disabled" : ""}`} onClick={handlePrevPage}> &#8249; </button>
+                            <button className="join-item btn btn-ghost hover:bg-light_green">{page} / {totalPages}</button>
+                            <button className={`join-item btn btn-ghost hover:bg-light_green ${page === totalPages ? "opacity-0 btn-disabled" : ""}`} onClick={handleNextPage}> &#8250; </button>
                         </div>
                     </div>
 
-                    <div className="mx-4">
+                    <div className="mx-8 overflow-y-auto">
                         {ideas.length > selectedIndex && <Report idea={ideas[selectedIndex]} />}
                     </div>
                 </div>

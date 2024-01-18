@@ -40,10 +40,10 @@ export default function Page() {
         "Water": "#DAE06D",
         "Materials": "#88C4A6",
         "Value": "#98C26C",
-        "Society and Culture": "#728F4F",
+        "Society & Culture": "#728F4F",
         "Energy": "#3D6E5B",
         "Biodiversity": "#CCE1B6",
-        "Health and Wellbeing": "#B9C7A7"
+        "Health & Wellbeing": "#B9C7A7"
     };
 
     useEffect(() => {

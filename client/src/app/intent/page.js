@@ -151,7 +151,7 @@ export default function Page() {
                             {categories.map((category, index) => (
                                 <div key={index} className="flex flex-col text-right mx-8 w-1/2"
                                      style={{color: 'black'}}>
-                                    <h1 className="text-2xl font-bold">{category.name} (
+                                    <h1 className="text-2xl font-bold">{category.name}
                                         <input type="numeric"
                                                className="input input-ghost m-2 max-w-16 bg-card_color text-center"
                                                style={{ appearance: 'none', MozAppearance: 'textfield' }}
@@ -159,7 +159,7 @@ export default function Page() {
                                                max={100}
                                                value={categorySignificance[index]}
                                                onChange={(event) => handleSignificanceChange(event, index)} />
-                                        %)</h1>
+                                        %</h1>
                                     <div className="mx-4 mt-4">
                                         {category.sliders.map((slider, sliderIndex) => (
                                             <div key={sliderIndex} className="grid grid-cols-9">
@@ -211,8 +211,8 @@ export default function Page() {
                             </button>
 
                             <div className="tooltip" data-tip={`${apiStatus?.apiStatus === 'ready' ? "Ready" : `Loading (${apiStatus?.resolvedCalls} / ${apiStatus?.totalCalls})`}`}>
-                                <button className={`btn btn-primary mx-4 ${apiStatus?.apiStatus === 'ready' ? "" : "btn-disabled"}`} onClick={handleSubmit} style={{
-                                    backgroundColor: '#98C26C',
+                                <button className={`btn btn-primary mx-4 bg-light_green ${apiStatus?.apiStatus === 'ready' ? "" : "btn-disabled"}`} onClick={handleSubmit} style={{
+                                    backgroundColor: apiStatus?.apiStatus ? '#98C26C' : '#6D6D6D',
                                     marginTop: '30pt',
                                     border: 'none',
                                     paddingLeft: '30px',

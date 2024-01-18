@@ -1,4 +1,6 @@
 import RadarChartSingle from "@/components/RadarChartSingle";
+import { Swiper, SwiperSlide } from 'swiper/react';
+
 import {useState} from "react";
 
 export default function Report({ idea }) {
@@ -27,7 +29,7 @@ export default function Report({ idea }) {
     }
 
     return (
-        <div className="bg-card_color rounded-lg min-h-fit p-8 max-w-xl">
+        <div className="bg-white rounded-lg max-h-[80%] p-8 max-w-xl overflow-y-auto">
             <h1 className="font-bold">{idea.newName}</h1>
 
             <label className="form-control mt-2">
@@ -65,107 +67,107 @@ export default function Report({ idea }) {
 
             {selectedChart === "problem" ? (
                 <div className="mt-4">
-                    <div className="collapse collapse-arrow bg-white mt-4 p-0">
-                        <p className="absolute top-[17px] right-10 text-sm"> { idea.problemPopularityScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2" />
+                    <div className="collapse collapse-arrow shadow-lg mt-4 p-0">
+                        <p className="absolute top-[17px] right-10 text-sm"> { idea.problemGrowingScore } / 10 </p>
+                        <input type="checkbox" name="my-accordion-2" />
                         <div className="collapse-title text-sm font-bold">
                             Popularity
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.problemPopularityExplaination} </p>
+                            <p> {idea.problemPopularityExplanation} </p>
                         </div>
                     </div>
-                    <div className="collapse collapse-arrow bg-white mt-4">
+                    <div className="collapse collapse-arrow shadow-lg mt-4">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.problemGrowingScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2" />
+                        <input type="checkbox" name="my-accordion-2" />
                         <div className="collapse-title text-sm font-bold">
                             Growing
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.problemGrowingExplaination} </p>
+                            <p> {idea.problemGrowingExplanation} </p>
                         </div>
                     </div>
-                    <div className="collapse collapse-arrow bg-white mt-4">
+                    <div className="collapse collapse-arrow shadow-lg mt-4">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.problemUrgentScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2"  />
+                        <input type="checkbox" name="my-accordion-2"  />
                         <div className="collapse-title text-sm font-bold">
                             Urgent
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.problemUrgentExplaination} </p>
+                            <p> {idea.problemUrgentExplanation} </p>
                         </div>
                     </div>
-                    <div className="collapse collapse-arrow bg-white mt-4">
+                    <div className="collapse collapse-arrow shadow-lg mt-4">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.problemExpenseScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2"  />
+                        <input type="checkbox" name="my-accordion-2"  />
                         <div className="collapse-title text-sm font-bold">
                             Expensive
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.problemExpenseExplaination} </p>
+                            <p> {idea.problemExpenseExplanation} </p>
                         </div>
                     </div>
-                    <div className="collapse collapse-arrow bg-white mt-4">
+                    <div className="collapse collapse-arrow shadow-lg mt-4">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.problemFrequentScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2"  />
+                        <input type="checkbox" name="my-accordion-2"  />
                         <div className="collapse-title text-sm font-bold">
                             Frequent
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.problemFrequentExplaination} </p>
+                            <p> {idea.problemFrequentExplanation} </p>
                         </div>
                     </div>
                 </div>
             ) : (
                 <div className="mt-4">
-                    <div className="collapse collapse-arrow bg-white mt-4 p-0">
+                    <div className="collapse collapse-arrow shadow-lg mt-4 p-0">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.solutionCompletenessScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2" />
+                        <input type="checkbox" name="my-accordion-2" />
                         <div className="collapse-title text-sm font-bold">
                             Completeness
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.solutionCompletenessExplaination} </p>
+                            <p> {idea.solutionCompletenessExplanation} </p>
                         </div>
                     </div>
-                    <div className="collapse collapse-arrow bg-white mt-4">
+                    <div className="collapse collapse-arrow shadow-lg mt-4">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.solutionFinImpactScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2" />
+                        <input type="checkbox" name="my-accordion-2" />
                         <div className="collapse-title text-sm font-bold">
                             Financial Impact
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.solutionFinImpactExplaination} </p>
+                            <p> {idea.solutionFinImpactExplanation} </p>
                         </div>
                     </div>
-                    <div className="collapse collapse-arrow bg-white mt-4">
+                    <div className="collapse collapse-arrow shadow-lg mt-4">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.solutionImplementabilityScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2"  />
+                        <input type="checkbox" name="my-accordion-2"  />
                         <div className="collapse-title text-sm font-bold">
                             Implementability
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.solutionImplementabilityExplaination} </p>
+                            <p> {idea.solutionImplementabilityExplanation} </p>
                         </div>
                     </div>
-                    <div className="collapse collapse-arrow bg-white mt-4">
+                    <div className="collapse collapse-arrow shadow-lg mt-4">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.solutionTargetScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2"  />
+                        <input type="checkbox" name="my-accordion-2"  />
                         <div className="collapse-title text-sm font-bold">
                             Targeted
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.solutionTargetExplaination} </p>
+                            <p> {idea.solutionTargetExplanation} </p>
                         </div>
                     </div>
-                    <div className="collapse collapse-arrow bg-white mt-4">
+                    <div className="collapse collapse-arrow shadow-lg mt-4">
                         <p className="absolute top-[17px] right-10 text-sm"> { idea.solutionNoveltyScore } / 10 </p>
-                        <input type="radio" name="my-accordion-2"  />
+                        <input type="checkbox" name="my-accordion-2"  />
                         <div className="collapse-title text-sm font-bold">
                             Novelty
                         </div>
                         <div className="collapse-content text-xs">
-                            <p> {idea.solutionNoveltyExplaination} </p>
+                            <p> {idea.solutionNoveltyExplanation} </p>
                         </div>
                     </div>
                 </div>
