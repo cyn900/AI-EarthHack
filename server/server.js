@@ -290,10 +290,11 @@ app.post('/load-user-rating', (req, res) => {
     API_STATUS = API_CALCULATING;
 
     USER_RATINGS = req.body.rating;
-    USER_PROBLEM_SIGNIFICANCE = req.body.problemSignificance;
-    USER_SOLUTION_SIGNIFICANCE = req.body.solutionSignificance;
+    USER_PROBLEM_SIGNIFICANCE = parseInt(req.body.problemSignificance);
+    USER_SOLUTION_SIGNIFICANCE = parseInt(req.body.solutionSignificance);
 
     if (!(USER_PROBLEM_SIGNIFICANCE >= 0 && USER_SOLUTION_SIGNIFICANCE >= 0 && USER_PROBLEM_SIGNIFICANCE + USER_SOLUTION_SIGNIFICANCE === 100)) {
+        API_STATUS = API_READY;
         return res.status(400).json({ error: 'Invalid problem and solution significance' });
     }
 
