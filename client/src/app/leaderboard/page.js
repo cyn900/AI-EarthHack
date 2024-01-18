@@ -75,8 +75,12 @@ export default function Page() {
                                 <tr key={index} onClick={() => handleSelectedIdeas(index) } className={`hover:cursor-pointer ${index === selectedIndex ? "bg-middle_green" : "bg-white"}`}>
                                     <th className="font-bold">{(page-1) * pageSize + index + 1}</th>
                                     <td className="min-w-48 font-bold">{idea.newName}</td>
-                                    <td className="min-w-40">
-                                        <div className="text-dark_green text-xs bg-card_color w-fit py-1 px-5 rounded-3xl"> {idea.tags} </div>
+                                    <td className="min-w-40 flex flex-row">
+                                        {
+                                            idea.tags.split(',').map((tag, index) => (
+                                                <div key={index} className="text-dark_green text-xs bg-card_color w-fit py-1 px-5 rounded-3xl m-1"> {tag.trim()} </div>
+                                            ))
+                                        }
                                     </td>
                                     <td className="font-bold">{idea.score} pt</td>
                                     <td>&#8250;</td>

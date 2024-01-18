@@ -396,7 +396,7 @@ app.get('/get-top-5-ideas-by-category', (req, res) => {
     if (req.query.category === 'All') {
         relevantRows = PROCESSED_ROWS.filter((row) => row.relevance === 'Valid');
     } else {
-        relevantRows = PROCESSED_ROWS.filter((row) => row.relevance === 'Valid' && req.query.category === row.tags);
+        relevantRows = PROCESSED_ROWS.filter((row) => row.relevance === 'Valid' && row.tags.includes(req.query.category));
     }
     relevantRows.sort((a, b) => b.score - a.score);
 
@@ -412,10 +412,13 @@ app.get('/get-tag-frequency', (req, res) => {
     const tagFreq = {};
     for (const row of PROCESSED_ROWS) {
         if (row.relevance === 'Valid') {
-            if (row.tags in tagFreq) {
-                tagFreq[row.tags] += 1;
-            } else {
-                tagFreq[row.tags] = 1;
+            let tagArray = row.tags.split(',').map(tag => tag.trim());
+            for (const tag of tagArray) {
+                if (tag in tagFreq) {
+                    tagFreq[tag] += 1;
+                } else {
+                    tagFreq[tag] = 1;
+                }
             }
         }
     }

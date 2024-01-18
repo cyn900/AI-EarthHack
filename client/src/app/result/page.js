@@ -14,6 +14,7 @@ export default function Page() {
     const [open, setOpen] = useState(false);
     const [evaluationGoal, setEvaluationGoal] = useState('');
     const [relevantIdeasNumber, setRelevantIdeasNumber] = useState(0);
+    const [totalIdeasNumber, setTotalIdeasNumber] = useState(0);
     const [averageIdeaScore, setAverageIdeaScore] = useState('');
     const [pillars, setPillars] = useState([]);
     const [topIdeas, setTopIdeas] = useState([]);
@@ -64,6 +65,7 @@ export default function Page() {
                 const response = await axios.get(API_URL + '/get-relevant-ideas-number');
                 // console.log("relevant ideas number: " + JSON.stringify(response));
                 setRelevantIdeasNumber(response.data.relevantIdeasNumber);
+                setTotalIdeasNumber(response.data.totalIdeasNumber);
             } catch (error) {
                 console.error('Error fetching relevant ideas number:', error);
             }
@@ -257,7 +259,10 @@ export default function Page() {
                                     <p className="text-md content2"> Total number of </p>
                                     <p className="font-bold text-2xl subtitle2"> Relevant Ideas </p>
                                 </div>
-                                <p className="text-4xl font-bold text-right"> {relevantIdeasNumber} </p>
+                                <div>
+                                    <p className="text-md text-right"> out of {relevantIdeasNumber} </p>
+                                    <p className="text-5xl font-bold text-right text-dark_green"> {relevantIdeasNumber} </p>
+                                </div>
                             </div>
                         </div>
 
@@ -267,7 +272,10 @@ export default function Page() {
                                     <p className="text-md content2"> Grading Standards </p>
                                     <p className="font-bold text-2xl subtitle2"> Average Idea Points </p>
                                 </div>
-                                <p className="text-4xl font-bold text-right"> {averageIdeaScore} </p>
+                                <div>
+                                    <p className="text-md text-right"> out of 100 </p>
+                                    <p className="text-5xl font-bold text-right text-dark_green"> {averageIdeaScore} </p>
+                                </div>
                             </div>
                         </div>
                     </div>
