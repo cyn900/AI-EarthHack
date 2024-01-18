@@ -31,6 +31,8 @@ export default function Page() {
         },
     ];
 
+    const [categorySignificance, setCategorySignificance] = useState([50, 50]);
+
     const [categoryScores, setCategoryScores] = useState(
         categories.reduce((acc, category) => {
             const sliders = category.sliders;
@@ -43,6 +45,35 @@ export default function Page() {
     );
 
     const [loading, setLoading] = useState(false);
+    const [apiStatus, setApiStatus] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(API_URL + '/get-api-status');
+                console.log(response.data);
+                setApiStatus(response.data);
+            } catch (error) {
+                console.error('Error getting status:', error);
+            }
+        };
+
+        fetchData();
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 1000); // 5 minutes in milliseconds
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    const handleSignificanceChange = (event, index) => {
+        const value = event.target.value;
+        const newSignificance = [0, 0];
+
+        newSignificance[index] = value;
+        newSignificance[1 - index] = 100 - value;
+        setCategorySignificance(newSignificance);
+    }
 
     const handleScoreChange = (category, slider, score) => {
         setCategoryScores((prevScores) => ({
@@ -51,48 +82,10 @@ export default function Page() {
         }));
     };
 
-    const [categoryTotals, setCategoryTotals] = useState({});
-
-    useEffect(() => {
-        // Calculate category totals when categoryScores changes
-        const totals = {};
-        categories.forEach((category) => {
-            totals[category.name] = Object.values(categoryScores[category.name]).reduce((sum, score) => sum + score, 0);
-        });
-        setCategoryTotals(totals);
-    }, [categoryScores]);
-
-
     const handleSubmit = async(e) => {
         e.preventDefault();
         try {
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-
             setLoading(true)
-            for (let i = 0; i < 100; i++) {
-                const relevantIdeasResponse = await axios.get(API_URL + '/get-relevant-ideas-number');
-                const relevantIdeasJson = relevantIdeasResponse.data;
-
-                if (relevantIdeasJson.relevantIdeasNumber > 0) {
-                    break; // Exit the loop if relevantIdeasNumber is greater than 0
-                } else {
-                    await sleep(1000);
-                }
-
-                // const averageIdeaResponse = await axios.get(API_URL + '/get-average-idea-score');
-                // const averageIdeaJson = averageIdeaResponse.data;
-                //
-                // if (averageIdeaJson.averageIdeaScore !== "NaN" && averageIdeaJson.averageIdeaScore > 0) {
-                //     break; // Exit the loop if averageIdeaScore is greater than 0
-                // } else {
-                //     await sleep(1000);
-                // }
-            }
-
-            await sleep(3000);
-
             const transformedCategoryScores = Object.keys(categoryScores).reduce((acc, categoryName) => {
                 const sliderScores = categoryScores[categoryName];
 
@@ -107,7 +100,11 @@ export default function Page() {
                 return acc;
             }, {});
 
-            const response = await axios.post(API_URL + '/load-user-rating', { rating: transformedCategoryScores });
+            const response = await axios.post(API_URL + '/load-user-rating', {
+                rating: transformedCategoryScores,
+                problemSignificance: categorySignificance[0],
+                solutionSignificance: categorySignificance[1]
+            });
             const json = response.data;
 
             if (response.status !== 200) {
@@ -116,7 +113,6 @@ export default function Page() {
             } else {
                 setLoading(false);
                 router.push('/result');
-                // window.location.href = "/result";
             }
         } catch (error) {
             console.error('Error sending form:', error);
@@ -155,7 +151,15 @@ export default function Page() {
                             {categories.map((category, index) => (
                                 <div key={index} className="flex flex-col text-right mx-8 w-1/2"
                                      style={{color: 'black'}}>
-                                    <h1 className="text-2xl font-bold">{category.name} ({categoryTotals[category.name] || 0} points)</h1>
+                                    <h1 className="text-2xl font-bold">{category.name} (
+                                        <input type="numeric"
+                                               className="input input-ghost m-2 max-w-16 bg-card_color text-center"
+                                               style={{ appearance: 'none', MozAppearance: 'textfield' }}
+                                               min={0}
+                                               max={100}
+                                               value={categorySignificance[index]}
+                                               onChange={(event) => handleSignificanceChange(event, index)} />
+                                        %)</h1>
                                     <div className="mx-4 mt-4">
                                         {category.sliders.map((slider, sliderIndex) => (
                                             <div key={sliderIndex} className="grid grid-cols-9">
@@ -196,7 +200,6 @@ export default function Page() {
                         <div className="">
                             <button className="btn btn-primary mx-4" onClick={() => {
                                 router.push('/start');
-                                // window.location.href = "/start";
                             }} style={{
                                 backgroundColor: '#DFEDE7',
                                 marginTop: '10pt',
@@ -206,15 +209,18 @@ export default function Page() {
                                 color: '#3D6F5B'
                             }}> Prev
                             </button>
-                            <button className="btn btn-primary mx-4" onClick={handleSubmit} style={{
-                                backgroundColor: '#98C26C',
-                                marginTop: '30pt',
-                                border: 'none',
-                                paddingLeft: '30px',
-                                paddingRight: '30px',
-                                color: 'white'
-                            }}> Next
-                            </button>
+
+                            <div className="tooltip" data-tip={`${apiStatus?.apiStatus === 'ready' ? "Ready" : `Loading (${apiStatus?.resolvedCalls} / ${apiStatus?.totalCalls})`}`}>
+                                <button className={`btn btn-primary mx-4 ${apiStatus?.apiStatus === 'ready' ? "" : "btn-disabled"}`} onClick={handleSubmit} style={{
+                                    backgroundColor: '#98C26C',
+                                    marginTop: '30pt',
+                                    border: 'none',
+                                    paddingLeft: '30px',
+                                    paddingRight: '30px',
+                                    color: 'white'
+                                }}> Next
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

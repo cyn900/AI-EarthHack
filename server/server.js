@@ -273,6 +273,18 @@ app.post('/load-user-rating', (req, res) => {
         return res.status(400).json({ error: 'No problem provided' });
     }
 
+    if (!req.body.problemSignificance) {
+        return res.status(400).json({ error: 'No problem significance provided' });
+    }
+
+    if (!req.body.solutionSignificance) {
+        return res.status(400).json({ error: 'No solution significance provided' });
+    }
+
+    if (API_STATUS !== API_READY) {
+        return res.status(400).json({ error: 'API is busy' });
+    }
+
     API_STATUS = API_CALCULATING;
 
     USER_RATINGS = req.body.rating;
