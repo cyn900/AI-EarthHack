@@ -1,6 +1,4 @@
 import RadarChartSingle from "@/components/RadarChartSingle";
-import { Swiper, SwiperSlide } from 'swiper/react';
-
 import {useState} from "react";
 
 export default function Report({ idea }) {
