@@ -18,7 +18,7 @@ export default function Page() {
     const [averageIdeaScore, setAverageIdeaScore] = useState('');
     const [pillars, setPillars] = useState([]);
     const [topIdeas, setTopIdeas] = useState([]);
-    const [selectedValue, setSelectedValue] = useState('Water');
+    const [selectedValue, setSelectedValue] = useState('Materials');
 
     const [genRadarChart, setGenRadarChart] = useState(false);
     const [topIdeasByPillarProblem, setTopIdeasByPillarProblem] = useState([]);
