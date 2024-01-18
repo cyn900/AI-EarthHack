@@ -64,6 +64,7 @@ export default function Home() {
                 });
 
                 setResponse("File uploaded successfully. Upload status: " + response.data.status);
+                console.log("HAHA " + router.pathname);
                 if (response.status === 200) {
                     if (router.pathname === '/start') {
                         router.push('/intent');

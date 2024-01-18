@@ -261,7 +261,7 @@ export default function Page() {
                                     <p className="font-bold text-2xl subtitle2"> Relevant Ideas </p>
                                 </div>
                                 <div>
-                                    <p className="text-md text-right"> out of {relevantIdeasNumber} </p>
+                                    <p className="text-md text-right"> out of {totalIdeasNumber} </p>
                                     <p className="text-5xl font-bold text-right text-dark_green"> {relevantIdeasNumber} </p>
                                 </div>
                             </div>

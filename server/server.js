@@ -230,6 +230,7 @@ app.post('/load-csv', upload.single('csvFile'), (req, res) => {
 
                 allPromises.push(promises);
                 Promise.all(promises).then(() => {
+                    // console.log('Processed row:', result.data['id']);
                     rows.push(rowData);
                 });
             },
@@ -329,7 +330,7 @@ app.post('/load-user-rating', (req, res) => {
 
 app.post('/read-csv', (req, res) => {
     const data = [];
-    const csvFilePath = path.join(__dirname, 'output.csv');
+    const csvFilePath = path.join(__dirname, req.query.csvFile || 'output.csv');
 
     const processData = () => {
         const data = [];
