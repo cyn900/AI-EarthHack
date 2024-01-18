@@ -31,7 +31,7 @@ export default function Report({ idea }) {
             <h1 className="font-bold">{idea.newName}</h1>
 
             <label className="form-control mt-2">
-                <textarea className="textarea bg-card_color h-20 text-xs" readOnly={true} value={idea.summary}></textarea>
+                <div className="text-xs">{idea.summary}</div>
             </label>
 
             <div className="text-dark_green font-bold mt-4">
