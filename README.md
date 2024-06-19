@@ -15,3 +15,6 @@ For the frontend, we recommend running in development mode,
 - `npm i` to install the dependencies
 - `npm run dev` to start the frontend
 - open `http://localhost:3000` in your browser to check it
+
+## Figma Prototype
+https://www.figma.com/proto/2yTdoDSVYEinXfwxLcR8xc/AI-EarthHack---Arbor?node-id=285-2528&t=4Hy7HkFYh8JwF8nH-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=100%3A5081
